@@ -1,7 +1,17 @@
-// --- 1. Menu & Modal Logic ---
+// --- 1. Menu & Modals Logic ---
 const hamburger = document.getElementById('hamburger');
 const navLinks = document.getElementById('nav-links');
 hamburger.addEventListener('click', () => navLinks.classList.toggle('active'));
+
+const rulesBtn = document.getElementById('rules-btn');
+const rulesModal = document.getElementById('rules-modal');
+const closeRules = document.getElementById('close-rules');
+
+rulesBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    rulesModal.classList.remove('hidden');
+});
+closeRules.addEventListener('click', () => rulesModal.classList.add('hidden'));
 
 const myProjectsBtn = document.getElementById('my-projects-btn');
 const modal = document.getElementById('projects-modal');
@@ -36,18 +46,16 @@ const colors = ['black', 'yellow', 'green', 'red'];
 function createBoard() {
     arms.forEach(armId => {
         const container = document.getElementById(armId);
-        
         for (let i = 1; i <= 24; i++) {
             const sq = document.createElement('div');
             sq.classList.add('square');
             sq.dataset.id = `${armId}-sq-${i}`;
             
-            // Adding numbers and safe zone markers
             const mark = document.createElement('span');
             mark.style.fontSize = '10px';
             mark.style.color = 'rgba(139, 0, 0, 0.6)';
             mark.style.position = 'absolute';
-            mark.style.pointerEvents = 'none'; // so tokens remain clickable
+            mark.style.pointerEvents = 'none'; 
             
             if (i >= 1 && i <= 7) {
                 sq.style.backgroundColor = 'rgba(212, 175, 55, 0.3)'; // Belly highlight
@@ -120,7 +128,21 @@ function updateTurnUI() {
     }
 }
 
-// Dice Roll Logic
+// --- 4. Dice Animation and Dots ---
+function drawDots(containerId, number) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = ''; 
+    for (let i = 0; i < number; i++) {
+        const dot = document.createElement('div');
+        dot.classList.add('dot');
+        container.appendChild(dot);
+    }
+}
+
+// Draw initial dots
+drawDots('dot-container-1', 1);
+drawDots('dot-container-2', 4);
+
 rollBtn.addEventListener('click', () => {
     if (isComputerTurn) return; 
     if (currentDiceRoll > 0) {
@@ -131,21 +153,36 @@ rollBtn.addEventListener('click', () => {
 });
 
 function rollTheDice() {
-    const val1 = validDiceFaces[Math.floor(Math.random() * validDiceFaces.length)];
-    const val2 = validDiceFaces[Math.floor(Math.random() * validDiceFaces.length)];
-    pasha1.innerText = val1;
-    pasha2.innerText = val2;
-    currentDiceRoll = val1 + val2; 
-
-    if (val1 === val2) {
-        resultText.innerText = `Doublet! (${val1} & ${val2}). Move: ${currentDiceRoll}`;
-    } else {
-        resultText.innerText = `Result: ${val1} & ${val2}. Move: ${currentDiceRoll}`;
-    }
+    rollBtn.disabled = true; 
+    resultText.innerText = "Rolling...";
     
-    if (isComputerTurn) {
-        setTimeout(moveComputerToken, 1500);
-    }
+    pasha1.classList.add('rolling');
+    pasha2.classList.add('rolling');
+
+    setTimeout(() => {
+        pasha1.classList.remove('rolling');
+        pasha2.classList.remove('rolling');
+
+        const val1 = validDiceFaces[Math.floor(Math.random() * validDiceFaces.length)];
+        const val2 = validDiceFaces[Math.floor(Math.random() * validDiceFaces.length)];
+        
+        drawDots('dot-container-1', val1);
+        drawDots('dot-container-2', val2);
+        
+        currentDiceRoll = val1 + val2; 
+
+        if (val1 === val2) {
+            resultText.innerText = `Doublet! (${val1} & ${val2}). Move: ${currentDiceRoll}`;
+        } else {
+            resultText.innerText = `Result: ${val1} & ${val2}. Move: ${currentDiceRoll}`;
+        }
+        
+        if (isComputerTurn) {
+            setTimeout(moveComputerToken, 1500);
+        } else {
+            rollBtn.disabled = false;
+        }
+    }, 1000); 
 }
 
 // Computer Bot Actions
@@ -158,11 +195,18 @@ function moveComputerToken() {
     if (computerTokens.length > 0 && currentDiceRoll > 0) {
         const tokenToMove = computerTokens[0]; 
         
-        tokenToMove.style.transform = "translateY(-15px) scale(1.2)";
+        // Placeholder for highlight effect
+        const parentSquare = tokenToMove.parentElement;
+        parentSquare.classList.add('highlight-move');
+
         setTimeout(() => {
-            tokenToMove.style.transform = "translateY(0) scale(1)";
-            resultText.innerText = `Computer moved ${currentDiceRoll} steps!`;
-            setTimeout(switchTurn, 1000);
+            parentSquare.classList.remove('highlight-move');
+            tokenToMove.style.transform = "translateY(-15px) scale(1.2)";
+            setTimeout(() => {
+                tokenToMove.style.transform = "translateY(0) scale(1)";
+                resultText.innerText = `Computer moved ${currentDiceRoll} steps!`;
+                setTimeout(switchTurn, 1000);
+            }, 800);
         }, 800);
     } else {
         switchTurn();
@@ -186,11 +230,17 @@ document.addEventListener('click', (e) => {
             return;
         }
 
-        e.target.style.transform = "translateY(-15px) scale(1.2)";
+        const parentSquare = e.target.parentElement;
+        parentSquare.classList.add('highlight-move');
+
         setTimeout(() => {
-            e.target.style.transform = "translateY(0) scale(1)";
-            resultText.innerText = "Move completed.";
-            setTimeout(switchTurn, 500);
+            parentSquare.classList.remove('highlight-move');
+            e.target.style.transform = "translateY(-15px) scale(1.2)";
+            setTimeout(() => {
+                e.target.style.transform = "translateY(0) scale(1)";
+                resultText.innerText = "Move completed.";
+                setTimeout(switchTurn, 500);
+            }, 500);
         }, 500);
     }
 });
