@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pachisi: The Ancient Indian Epic</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Google Fonts for the Royal Ancient Look -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Yatra+One&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -26,42 +25,42 @@
         </div>
     </header>
 
-    <!-- My Projects Modal (Loaded dynamically from JSON) -->
+    <!-- My Projects Modal -->
     <div id="projects-modal" class="modal hidden">
         <div class="modal-content">
             <span class="close-btn" id="close-modal">&times;</span>
             <h2>My Portfolio & Projects</h2>
-            <div id="projects-container">
-                <!-- Projects will be rendered here dynamically -->
-            </div>
+            <div id="projects-container"></div>
         </div>
     </div>
 
     <!-- Main Game Area -->
     <main class="game-area">
         <div class="theme-intro">
-            <h1>Maharaja, awaiting your move...</h1>
+            <h1 id="turn-indicator">Maharaja, awaiting your move...</h1>
         </div>
         
         <!-- The Pachisi Board -->
-        <div class="board-container">
-            <div class="board">
-                <!-- Top Arm (Black) -->
-                <div class="arm vertical-arm top-arm" id="black-arm"></div>
-                
-                <!-- Left Arm (Yellow) -->
-                <div class="arm horizontal-arm left-arm" id="yellow-arm"></div>
-                
-                <!-- Center Home -->
-                <div class="center-home">
-                    <span>HOME</span>
+        <div class="board-wrapper">
+            <div class="board-container">
+                <div class="board">
+                    <!-- Top Arm (Black) -->
+                    <div class="arm vertical-arm top-arm" id="black-arm"></div>
+                    
+                    <!-- Left Arm (Yellow) -->
+                    <div class="arm horizontal-arm left-arm" id="yellow-arm"></div>
+                    
+                    <!-- Center Home -->
+                    <div class="center-home">
+                        <span>HOME</span>
+                    </div>
+                    
+                    <!-- Right Arm (Green) -->
+                    <div class="arm horizontal-arm right-arm" id="green-arm"></div>
+                    
+                    <!-- Bottom Arm (Red) -->
+                    <div class="arm vertical-arm bottom-arm" id="red-arm"></div>
                 </div>
-                
-                <!-- Right Arm (Green) -->
-                <div class="arm horizontal-arm right-arm" id="green-arm"></div>
-                
-                <!-- Bottom Arm (Red) -->
-                <div class="arm vertical-arm bottom-arm" id="red-arm"></div>
             </div>
         </div>
 
