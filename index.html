@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pachisi: The Ancient Indian Epic</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts for the Royal Ancient Look -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Yatra+One&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Responsive Navigation Bar -->
+    <header class="navbar">
+        <div class="logo">Chaupar / Pachisi</div>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="#">Play</a></li>
+            <li><a href="#">Rules</a></li>
+            <li><a href="#" id="my-projects-btn">My Projects</a></li>
+            <li><a href="#">Login</a></li>
+        </ul>
+        <div class="hamburger" id="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </header>
+
+    <!-- My Projects Modal (Loaded dynamically from JSON) -->
+    <div id="projects-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn" id="close-modal">&times;</span>
+            <h2>My Portfolio & Projects</h2>
+            <div id="projects-container">
+                <!-- Projects will be rendered here dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Game Area -->
+    <main class="game-area">
+        <div class="theme-intro">
+            <h1>Maharaja, awaiting your move...</h1>
+        </div>
+        
+        <!-- The Pachisi Board -->
+        <div class="board-container">
+            <div class="board">
+                <!-- Top Arm (Black) -->
+                <div class="arm vertical-arm top-arm" id="black-arm"></div>
+                
+                <!-- Left Arm (Yellow) -->
+                <div class="arm horizontal-arm left-arm" id="yellow-arm"></div>
+                
+                <!-- Center Home -->
+                <div class="center-home">
+                    <span>HOME</span>
+                </div>
+                
+                <!-- Right Arm (Green) -->
+                <div class="arm horizontal-arm right-arm" id="green-arm"></div>
+                
+                <!-- Bottom Arm (Red) -->
+                <div class="arm vertical-arm bottom-arm" id="red-arm"></div>
+            </div>
+        </div>
+
+        <!-- The Dice (Pasha) Area -->
+        <div class="dice-container">
+            <div class="pasha" id="pasha-1">1</div>
+            <div class="pasha" id="pasha-2">4</div>
+            <button id="roll-dice-btn" class="royal-btn">Roll the Pasha</button>
+            <p id="dice-result">Result: --</p>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
