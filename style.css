@@ -146,11 +146,6 @@ body {
     position: relative; 
 }
 
-.highlight-move {
-    background-color: rgba(46, 204, 113, 0.5) !important;
-    border: 2px dashed #27ae60 !important;
-}
-
 /* Tokens */
 .token {
     width: 20px;
@@ -161,7 +156,7 @@ body {
     display: inline-block;
     margin: 2px;
     cursor: pointer;
-    transition: transform 0.4s ease-in-out; /* স্মুথ চলাচলের জন্য */
+    transition: transform 0.3s ease-in-out;
     position: relative;
     z-index: 10; 
 }
@@ -173,7 +168,7 @@ body {
 .token-yellow { background-color: var(--token-yellow); }
 .token-black { background-color: var(--token-black); }
 
-/* Dice Bowl & 3D Tumble Animation */
+/* Dice Bowl & 4-Sided Stick Animation */
 .dice-container {
     margin-top: 20px;
     text-align: center;
@@ -185,8 +180,8 @@ body {
 }
 
 .bowl {
-    width: 140px;
-    height: 140px;
+    width: 150px;
+    height: 150px;
     background: radial-gradient(circle at center, #5c3a21, #2b1708);
     border-radius: 50%;
     margin: 0 auto 15px auto;
@@ -195,18 +190,18 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 15px;
-    perspective: 800px; /* থ্রিডি স্পেস তৈরি করার জন্য */
+    gap: 20px;
+    perspective: 800px; 
     overflow: hidden;
 }
 
 .pasha {
-    width: 30px;
-    height: 70px;
-    background-color: #d4af37; 
-    border: 2px solid #3d2314;
-    border-radius: 6px;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+    width: 24px;
+    height: 85px; 
+    background: linear-gradient(to right, #a0522d, #cd853f, #a0522d); 
+    border: 1px solid #3d2314;
+    border-radius: 4px;
+    box-shadow: inset -3px 0 5px rgba(0,0,0,0.4), 4px 4px 6px rgba(0,0,0,0.7);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -216,26 +211,26 @@ body {
 .dot-container {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 6px;
     padding: 5px;
 }
 
 .dot {
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
     background-color: #3d2314;
     border-radius: 50%;
+    box-shadow: inset 1px 1px 2px rgba(0,0,0,0.8);
 }
 
-/* পাসার থ্রিডি ঘোরার অ্যানিমেশন */
 .rolling {
-    animation: tumble 0.4s infinite linear;
+    animation: rollStick 0.4s infinite linear;
 }
 
-@keyframes tumble {
-    0% { transform: translateY(0) rotateX(0deg) rotateY(0deg); }
-    50% { transform: translateY(-15px) rotateX(180deg) rotateY(90deg); }
-    100% { transform: translateY(0) rotateX(360deg) rotateY(180deg); }
+@keyframes rollStick {
+    0% { transform: rotateX(0deg) translateY(0); }
+    50% { transform: rotateX(180deg) translateY(-15px); } 
+    100% { transform: rotateX(360deg) translateY(0); }
 }
 
 .royal-btn {
