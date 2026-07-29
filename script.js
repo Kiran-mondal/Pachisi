@@ -58,7 +58,7 @@ function createBoard() {
             mark.style.pointerEvents = 'none'; 
             
             if (i >= 1 && i <= 7) {
-                sq.style.backgroundColor = 'rgba(212, 175, 55, 0.3)'; // Belly highlight
+                sq.style.backgroundColor = 'rgba(212, 175, 55, 0.3)';
                 mark.innerText = i + ' 🏠';
             } else {
                 mark.innerText = i;
@@ -73,18 +73,20 @@ function createBoard() {
 function placeInitialTokens() {
     colors.forEach((color, index) => {
         const armId = arms[index];
-        const createToken = () => {
+        const createToken = (pos) => {
             const t = document.createElement('div');
             t.classList.add('token', `token-${color}`);
             t.dataset.color = color;
+            t.dataset.arm = armId;
+            t.dataset.pos = pos; 
             return t;
         };
         const sq6 = document.querySelector(`[data-id="${armId}-sq-6"]`);
-        if(sq6) sq6.appendChild(createToken());
+        if(sq6) sq6.appendChild(createToken(6));
         const sq7 = document.querySelector(`[data-id="${armId}-sq-7"]`);
-        if(sq7) sq7.appendChild(createToken());
+        if(sq7) sq7.appendChild(createToken(7));
         const sq12 = document.querySelector(`[data-id="${armId}-sq-12"]`);
-        if(sq12) { sq12.appendChild(createToken()); sq12.appendChild(createToken()); }
+        if(sq12) { sq12.appendChild(createToken(12)); sq12.appendChild(createToken(12)); }
     });
 }
 createBoard();
@@ -95,7 +97,6 @@ let currentPlayer = 'red';
 let currentDiceRoll = 0;
 let isComputerTurn = false;
 
-// Define player types (Green is Bot, others are human)
 const players = {
     red: { type: 'human', displayColor: '#d32f2f' },
     green: { type: 'computer', displayColor: '#388e3c' }, 
@@ -128,7 +129,7 @@ function updateTurnUI() {
     }
 }
 
-// --- 4. Dice Animation and Dots ---
+// --- 4. 4-Sided Stick Dice Animation ---
 function drawDots(containerId, number) {
     const container = document.getElementById(containerId);
     container.innerHTML = ''; 
@@ -139,7 +140,6 @@ function drawDots(containerId, number) {
     }
 }
 
-// Draw initial dots
 drawDots('dot-container-1', 1);
 drawDots('dot-container-2', 4);
 
@@ -159,7 +159,15 @@ function rollTheDice() {
     pasha1.classList.add('rolling');
     pasha2.classList.add('rolling');
 
+    let shuffleInterval = setInterval(() => {
+        let temp1 = validDiceFaces[Math.floor(Math.random() * validDiceFaces.length)];
+        let temp2 = validDiceFaces[Math.floor(Math.random() * validDiceFaces.length)];
+        drawDots('dot-container-1', temp1);
+        drawDots('dot-container-2', temp2);
+    }, 100);
+
     setTimeout(() => {
+        clearInterval(shuffleInterval);
         pasha1.classList.remove('rolling');
         pasha2.classList.remove('rolling');
 
@@ -178,14 +186,40 @@ function rollTheDice() {
         }
         
         if (isComputerTurn) {
-            setTimeout(moveComputerToken, 1500);
+            setTimeout(moveComputerToken, 1000);
         } else {
             rollBtn.disabled = false;
         }
     }, 1000); 
 }
 
-// Computer Bot Actions
+// --- 5. Token Real Movement Logic ---
+function performMove(token) {
+    let currentPos = parseInt(token.dataset.pos);
+    let armId = token.dataset.arm;
+    
+    let targetPos = currentPos + currentDiceRoll;
+    if (targetPos > 24) targetPos = 24; // Temporary cap
+    
+    let targetSquare = document.querySelector(`[data-id="${armId}-sq-${targetPos}"]`);
+    
+    if(targetSquare) {
+        token.style.transform = "scale(1.5) translateY(-15px)";
+        token.style.zIndex = "50";
+        
+        setTimeout(() => {
+            targetSquare.appendChild(token); 
+            token.dataset.pos = targetPos;   
+            
+            token.style.transform = "scale(1) translateY(0)";
+            token.style.zIndex = "10";
+            
+            resultText.innerText = "Move completed.";
+            setTimeout(switchTurn, 600);
+        }, 300); 
+    }
+}
+
 function playComputerTurn() {
     rollTheDice();
 }
@@ -195,53 +229,32 @@ function moveComputerToken() {
     if (computerTokens.length > 0 && currentDiceRoll > 0) {
         const tokenToMove = computerTokens[0]; 
         
-        // Placeholder for highlight effect
-        const parentSquare = tokenToMove.parentElement;
-        parentSquare.classList.add('highlight-move');
-
+        tokenToMove.style.transform = "scale(1.3)"; 
         setTimeout(() => {
-            parentSquare.classList.remove('highlight-move');
-            tokenToMove.style.transform = "translateY(-15px) scale(1.2)";
-            setTimeout(() => {
-                tokenToMove.style.transform = "translateY(0) scale(1)";
-                resultText.innerText = `Computer moved ${currentDiceRoll} steps!`;
-                setTimeout(switchTurn, 1000);
-            }, 800);
+            tokenToMove.style.transform = "scale(1)";
+            performMove(tokenToMove); 
         }, 800);
     } else {
         switchTurn();
     }
 }
 
-// Human Token Movement
 document.addEventListener('click', (e) => {
     if (e.target.classList.contains('token')) {
-        const tokenColor = e.target.dataset.color;
+        const token = e.target;
+        const tokenColor = token.dataset.color;
         
         if (isComputerTurn) return; 
-        
         if (tokenColor !== currentPlayer) {
             alert(`It's ${currentPlayer.toUpperCase()}'s turn! You cannot move this token.`);
             return;
         }
-
         if (currentDiceRoll === 0) {
             alert("Please roll the Pasha first!");
             return;
         }
 
-        const parentSquare = e.target.parentElement;
-        parentSquare.classList.add('highlight-move');
-
-        setTimeout(() => {
-            parentSquare.classList.remove('highlight-move');
-            e.target.style.transform = "translateY(-15px) scale(1.2)";
-            setTimeout(() => {
-                e.target.style.transform = "translateY(0) scale(1)";
-                resultText.innerText = "Move completed.";
-                setTimeout(switchTurn, 500);
-            }, 500);
-        }, 500);
+        performMove(token); 
     }
 });
 
@@ -252,5 +265,5 @@ function switchTurn() {
     updateTurnUI();
 }
 
-// Start Game
 updateTurnUI();
+        
