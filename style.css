@@ -102,7 +102,7 @@ body {
     grid-template-columns: 240px 90px 240px; 
     grid-template-rows: 240px 90px 240px;
     gap: 0;
-    background-color: transparent; /* Removed the brown background */
+    background-color: transparent; 
 }
 
 .arm {
@@ -149,6 +149,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 30px;
+    position: relative; /* For absolute positioning of markers */
 }
 
 /* Tokens */
@@ -162,6 +163,8 @@ body {
     margin: 2px;
     cursor: pointer;
     transition: transform 0.3s;
+    position: relative;
+    z-index: 10; /* Keep tokens above the numbers */
 }
 
 .token:hover {
@@ -282,6 +285,6 @@ body {
     .board {
         transform: scale(0.65);
         transform-origin: top center;
-        margin-bottom: -150px; /* Adjust spacing caused by scaling */
+        margin-bottom: -150px; 
     }
 }
