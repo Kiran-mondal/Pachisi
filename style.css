@@ -1,9 +1,12 @@
-/* Basic Reset and Ancient Theme Variables */
 :root {
     --royal-red: #8b0000;
     --gold: #d4af37;
     --parchment: #f4e8d3;
     --dark-wood: #3d2314;
+    --token-red: #d32f2f;
+    --token-green: #388e3c;
+    --token-yellow: #fbc02d;
+    --token-black: #212121;
 }
 
 * {
@@ -14,13 +17,13 @@
 
 body {
     background-color: var(--parchment);
-    /* Ancient parchment texture background */
     background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
     font-family: 'Cinzel', serif; 
     color: var(--dark-wood);
+    overflow-x: hidden;
 }
 
-/* Navigation Bar */
+/* Navbar */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -55,7 +58,6 @@ body {
     color: var(--gold);
 }
 
-/* Hamburger Menu for Mobile */
 .hamburger {
     display: none;
     cursor: pointer;
@@ -73,41 +75,43 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 40px;
+    margin-top: 20px;
     padding-bottom: 50px;
 }
 
 .theme-intro h1 {
     color: var(--royal-red);
     text-shadow: 1px 1px var(--gold);
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     text-align: center;
+    transition: color 0.3s;
 }
 
-/* =========================================
-   Pachisi Board Styling (Grid Layout)
-   ========================================= */
-.board-container {
-    margin: 20px 0;
+/* Board Wrapper for Mobile Scrolling */
+.board-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+    padding: 20px;
 }
 
+/* Fixed Pachisi Board Cross Shape */
 .board {
     display: grid;
-    /* Center square is 90x90, arms are 240px long */
     grid-template-columns: 240px 90px 240px; 
     grid-template-rows: 240px 90px 240px;
     gap: 0;
-    background-color: var(--dark-wood); 
-    border: 4px solid var(--dark-wood);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    background-color: transparent; /* Removed the brown background */
 }
 
 .arm {
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.95);
     display: grid;
+    border: 3px solid var(--dark-wood);
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.4);
 }
 
-/* 24 squares per arm (3 columns x 8 rows or vice versa) */
 .vertical-arm {
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(8, 1fr);
@@ -118,13 +122,11 @@ body {
     grid-template-rows: repeat(3, 1fr);
 }
 
-/* Positioning the arms in the cross shape */
 .top-arm { grid-column: 2 / 3; grid-row: 1 / 2; }
 .bottom-arm { grid-column: 2 / 3; grid-row: 3 / 4; }
 .left-arm { grid-column: 1 / 2; grid-row: 2 / 3; }
 .right-arm { grid-column: 3 / 4; grid-row: 2 / 3; }
 
-/* Center Home */
 .center-home {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
@@ -136,48 +138,50 @@ body {
     font-size: 1.5rem;
     font-weight: bold;
     color: var(--royal-red);
-    border: 1px solid var(--dark-wood);
+    border: 3px solid var(--dark-wood);
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
 }
 
-/* Individual Squares & Tokens */
 .square {
     border: 1px solid var(--dark-wood);
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.8); 
     min-height: 30px;
 }
 
-/* Tokens (Guti) */
+/* Tokens */
 .token {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     border: 2px solid var(--parchment);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.8);
     display: inline-block;
     margin: 2px;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: transform 0.3s;
 }
 
 .token:hover {
-    transform: scale(1.2);
+    transform: scale(1.3);
 }
 
-.token-red { background-color: #d32f2f; }
-.token-green { background-color: #388e3c; }
-.token-yellow { background-color: #fbc02d; }
-.token-black { background-color: #212121; }
+.token-red { background-color: var(--token-red); }
+.token-green { background-color: var(--token-green); }
+.token-yellow { background-color: var(--token-yellow); }
+.token-black { background-color: var(--token-black); }
 
-/* =========================================
-   Dice (Pasha) Styling
-   ========================================= */
+/* Dice Area */
 .dice-container {
-    margin-top: 30px;
+    margin-top: 20px;
     text-align: center;
+    background-color: rgba(244, 232, 211, 0.9);
+    padding: 15px 30px;
+    border-radius: 10px;
+    border: 2px solid var(--gold);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
 .pasha {
@@ -204,13 +208,23 @@ body {
     font-family: 'Cinzel', serif;
     margin-top: 15px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .royal-btn:active {
     transform: scale(0.95);
 }
 
-/* My Projects Modal */
+.royal-btn:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    border-color: #333;
+    color: #aaa;
+}
+
+/* Modal */
 .modal {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -220,7 +234,6 @@ body {
     align-items: center;
     z-index: 1000;
 }
-
 .modal.hidden { display: none; }
 
 .modal-content {
@@ -240,7 +253,6 @@ body {
     color: var(--royal-red);
     cursor: pointer;
 }
-
 .project-card {
     background: white;
     border: 1px solid var(--gold);
@@ -249,7 +261,7 @@ body {
     border-radius: 5px;
 }
 
-/* Responsive Design */
+/* Mobile Responsive */
 @media (max-width: 768px) {
     .nav-links {
         display: none;
@@ -264,14 +276,12 @@ body {
         border-bottom: 3px solid var(--gold);
         z-index: 500;
     }
-    .nav-links.active {
-        display: flex;
-    }
-    .hamburger {
-        display: block;
-    }
+    .nav-links.active { display: flex; }
+    .hamburger { display: block; }
+    
     .board {
-        transform: scale(0.6); /* Scale down board for mobile */
+        transform: scale(0.65);
         transform-origin: top center;
+        margin-bottom: -150px; /* Adjust spacing caused by scaling */
     }
 }
