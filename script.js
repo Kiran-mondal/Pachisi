@@ -29,18 +29,34 @@ function renderProjects() {
 myProjectsBtn.addEventListener('click', (e) => { e.preventDefault(); renderProjects(); modal.classList.remove('hidden'); });
 closeModal.addEventListener('click', () => modal.classList.add('hidden'));
 
-// --- 2. Board Setup ---
+// --- 2. Board Setup with Numbers & Markers ---
 const arms = ['black-arm', 'yellow-arm', 'green-arm', 'red-arm'];
 const colors = ['black', 'yellow', 'green', 'red'];
 
 function createBoard() {
     arms.forEach(armId => {
         const container = document.getElementById(armId);
+        
         for (let i = 1; i <= 24; i++) {
             const sq = document.createElement('div');
             sq.classList.add('square');
             sq.dataset.id = `${armId}-sq-${i}`;
-            if (i >= 1 && i <= 7) sq.style.backgroundColor = 'rgba(212, 175, 55, 0.3)'; // Belly
+            
+            // Adding numbers and safe zone markers
+            const mark = document.createElement('span');
+            mark.style.fontSize = '10px';
+            mark.style.color = 'rgba(139, 0, 0, 0.6)';
+            mark.style.position = 'absolute';
+            mark.style.pointerEvents = 'none'; // so tokens remain clickable
+            
+            if (i >= 1 && i <= 7) {
+                sq.style.backgroundColor = 'rgba(212, 175, 55, 0.3)'; // Belly highlight
+                mark.innerText = i + ' 🏠';
+            } else {
+                mark.innerText = i;
+            }
+            
+            sq.appendChild(mark);
             container.appendChild(sq);
         }
     });
@@ -71,7 +87,7 @@ let currentPlayer = 'red';
 let currentDiceRoll = 0;
 let isComputerTurn = false;
 
-// Define player types (Green is Bot)
+// Define player types (Green is Bot, others are human)
 const players = {
     red: { type: 'human', displayColor: '#d32f2f' },
     green: { type: 'computer', displayColor: '#388e3c' }, 
@@ -140,9 +156,8 @@ function playComputerTurn() {
 function moveComputerToken() {
     const computerTokens = document.querySelectorAll(`.token-${currentPlayer}`);
     if (computerTokens.length > 0 && currentDiceRoll > 0) {
-        const tokenToMove = computerTokens[0]; // Simple bot logic: picks first available token
+        const tokenToMove = computerTokens[0]; 
         
-        // Visual simulation of token movement
         tokenToMove.style.transform = "translateY(-15px) scale(1.2)";
         setTimeout(() => {
             tokenToMove.style.transform = "translateY(0) scale(1)";
@@ -171,7 +186,6 @@ document.addEventListener('click', (e) => {
             return;
         }
 
-        // Visual simulation of token movement
         e.target.style.transform = "translateY(-15px) scale(1.2)";
         setTimeout(() => {
             e.target.style.transform = "translateY(0) scale(1)";
