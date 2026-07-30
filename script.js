@@ -20,10 +20,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (btn.parentElement.tagName === 'LI') {
                 btn.classList.add('active');
             } else if (targetId === 'game-tab') {
-                document.querySelector('.nav-links [data-target="game-tab"]').classList.add('active');
+                const gameLink = document.querySelector('.nav-links [data-target="game-tab"]');
+                if (gameLink) gameLink.classList.add('active');
             }
 
-            if (navLinksContainer.classList.contains('active')) {
+            if (navLinksContainer && navLinksContainer.classList.contains('active')) {
                 navLinksContainer.classList.remove('active');
             }
         });
@@ -51,11 +52,15 @@ document.addEventListener('DOMContentLoaded', () => {
         projectsContainer.innerHTML = ''; 
         myProjectsData.forEach(project => {
             const div = document.createElement('div');
-            div.classList.add('project-card');
+            div.style.background = 'white';
+            div.style.padding = '15px';
+            div.style.border = '1px solid #dcb360';
+            div.style.marginTop = '15px';
+            div.style.borderRadius = '5px';
             div.innerHTML = `
                 <h3 style="color: #8b0000; font-family: 'Cinzel', serif; margin-bottom:5px;">${project.title}</h3>
                 <p style="font-family: Arial, sans-serif;">${project.description}</p>
-                <a href="${project.link}" target="_blank" style="color: #d4af37; font-weight: bold; text-decoration: none; margin-top: 10px; display: inline-block;">View Project</a>
+                <a href="${project.link}" target="_blank" style="color: #dcb360; font-weight: bold; text-decoration: none; margin-top: 10px; display: inline-block;">View Project</a>
             `;
             projectsContainer.appendChild(div);
         });
@@ -66,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault(); 
             renderProjects(); 
             projectsModal.classList.remove('hidden'); 
-            if (navLinksContainer.classList.contains('active')) navLinksContainer.classList.remove('active');
+            if (navLinksContainer && navLinksContainer.classList.contains('active')) navLinksContainer.classList.remove('active');
         });
         closeModal.addEventListener('click', () => projectsModal.classList.add('hidden'));
     }
@@ -137,13 +142,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let isComputerTurn = false;
 
     const players = {
-        red: { type: 'human', displayColor: '#d32f2f', displayName: 'Your Turn' },
-        green: { type: 'computer', displayColor: '#388e3c', displayName: 'Player 2' }, 
-        yellow: { type: 'human', displayColor: '#fbc02d', displayName: 'Player 3' },
-        black: { type: 'human', displayColor: '#212121', displayName: 'Player 4' }
+        red: { type: 'human', displayColor: '#d32f2f', displayName: 'YOUR' },
+        green: { type: 'computer', displayColor: '#388e3c', displayName: 'PLAYER 2' }, 
+        yellow: { type: 'human', displayColor: '#fbc02d', displayName: 'PLAYER 3' },
+        black: { type: 'human', displayColor: '#212121', displayName: 'PLAYER 4' }
     };
 
     const turnIndicator = document.getElementById('turn-indicator');
+    const turnIndicatorMobile = document.getElementById('turn-indicator-mobile');
     const rollBtn = document.getElementById('roll-dice-btn');
     const resultText = document.getElementById('dice-result');
     const pasha1 = document.getElementById('pasha-1');
@@ -151,25 +157,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const validDiceFaces = [1, 3, 4, 6];
 
     function updateTurnUI() {
-        if (!turnIndicator) return;
-        turnIndicator.innerText = `${players[currentPlayer].displayName}'s Move`;
-        turnIndicator.style.color = players[currentPlayer].displayColor;
+        const turnText = `${players[currentPlayer].displayName}'S MOVE`;
+        
+        if (turnIndicator) {
+            turnIndicator.innerText = turnText;
+            turnIndicator.style.color = players[currentPlayer].displayColor;
+        }
+        if (turnIndicatorMobile) {
+            turnIndicatorMobile.innerText = turnText;
+            turnIndicatorMobile.style.color = players[currentPlayer].displayColor;
+        }
+        
         currentDiceRoll = 0; 
         
-        if (resultText) resultText.innerText = "Roll Pasha to move.";
+        if (resultText) resultText.innerHTML = "Roll Pasha<br>to move.";
 
         if (players[currentPlayer].type === 'computer') {
             isComputerTurn = true;
             if (rollBtn) {
                 rollBtn.disabled = true;
-                rollBtn.innerText = "Thinking...";
+                rollBtn.innerText = "THINKING...";
             }
             setTimeout(playComputerTurn, 1500); 
         } else {
             isComputerTurn = false;
             if (rollBtn) {
                 rollBtn.disabled = false;
-                rollBtn.innerText = "Roll Pasha";
+                rollBtn.innerText = "ROLL PASHA";
             }
         }
     }
@@ -229,9 +243,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (resultText) {
                 if (val1 === val2) {
-                    resultText.innerText = `Doublet! (${val1} & ${val2}). Move: ${currentDiceRoll}`;
+                    resultText.innerHTML = `Doublet: ${val1} & ${val2}<br>Move: ${currentDiceRoll}`;
                 } else {
-                    resultText.innerText = `Result: ${val1} & ${val2}. Move: ${currentDiceRoll}`;
+                    resultText.innerHTML = `Result: ${val1} & ${val2}<br>Move: ${currentDiceRoll}`;
                 }
             }
             
@@ -264,7 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 token.style.transform = "scale(1) translateY(0)";
                 token.style.zIndex = "10";
                 
-                if (resultText) resultText.innerText = "Move completed.";
+                if (resultText) resultText.innerHTML = "Move<br>completed.";
                 setTimeout(switchTurn, 600);
             }, 300); 
         }
@@ -311,9 +325,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const turnOrder = ['red', 'green', 'yellow', 'black'];
         const currentIndex = turnOrder.indexOf(currentPlayer);
         currentPlayer = turnOrder[(currentIndex + 1) % 4]; 
+        
+        // Remove active-turn class from all player cards
+        document.querySelectorAll('.player-card').forEach(card => {
+            card.classList.remove('active-turn');
+        });
+        
+        // Add active-turn class to current player
+        const activeTokenIcon = document.querySelector(`.token-${currentPlayer}`);
+        if (activeTokenIcon) {
+            const parentCard = activeTokenIcon.closest('.player-card');
+            if (parentCard) parentCard.classList.add('active-turn');
+        }
+
         updateTurnUI();
     }
 
     updateTurnUI();
 });
-            
