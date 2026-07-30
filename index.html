@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bharatiya Pasha</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Yatra+One&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
+    <!-- Premium Navigation Bar -->
     <header class="navbar">
         <div class="brand">
             <i class="fa-solid fa-dharmachakra logo-icon"></i>
@@ -20,14 +23,14 @@
         </div>
         
         <ul class="nav-links" id="nav-links">
-            <li><a href="#" class="nav-btn" data-target="home-tab">Home</a></li>
-            <li><a href="#" class="nav-btn active" data-target="game-tab">Play</a></li>
+            <li><a href="#" class="nav-btn active" data-target="home-tab">Home</a></li>
+            <li><a href="#" class="nav-btn" data-target="game-tab">Play</a></li>
             <li><a href="#" class="nav-btn" data-target="rules-tab">Rules</a></li>
             <li><a href="#" class="nav-btn" data-target="heritage-tab">Heritage</a></li>
             <li><a href="#" id="my-projects-btn">My Projects</a></li>
         </ul>
         
-        <button class="login-btn">Login/Register</button>
+        <button class="login-btn" onclick="if(confirm('গেম রিস্টার্ট করতে চান?')){localStorage.removeItem('pachisi_save'); location.reload();}">Restart Game</button>
         
         <div class="hamburger" id="hamburger">
             <span class="bar"></span>
@@ -38,52 +41,56 @@
 
     <main class="main-content">
         
-        <section id="home-tab" class="tab-section">
+        <!-- 1. HOME TAB -->
+        <section id="home-tab" class="tab-section active">
             <div class="hero">
                 <div class="hero-overlay">
                     <div class="hero-content">
                         <h2>The World of Traditional<br>Indian Pasha</h2>
                         <p>Play online and experience the<br>glorious culture and heritage of India.</p>
-                        <button class="play-now-btn nav-btn" data-target="game-tab">Play Now</button>
+                        <button class="play-now-btn nav-btn" data-target="game-tab">Play / Resume Game</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="game-tab" class="tab-section active">
+        <!-- 2. GAME TAB (New Space-Saving Layout) -->
+        <section id="game-tab" class="tab-section">
             <div class="hero game-bg">
                 <div class="game-ui-wrapper">
                     
-                    <div class="side-panel left-panel">
-                        <div class="top-players-row">
-                            <div class="player-card active-turn">
-                                <div class="player-info">
-                                    <h4>YOUR TURN</h4>
-                                    <div class="avatar-box"><i class="fa-solid fa-user"></i></div>
-                                </div>
-                                <div class="token-icon token-red"></div>
-                            </div>
-                            
-                            <div class="turn-status-box mobile-hide">
-                                <h3 id="turn-indicator" class="turn-text">YOUR TURN'S MOVE</h3>
-                            </div>
-
-                            <div class="player-card">
-                                <div class="player-info">
-                                    <h4>PLAYER 3</h4>
-                                    <div class="avatar-box"><i class="fa-solid fa-user"></i></div>
-                                </div>
-                                <div class="token-icon token-yellow"></div>
-                            </div>
-                        </div>
-                        <div class="turn-status-box desktop-hide">
-                            <h3 id="turn-indicator-mobile" class="turn-text">YOUR TURN'S MOVE</h3>
-                        </div>
+                    <div class="turn-status-box">
+                        <h3 id="turn-indicator" class="turn-text">YOUR TURN'S MOVE</h3>
                     </div>
 
+                    <!-- CENTER PANEL (Board with Corner Players) -->
                     <div class="center-panel">
                         <div class="board-ornate-border">
                             <div class="board">
+                                
+                                <!-- Players in the 4 Corners -->
+                                <div class="corner-player corner-tl" id="player-card-red">
+                                    <h4>YOUR TURN</h4>
+                                    <div class="avatar-box"><i class="fa-solid fa-user"></i></div>
+                                    <div class="token-icon token-red"></div>
+                                </div>
+                                <div class="corner-player corner-tr" id="player-card-green">
+                                    <h4>PLAYER 2</h4>
+                                    <div class="avatar-box"><i class="fa-solid fa-user"></i></div>
+                                    <div class="token-icon token-green"></div>
+                                </div>
+                                <div class="corner-player corner-bl" id="player-card-yellow">
+                                    <h4>PLAYER 3</h4>
+                                    <div class="avatar-box"><i class="fa-solid fa-user"></i></div>
+                                    <div class="token-icon token-yellow"></div>
+                                </div>
+                                <div class="corner-player corner-br" id="player-card-black">
+                                    <h4>PLAYER 4</h4>
+                                    <div class="avatar-box"><i class="fa-solid fa-user"></i></div>
+                                    <div class="token-icon token-black"></div>
+                                </div>
+
+                                <!-- Arms and Center -->
                                 <div class="arm vertical-arm top-arm" id="black-arm"></div>
                                 <div class="arm horizontal-arm left-arm" id="yellow-arm"></div>
                                 <div class="center-home"><span>HOME</span></div>
@@ -93,15 +100,8 @@
                         </div>
                     </div>
 
-                    <div class="side-panel right-panel">
-                        <div class="player-card">
-                            <div class="player-info">
-                                <h4>PLAYER 2</h4>
-                                <div class="avatar-box"><i class="fa-solid fa-user"></i></div>
-                            </div>
-                            <div class="token-icon token-green"></div>
-                        </div>
-
+                    <!-- BOTTOM PANEL (Dice Area & Chat) -->
+                    <div class="bottom-panel">
                         <div class="dice-panel">
                             <div class="bowl oval-bowl">
                                 <div class="pasha" id="pasha-1"><div class="dot-container" id="dot-container-1"></div></div>
@@ -114,31 +114,13 @@
                                 <p id="dice-result">Roll Pasha<br>to move.</p>
                             </div>
                         </div>
-
-                        <div class="player-card">
-                            <div class="player-info">
-                                <h4>PLAYER 4</h4>
-                                <div class="avatar-box"><i class="fa-solid fa-user"></i></div>
-                            </div>
-                            <div class="token-icon token-black"></div>
-                        </div>
-
-                        <div class="chat-box">
-                            <div class="chat-header">Chat <i class="fa-solid fa-comment"></i></div>
-                            <div class="chat-messages">
-                                <p><strong>Player 2:</strong> Good luck!</p>
-                            </div>
-                            <div class="chat-input-area">
-                                <input type="text" placeholder="Chat here...">
-                                <button><i class="fa-solid fa-paper-plane"></i></button>
-                            </div>
-                        </div>
-
                     </div>
+
                 </div>
             </div>
         </section>
 
+        <!-- 3. RULES TAB -->
         <section id="rules-tab" class="tab-section">
             <div class="page-content">
                 <div class="content-box">
@@ -148,13 +130,13 @@
                         <li><strong>Tokens:</strong> The game involves 4 sets of 4 counters.</li>
                         <li><strong>Pasha (Dice):</strong> Played with a pair of stick dice. A doublet allows moving a pair of counters together, or as individual counters.</li>
                         <li><strong>Safe Zones:</strong> Squares 1 to 7 are called the 'Belly'. A counter cannot go into the bellies of other counters.</li>
-                        <li><strong>Capturing:</strong> A counter is captured when a player's counter lands on the other player's counter in the same square.</li>
                         <li><strong>Winning:</strong> The first player to get all his 4 counters home is the winner.</li>
                     </ul>
                 </div>
             </div>
         </section>
 
+        <!-- 4. HERITAGE TAB -->
         <section id="heritage-tab" class="tab-section">
             <div class="page-content">
                 <div class="content-box">
@@ -166,6 +148,7 @@
 
     </main>
 
+    <!-- My Projects Modal -->
     <div id="projects-modal" class="modal hidden">
         <div class="modal-content">
             <span class="close-btn" id="close-modal">&times;</span>
