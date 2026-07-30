@@ -1,25 +1,41 @@
-// Wait for the entire HTML document to load before running JavaScript
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- 1. Menu & Modals Logic ---
+    // --- 1. Multi-Page / Tab Navigation Logic ---
+    const navButtons = document.querySelectorAll('.nav-btn');
+    const tabSections = document.querySelectorAll('.tab-section');
+    const navLinksContainer = document.getElementById('nav-links');
     const hamburger = document.getElementById('hamburger');
-    const navLinks = document.getElementById('nav-links');
-    if (hamburger && navLinks) {
-        hamburger.addEventListener('click', () => navLinks.classList.toggle('active'));
-    }
 
-    const rulesBtn = document.getElementById('rules-btn');
-    const rulesModal = document.getElementById('rules-modal');
-    const closeRules = document.getElementById('close-rules');
-
-    if (rulesBtn && rulesModal && closeRules) {
-        rulesBtn.addEventListener('click', (e) => {
+    navButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
             e.preventDefault();
-            rulesModal.classList.remove('hidden');
+            const targetId = btn.getAttribute('data-target');
+            
+            tabSections.forEach(section => section.classList.remove('active'));
+            document.querySelectorAll('.nav-links .nav-btn').forEach(nav => nav.classList.remove('active'));
+            
+            const targetSection = document.getElementById(targetId);
+            if (targetSection) targetSection.classList.add('active');
+            
+            if (btn.parentElement.tagName === 'LI') {
+                btn.classList.add('active');
+            } else if (targetId === 'game-tab') {
+                document.querySelector('.nav-links [data-target="game-tab"]').classList.add('active');
+            }
+
+            if (navLinksContainer.classList.contains('active')) {
+                navLinksContainer.classList.remove('active');
+            }
         });
-        closeRules.addEventListener('click', () => rulesModal.classList.add('hidden'));
+    });
+
+    if (hamburger && navLinksContainer) {
+        hamburger.addEventListener('click', () => {
+            navLinksContainer.classList.toggle('active');
+        });
     }
 
+    // --- 2. My Projects Modal Logic ---
     const myProjectsBtn = document.getElementById('my-projects-btn');
     const projectsModal = document.getElementById('projects-modal');
     const closeModal = document.getElementById('close-modal');
@@ -37,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const div = document.createElement('div');
             div.classList.add('project-card');
             div.innerHTML = `
-                <h3 style="color: #8b0000; font-family: 'Cinzel', serif;">${project.title}</h3>
+                <h3 style="color: #8b0000; font-family: 'Cinzel', serif; margin-bottom:5px;">${project.title}</h3>
                 <p style="font-family: Arial, sans-serif;">${project.description}</p>
                 <a href="${project.link}" target="_blank" style="color: #d4af37; font-weight: bold; text-decoration: none; margin-top: 10px; display: inline-block;">View Project</a>
             `;
@@ -50,18 +66,19 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault(); 
             renderProjects(); 
             projectsModal.classList.remove('hidden'); 
+            if (navLinksContainer.classList.contains('active')) navLinksContainer.classList.remove('active');
         });
         closeModal.addEventListener('click', () => projectsModal.classList.add('hidden'));
     }
 
-    // --- 2. Board Setup with Numbers & Markers ---
+    // --- 3. Board Setup with Numbers & Markers ---
     const arms = ['black-arm', 'yellow-arm', 'green-arm', 'red-arm'];
     const colors = ['black', 'yellow', 'green', 'red'];
 
     function createBoard() {
         arms.forEach(armId => {
             const container = document.getElementById(armId);
-            if (!container) return; // Safety check
+            if (!container) return; 
             
             for (let i = 1; i <= 24; i++) {
                 const sq = document.createElement('div');
@@ -69,14 +86,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 sq.dataset.id = `${armId}-sq-${i}`;
                 
                 const mark = document.createElement('span');
-                mark.style.fontSize = '10px';
-                mark.style.color = 'rgba(139, 0, 0, 0.6)';
+                mark.style.fontSize = '8px';
+                mark.style.color = 'rgba(139, 0, 0, 0.4)';
                 mark.style.position = 'absolute';
                 mark.style.pointerEvents = 'none'; 
                 
                 if (i >= 1 && i <= 7) {
                     sq.style.backgroundColor = 'rgba(212, 175, 55, 0.3)';
-                    mark.innerText = i + ' 🏠';
                 } else {
                     mark.innerText = i;
                 }
@@ -112,20 +128,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Initialize Board
     createBoard();
     placeInitialTokens();
 
-    // --- 3. Game Logic (Turns & Bot) ---
+    // --- 4. Game Logic (Turns & Bot) ---
     let currentPlayer = 'red'; 
     let currentDiceRoll = 0;
     let isComputerTurn = false;
 
     const players = {
-        red: { type: 'human', displayColor: '#d32f2f' },
-        green: { type: 'computer', displayColor: '#388e3c' }, 
-        yellow: { type: 'human', displayColor: '#fbc02d' },
-        black: { type: 'human', displayColor: '#212121' }
+        red: { type: 'human', displayColor: '#d32f2f', displayName: 'Your Turn' },
+        green: { type: 'computer', displayColor: '#388e3c', displayName: 'Player 2' }, 
+        yellow: { type: 'human', displayColor: '#fbc02d', displayName: 'Player 3' },
+        black: { type: 'human', displayColor: '#212121', displayName: 'Player 4' }
     };
 
     const turnIndicator = document.getElementById('turn-indicator');
@@ -137,29 +152,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateTurnUI() {
         if (!turnIndicator) return;
-        turnIndicator.innerText = `Current Turn: ${currentPlayer.toUpperCase()}`;
+        turnIndicator.innerText = `${players[currentPlayer].displayName}'s Move`;
         turnIndicator.style.color = players[currentPlayer].displayColor;
         currentDiceRoll = 0; 
         
-        if (resultText) resultText.innerText = "Roll the Pasha to move.";
+        if (resultText) resultText.innerText = "Roll Pasha to move.";
 
         if (players[currentPlayer].type === 'computer') {
             isComputerTurn = true;
             if (rollBtn) {
                 rollBtn.disabled = true;
-                rollBtn.innerText = "Computer is playing...";
+                rollBtn.innerText = "Thinking...";
             }
             setTimeout(playComputerTurn, 1500); 
         } else {
             isComputerTurn = false;
             if (rollBtn) {
                 rollBtn.disabled = false;
-                rollBtn.innerText = "Roll the Pasha";
+                rollBtn.innerText = "Roll Pasha";
             }
         }
     }
 
-    // --- 4. 4-Sided Stick Dice Animation ---
+    // --- 5. 4-Sided Stick Dice Animation ---
     function drawDots(containerId, number) {
         const container = document.getElementById(containerId);
         if (!container) return;
@@ -228,13 +243,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000); 
     }
 
-    // --- 5. Token Real Movement Logic ---
+    // --- 6. Token Real Movement Logic ---
     function performMove(token) {
         let currentPos = parseInt(token.dataset.pos);
         let armId = token.dataset.arm;
         
         let targetPos = currentPos + currentDiceRoll;
-        if (targetPos > 24) targetPos = 24; // Temporary boundary check
+        if (targetPos > 24) targetPos = 24; 
         
         let targetSquare = document.querySelector(`[data-id="${armId}-sq-${targetPos}"]`);
         
@@ -281,14 +296,13 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (isComputerTurn) return; 
             if (tokenColor !== currentPlayer) {
-                alert(`It's ${currentPlayer.toUpperCase()}'s turn! You cannot move this token.`);
+                alert(`It's ${players[currentPlayer].displayName}'s turn!`);
                 return;
             }
             if (currentDiceRoll === 0) {
                 alert("Please roll the Pasha first!");
                 return;
             }
-
             performMove(token); 
         }
     });
@@ -300,7 +314,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTurnUI();
     }
 
-    // Start Game Process
     updateTurnUI();
-
-}); // End DOMContentLoaded
+});
+            
