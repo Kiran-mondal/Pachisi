@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- 1. Default to Home Tab on Refresh ---
+    // --- 1. Tab Navigation ---
     const tabSections = document.querySelectorAll('.tab-section');
     const navButtons = document.querySelectorAll('.nav-btn');
     const navLinksContainer = document.getElementById('nav-links');
@@ -21,8 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Force home tab on page load
-    activateTab('home-tab');
+    activateTab('home-tab'); // Start fresh on home
 
     navButtons.forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -37,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 2. Modal Logic ---
+    // --- 2. My Projects Modal ---
     const myProjectsBtn = document.getElementById('my-projects-btn');
     const projectsModal = document.getElementById('projects-modal');
     const closeModal = document.getElementById('close-modal');
@@ -51,41 +50,55 @@ document.addEventListener('DOMContentLoaded', () => {
         closeModal.addEventListener('click', () => projectsModal.classList.add('hidden'));
     }
 
-    // --- 3. Board & Game State Setup ---
+    // --- 3. GAME SETUP & INITIALIZATION ---
     const arms = ['black-arm', 'yellow-arm', 'green-arm', 'red-arm'];
     let currentPlayer = 'red'; 
     let currentDiceRoll = 0;
     let isComputerTurn = false;
-
+    let turnOrder = [];
+    
+    // Core player data
     const players = {
-        red: { type: 'human', displayColor: '#d32f2f', displayName: 'YOUR', id: 'player-card-red' },
-        green: { type: 'computer', displayColor: '#388e3c', displayName: 'PLAYER 2', id: 'player-card-green' }, 
-        yellow: { type: 'human', displayColor: '#fbc02d', displayName: 'PLAYER 3', id: 'player-card-yellow' },
-        black: { type: 'human', displayColor: '#212121', displayName: 'PLAYER 4', id: 'player-card-black' }
+        red: { type: 'human', displayColor: '#d32f2f', displayName: 'RED', id: 'player-card-red' },
+        green: { type: 'computer', displayColor: '#388e3c', displayName: 'GREEN', id: 'player-card-green' }, 
+        black: { type: 'computer', displayColor: '#212121', displayName: 'BLACK', id: 'player-card-black' },
+        yellow: { type: 'computer', displayColor: '#fbc02d', displayName: 'YELLOW', id: 'player-card-yellow' }
     };
+
+    // Setup Screen Elements
+    const modeSelect = document.getElementById('mode-select');
+    const configGreen = document.getElementById('config-green');
+    const configYellow = document.getElementById('config-yellow');
+    const startGameBtn = document.getElementById('start-game-btn');
+    const setupScreen = document.getElementById('game-setup-screen');
+    const actualGameScreen = document.getElementById('actual-game-screen');
+
+    // Toggle 2-Player / 4-Player config visibility
+    if (modeSelect) {
+        modeSelect.addEventListener('change', (e) => {
+            if (e.target.value === '2') {
+                configGreen.style.display = 'none';
+                configYellow.style.display = 'none';
+            } else {
+                configGreen.style.display = 'flex';
+                configYellow.style.display = 'flex';
+            }
+        });
+    }
 
     function createBoard() {
         arms.forEach(armId => {
             const container = document.getElementById(armId);
             if (!container) return; 
+            container.innerHTML = ''; // Clear if rebuilding
             for (let i = 1; i <= 24; i++) {
                 const sq = document.createElement('div');
                 sq.classList.add('square');
                 sq.dataset.id = `${armId}-sq-${i}`;
                 
-                const mark = document.createElement('span');
-                mark.style.fontSize = '8px';
-                mark.style.color = 'rgba(139, 0, 0, 0.4)';
-                mark.style.position = 'absolute';
-                mark.style.pointerEvents = 'none'; 
-                
                 if (i >= 1 && i <= 7) {
                     sq.style.backgroundColor = 'rgba(212, 175, 55, 0.3)';
-                } else {
-                    mark.innerText = i;
                 }
-                
-                sq.appendChild(mark);
                 container.appendChild(sq);
             }
         });
@@ -100,28 +113,65 @@ document.addEventListener('DOMContentLoaded', () => {
         return t;
     }
 
-    // Fresh Start Every Time
-    function placeInitialTokens() {
-        const colors = ['black', 'yellow', 'green', 'red'];
-        colors.forEach((color, index) => {
-            const armId = arms[index];
+    // Start Game Button Logic
+    if (startGameBtn) {
+        startGameBtn.addEventListener('click', () => {
+            const is2Player = modeSelect.value === '2';
             
-            const sq6 = document.querySelector(`[data-id="${armId}-sq-6"]`);
-            if(sq6) sq6.appendChild(createTokenElem(color, armId, 6));
+            // Read types from dropdowns
+            players.red.type = document.getElementById('type-red').value;
+            players.black.type = document.getElementById('type-black').value;
             
-            const sq7 = document.querySelector(`[data-id="${armId}-sq-7"]`);
-            if(sq7) sq7.appendChild(createTokenElem(color, armId, 7));
-            
-            const sq12 = document.querySelector(`[data-id="${armId}-sq-12"]`);
-            if(sq12) { 
-                sq12.appendChild(createTokenElem(color, armId, 12)); 
-                sq12.appendChild(createTokenElem(color, armId, 12)); 
+            if (is2Player) {
+                turnOrder = ['red', 'black'];
+                document.getElementById('player-card-green').style.visibility = 'hidden';
+                document.getElementById('player-card-yellow').style.visibility = 'hidden';
+            } else {
+                players.green.type = document.getElementById('type-green').value;
+                players.yellow.type = document.getElementById('type-yellow').value;
+                // Anti-clockwise turn order logic
+                turnOrder = ['red', 'green', 'black', 'yellow']; 
+                document.getElementById('player-card-green').style.visibility = 'visible';
+                document.getElementById('player-card-yellow').style.visibility = 'visible';
             }
+
+            // Update names on cards based on type
+            turnOrder.forEach(color => {
+                const nameElem = document.getElementById(`name-${color}`);
+                if (nameElem) {
+                    nameElem.innerText = players[color].type === 'human' ? `P-${color.toUpperCase()}` : `BOT-${color.toUpperCase()}`;
+                }
+            });
+
+            createBoard();
+            
+            // Place initial tokens ONLY for active players
+            turnOrder.forEach((color) => {
+                // Map color to its starting arm
+                const armId = color + '-arm'; 
+                
+                const sq6 = document.querySelector(`[data-id="${armId}-sq-6"]`);
+                if(sq6) sq6.appendChild(createTokenElem(color, armId, 6));
+                
+                const sq7 = document.querySelector(`[data-id="${armId}-sq-7"]`);
+                if(sq7) sq7.appendChild(createTokenElem(color, armId, 7));
+                
+                const sq12 = document.querySelector(`[data-id="${armId}-sq-12"]`);
+                if(sq12) { 
+                    sq12.appendChild(createTokenElem(color, armId, 12)); 
+                    sq12.appendChild(createTokenElem(color, armId, 12)); 
+                }
+            });
+
+            currentPlayer = turnOrder[0];
+            
+            // Hide setup, show game
+            setupScreen.style.display = 'none';
+            actualGameScreen.style.display = 'flex';
+            
+            updateTurnUI();
         });
     }
-    
-    createBoard();
-    placeInitialTokens();
 
     // --- 4. Game Turn & Dice Logic ---
     const turnIndicator = document.getElementById('turn-indicator');
@@ -132,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const validDiceFaces = [1, 3, 4, 6];
 
     function updateTurnUI() {
-        const turnText = `${players[currentPlayer].displayName}'S MOVE`;
+        const turnText = `${players[currentPlayer].displayName}'S TURN`;
         if (turnIndicator) {
             turnIndicator.innerText = turnText;
             turnIndicator.style.color = players[currentPlayer].displayColor;
@@ -141,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentDiceRoll = 0; 
         if (resultText) resultText.innerHTML = "Roll Pasha<br>to move.";
 
-        // Highlight corner player
+        // Highlight active corner player
         document.querySelectorAll('.corner-player').forEach(card => card.classList.remove('active-turn'));
         const activeCard = document.getElementById(players[currentPlayer].id);
         if(activeCard) activeCard.classList.add('active-turn');
@@ -294,12 +344,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function switchTurn() {
-        const turnOrder = ['red', 'green', 'yellow', 'black'];
         const currentIndex = turnOrder.indexOf(currentPlayer);
-        currentPlayer = turnOrder[(currentIndex + 1) % 4]; 
-        
+        currentPlayer = turnOrder[(currentIndex + 1) % turnOrder.length]; 
         updateTurnUI();
     }
 
-    updateTurnUI();
 });
