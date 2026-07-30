@@ -5,14 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bharatiya Pasha</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Yatra+One&display=swap" rel="stylesheet">
-    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
-    <!-- Premium Navigation Bar -->
     <header class="navbar">
         <div class="brand">
             <i class="fa-solid fa-dharmachakra logo-icon"></i>
@@ -30,7 +27,7 @@
             <li><a href="#" id="my-projects-btn">My Projects</a></li>
         </ul>
         
-        <button class="login-btn" onclick="if(confirm('গেম রিস্টার্ট করতে চান?')){localStorage.removeItem('pachisi_save'); location.reload();}">Restart Game</button>
+        <button class="login-btn">Login/Register</button>
         
         <div class="hamburger" id="hamburger">
             <span class="bar"></span>
@@ -41,20 +38,18 @@
 
     <main class="main-content">
         
-        <!-- 1. HOME TAB -->
         <section id="home-tab" class="tab-section active">
             <div class="hero">
                 <div class="hero-overlay">
                     <div class="hero-content">
                         <h2>The World of Traditional<br>Indian Pasha</h2>
                         <p>Play online and experience the<br>glorious culture and heritage of India.</p>
-                        <button class="play-now-btn nav-btn" data-target="game-tab">Play / Resume Game</button>
+                        <button class="play-now-btn nav-btn" data-target="game-tab">Play Now</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 2. GAME TAB (New Space-Saving Layout) -->
         <section id="game-tab" class="tab-section">
             <div class="hero game-bg">
                 <div class="game-ui-wrapper">
@@ -63,12 +58,10 @@
                         <h3 id="turn-indicator" class="turn-text">YOUR TURN'S MOVE</h3>
                     </div>
 
-                    <!-- CENTER PANEL (Board with Corner Players) -->
                     <div class="center-panel">
                         <div class="board-ornate-border">
                             <div class="board">
                                 
-                                <!-- Players in the 4 Corners -->
                                 <div class="corner-player corner-tl" id="player-card-red">
                                     <h4>YOUR TURN</h4>
                                     <div class="avatar-box"><i class="fa-solid fa-user"></i></div>
@@ -90,7 +83,6 @@
                                     <div class="token-icon token-black"></div>
                                 </div>
 
-                                <!-- Arms and Center -->
                                 <div class="arm vertical-arm top-arm" id="black-arm"></div>
                                 <div class="arm horizontal-arm left-arm" id="yellow-arm"></div>
                                 <div class="center-home"><span>HOME</span></div>
@@ -100,7 +92,6 @@
                         </div>
                     </div>
 
-                    <!-- BOTTOM PANEL (Dice Area & Chat) -->
                     <div class="bottom-panel">
                         <div class="dice-panel">
                             <div class="bowl oval-bowl">
@@ -120,7 +111,6 @@
             </div>
         </section>
 
-        <!-- 3. RULES TAB -->
         <section id="rules-tab" class="tab-section">
             <div class="page-content">
                 <div class="content-box">
@@ -136,7 +126,6 @@
             </div>
         </section>
 
-        <!-- 4. HERITAGE TAB -->
         <section id="heritage-tab" class="tab-section">
             <div class="page-content">
                 <div class="content-box">
@@ -148,7 +137,6 @@
 
     </main>
 
-    <!-- My Projects Modal -->
     <div id="projects-modal" class="modal hidden">
         <div class="modal-content">
             <span class="close-btn" id="close-modal">&times;</span>
