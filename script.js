@@ -1,36 +1,33 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- 1. Multi-Page / Tab Navigation Logic ---
-    const navButtons = document.querySelectorAll('.nav-btn');
+    // --- 1. Default to Home Tab on Refresh ---
     const tabSections = document.querySelectorAll('.tab-section');
+    const navButtons = document.querySelectorAll('.nav-btn');
     const navLinksContainer = document.getElementById('nav-links');
     const hamburger = document.getElementById('hamburger');
+
+    function activateTab(targetId) {
+        tabSections.forEach(section => section.classList.remove('active'));
+        document.querySelectorAll('.nav-links .nav-btn').forEach(nav => nav.classList.remove('active'));
+        
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) targetSection.classList.add('active');
+        
+        const targetNav = document.querySelector(`.nav-links [data-target="${targetId}"]`);
+        if (targetNav) targetNav.classList.add('active');
+
+        if (navLinksContainer && navLinksContainer.classList.contains('active')) {
+            navLinksContainer.classList.remove('active');
+        }
+    }
+
+    // Force home tab on page load
+    activateTab('home-tab');
 
     navButtons.forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
-            const targetId = btn.getAttribute('data-target');
-            
-            // Remove active from all tabs
-            tabSections.forEach(section => section.classList.remove('active'));
-            document.querySelectorAll('.nav-links .nav-btn').forEach(nav => nav.classList.remove('active'));
-            
-            // Add active to the requested tab
-            const targetSection = document.getElementById(targetId);
-            if (targetSection) targetSection.classList.add('active');
-            
-            // Add active to the clicked link in the navbar
-            if (btn.parentElement.tagName === 'LI') {
-                btn.classList.add('active');
-            } else if (targetId === 'game-tab') {
-                const gameLink = document.querySelector('.nav-links [data-target="game-tab"]');
-                if (gameLink) gameLink.classList.add('active');
-            }
-
-            // Close mobile menu if open
-            if (navLinksContainer && navLinksContainer.classList.contains('active')) {
-                navLinksContainer.classList.remove('active');
-            }
+            activateTab(btn.getAttribute('data-target'));
         });
     });
 
@@ -40,55 +37,37 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 2. My Projects Modal Logic ---
+    // --- 2. Modal Logic ---
     const myProjectsBtn = document.getElementById('my-projects-btn');
     const projectsModal = document.getElementById('projects-modal');
     const closeModal = document.getElementById('close-modal');
-    const projectsContainer = document.getElementById('projects-container');
-
-    const myProjectsData = [
-        { title: "E-commerce Platform", description: "Modern shopping platform.", link: "#" },
-        { title: "Real-time Chat App", description: "Socket.io real-time chat.", link: "#" }
-    ];
-
-    function renderProjects() {
-        if (!projectsContainer) return;
-        projectsContainer.innerHTML = ''; 
-        myProjectsData.forEach(project => {
-            const div = document.createElement('div');
-            div.style.background = 'white';
-            div.style.padding = '15px';
-            div.style.border = '1px solid #dcb360';
-            div.style.marginTop = '15px';
-            div.style.borderRadius = '5px';
-            div.innerHTML = `
-                <h3 style="color: #8b0000; font-family: 'Cinzel', serif; margin-bottom:5px;">${project.title}</h3>
-                <p style="font-family: Arial, sans-serif;">${project.description}</p>
-                <a href="${project.link}" target="_blank" style="color: #dcb360; font-weight: bold; text-decoration: none; margin-top: 10px; display: inline-block;">View Project</a>
-            `;
-            projectsContainer.appendChild(div);
-        });
-    }
 
     if (myProjectsBtn && projectsModal && closeModal) {
         myProjectsBtn.addEventListener('click', (e) => { 
             e.preventDefault(); 
-            renderProjects(); 
             projectsModal.classList.remove('hidden'); 
             if (navLinksContainer && navLinksContainer.classList.contains('active')) navLinksContainer.classList.remove('active');
         });
         closeModal.addEventListener('click', () => projectsModal.classList.add('hidden'));
     }
 
-    // --- 3. Board Setup with Numbers & Markers ---
+    // --- 3. Board & Game State Setup ---
     const arms = ['black-arm', 'yellow-arm', 'green-arm', 'red-arm'];
-    const colors = ['black', 'yellow', 'green', 'red'];
+    let currentPlayer = 'red'; 
+    let currentDiceRoll = 0;
+    let isComputerTurn = false;
+
+    const players = {
+        red: { type: 'human', displayColor: '#d32f2f', displayName: 'YOUR', id: 'player-card-red' },
+        green: { type: 'computer', displayColor: '#388e3c', displayName: 'PLAYER 2', id: 'player-card-green' }, 
+        yellow: { type: 'human', displayColor: '#fbc02d', displayName: 'PLAYER 3', id: 'player-card-yellow' },
+        black: { type: 'human', displayColor: '#212121', displayName: 'PLAYER 4', id: 'player-card-black' }
+    };
 
     function createBoard() {
         arms.forEach(armId => {
             const container = document.getElementById(armId);
             if (!container) return; 
-            
             for (let i = 1; i <= 24; i++) {
                 const sq = document.createElement('div');
                 sq.classList.add('square');
@@ -112,48 +91,64 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function placeInitialTokens() {
-        colors.forEach((color, index) => {
-            const armId = arms[index];
-            const createToken = (pos) => {
-                const t = document.createElement('div');
-                t.classList.add('token', `token-${color}`);
-                t.dataset.color = color;
-                t.dataset.arm = armId;
-                t.dataset.pos = pos; 
-                return t;
-            };
-            const sq6 = document.querySelector(`[data-id="${armId}-sq-6"]`);
-            if(sq6) sq6.appendChild(createToken(6));
-            
-            const sq7 = document.querySelector(`[data-id="${armId}-sq-7"]`);
-            if(sq7) sq7.appendChild(createToken(7));
-            
-            const sq12 = document.querySelector(`[data-id="${armId}-sq-12"]`);
-            if(sq12) { 
-                sq12.appendChild(createToken(12)); 
-                sq12.appendChild(createToken(12)); 
-            }
+    // Save Game State to LocalStorage
+    function saveGameState() {
+        const tokensData = [];
+        document.querySelectorAll('.token').forEach(t => {
+            tokensData.push({ color: t.dataset.color, arm: t.dataset.arm, pos: t.dataset.pos });
         });
+        const state = { currentPlayer: currentPlayer, tokens: tokensData };
+        localStorage.setItem('pachisi_save', JSON.stringify(state));
+    }
+
+    function createTokenElem(color, armId, pos) {
+        const t = document.createElement('div');
+        t.classList.add('token', `token-${color}`);
+        t.dataset.color = color;
+        t.dataset.arm = armId;
+        t.dataset.pos = pos; 
+        return t;
+    }
+
+    // Load Game State or Set Default Initial Positions
+    function loadInitialOrSavedTokens() {
+        const savedData = localStorage.getItem('pachisi_save');
+        
+        if (savedData) {
+            // Resume saved game
+            const state = JSON.parse(savedData);
+            currentPlayer = state.currentPlayer;
+            
+            state.tokens.forEach(t => {
+                const sq = document.querySelector(`[data-id="${t.arm}-sq-${t.pos}"]`);
+                if(sq) sq.appendChild(createTokenElem(t.color, t.arm, t.pos));
+            });
+        } else {
+            // New Game default positions
+            const colors = ['black', 'yellow', 'green', 'red'];
+            colors.forEach((color, index) => {
+                const armId = arms[index];
+                
+                const sq6 = document.querySelector(`[data-id="${armId}-sq-6"]`);
+                if(sq6) sq6.appendChild(createTokenElem(color, armId, 6));
+                
+                const sq7 = document.querySelector(`[data-id="${armId}-sq-7"]`);
+                if(sq7) sq7.appendChild(createTokenElem(color, armId, 7));
+                
+                const sq12 = document.querySelector(`[data-id="${armId}-sq-12"]`);
+                if(sq12) { 
+                    sq12.appendChild(createTokenElem(color, armId, 12)); 
+                    sq12.appendChild(createTokenElem(color, armId, 12)); 
+                }
+            });
+        }
     }
     
     createBoard();
-    placeInitialTokens();
+    loadInitialOrSavedTokens();
 
-    // --- 4. Game Logic (Turns & Bot) ---
-    let currentPlayer = 'red'; 
-    let currentDiceRoll = 0;
-    let isComputerTurn = false;
-
-    const players = {
-        red: { type: 'human', displayColor: '#d32f2f', displayName: 'YOUR' },
-        green: { type: 'computer', displayColor: '#388e3c', displayName: 'PLAYER 2' }, 
-        yellow: { type: 'human', displayColor: '#fbc02d', displayName: 'PLAYER 3' },
-        black: { type: 'human', displayColor: '#212121', displayName: 'PLAYER 4' }
-    };
-
+    // --- 4. Game Turn & Dice Logic ---
     const turnIndicator = document.getElementById('turn-indicator');
-    const turnIndicatorMobile = document.getElementById('turn-indicator-mobile');
     const rollBtn = document.getElementById('roll-dice-btn');
     const resultText = document.getElementById('dice-result');
     const pasha1 = document.getElementById('pasha-1');
@@ -162,19 +157,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateTurnUI() {
         const turnText = `${players[currentPlayer].displayName}'S MOVE`;
-        
         if (turnIndicator) {
             turnIndicator.innerText = turnText;
             turnIndicator.style.color = players[currentPlayer].displayColor;
         }
-        if (turnIndicatorMobile) {
-            turnIndicatorMobile.innerText = turnText;
-            turnIndicatorMobile.style.color = players[currentPlayer].displayColor;
-        }
         
         currentDiceRoll = 0; 
-        
         if (resultText) resultText.innerHTML = "Roll Pasha<br>to move.";
+
+        // Highlight corner player
+        document.querySelectorAll('.corner-player').forEach(card => card.classList.remove('active-turn'));
+        const activeCard = document.getElementById(players[currentPlayer].id);
+        if(activeCard) activeCard.classList.add('active-turn');
 
         if (players[currentPlayer].type === 'computer') {
             isComputerTurn = true;
@@ -182,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 rollBtn.disabled = true;
                 rollBtn.innerText = "THINKING...";
             }
-            setTimeout(playComputerTurn, 1500); 
+            setTimeout(playComputerTurn, 1000); 
         } else {
             isComputerTurn = false;
             if (rollBtn) {
@@ -192,7 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- 5. 4-Sided Stick Dice Animation ---
     function drawDots(containerId, number) {
         const container = document.getElementById(containerId);
         if (!container) return;
@@ -203,7 +196,6 @@ document.addEventListener('DOMContentLoaded', () => {
             container.appendChild(dot);
         }
     }
-
     drawDots('dot-container-1', 1);
     drawDots('dot-container-2', 4);
 
@@ -254,14 +246,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             if (isComputerTurn) {
-                setTimeout(moveComputerToken, 1000);
+                setTimeout(moveComputerToken, 800);
             } else {
                 if (rollBtn) rollBtn.disabled = false;
             }
-        }, 1000); 
+        }, 800); 
     }
 
-    // --- 6. Token Real Movement Logic ---
+    // --- 5. Token Real Movement Logic & Saving ---
     function performMove(token) {
         let currentPos = parseInt(token.dataset.pos);
         let armId = token.dataset.arm;
@@ -283,7 +275,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 token.style.zIndex = "10";
                 
                 if (resultText) resultText.innerHTML = "Move<br>completed.";
-                setTimeout(switchTurn, 600);
+                
+                // Save state immediately after move completes
+                saveGameState();
+                
+                setTimeout(switchTurn, 500);
             }, 300); 
         }
     }
@@ -301,7 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 tokenToMove.style.transform = "scale(1)";
                 performMove(tokenToMove); 
-            }, 800);
+            }, 500);
         } else {
             switchTurn();
         }
@@ -330,18 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentIndex = turnOrder.indexOf(currentPlayer);
         currentPlayer = turnOrder[(currentIndex + 1) % 4]; 
         
-        // Remove active-turn class from all player cards
-        document.querySelectorAll('.player-card').forEach(card => {
-            card.classList.remove('active-turn');
-        });
-        
-        // Add active-turn class to current player
-        const activeTokenIcon = document.querySelector(`.token-${currentPlayer}`);
-        if (activeTokenIcon) {
-            const parentCard = activeTokenIcon.closest('.player-card');
-            if (parentCard) parentCard.classList.add('active-turn');
-        }
-
+        saveGameState(); // Ensure state is saved when turn changes
         updateTurnUI();
     }
 
