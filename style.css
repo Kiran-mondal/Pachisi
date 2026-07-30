@@ -1,8 +1,10 @@
 :root {
-    --royal-red: #8b0000;
+    --bg-cream: #f8e5cb; /* ছবির মতো হালকা ঘিয়ে/বেজ কালার */
+    --dark-blue: #0b253a; /* Login বাটনের কালার */
     --gold: #d4af37;
-    --parchment: #f4e8d3;
+    --royal-red: #8b0000;
     --dark-wood: #3d2314;
+    
     --token-red: #d32f2f;
     --token-green: #388e3c;
     --token-yellow: #fbc02d;
@@ -13,76 +15,181 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    scroll-behavior: smooth; /* স্মুথ স্ক্রলিংয়ের জন্য */
 }
 
 body {
-    background-color: var(--parchment);
-    background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
+    background-color: var(--bg-cream);
     font-family: 'Cinzel', serif; 
     color: var(--dark-wood);
     overflow-x: hidden;
 }
 
+/* =========================================
+   Premium Navigation Bar
+   ========================================= */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--royal-red);
-    padding: 15px 30px;
-    border-bottom: 3px solid var(--gold);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    background-color: var(--bg-cream);
+    padding: 15px 50px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
-.logo {
-    color: var(--gold);
-    font-size: 28px;
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-icon {
+    font-size: 35px;
+    color: var(--royal-red);
+}
+
+.logo-text h1 {
+    font-size: 24px;
     font-weight: 800;
-    font-family: 'Yatra One', cursive; 
+    font-family: 'Yatra One', cursive;
+    color: var(--royal-red);
+    line-height: 1;
+}
+
+.logo-text p {
+    font-size: 12px;
+    color: var(--dark-wood);
+    font-family: Arial, sans-serif;
 }
 
 .nav-links {
     list-style: none;
     display: flex;
-    gap: 20px;
+    gap: 30px;
 }
 
 .nav-links li a {
-    color: var(--parchment);
+    color: var(--dark-wood);
     text-decoration: none;
-    font-size: 18px;
+    font-size: 16px;
+    font-weight: bold;
     transition: color 0.3s;
 }
 
-.nav-links li a:hover { color: var(--gold); }
+.nav-links li a:hover {
+    color: var(--royal-red);
+}
 
+.login-btn {
+    background-color: var(--dark-blue);
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    transition: background 0.3s;
+}
+
+.login-btn:hover {
+    background-color: #1a4262;
+}
+
+/* Hamburger for mobile */
 .hamburger {
     display: none;
     cursor: pointer;
 }
-
 .hamburger .bar {
     width: 25px;
     height: 3px;
-    background-color: var(--gold);
+    background-color: var(--dark-wood);
     margin: 5px 0;
 }
 
+/* =========================================
+   Landing Page / Hero Section
+   ========================================= */
+.hero {
+    /* একটি সুন্দর ঐতিহ্যবাহী ব্যাকগ্রাউন্ড ছবি ব্যবহার করা হয়েছে */
+    background: url('https://images.unsplash.com/photo-1599839619722-39751411ea63?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat;
+    height: 80vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* ছবির উপর কালো শ্যাডো */
+    display: flex;
+    align-items: center;
+    padding-left: 10%;
+}
+
+.hero-content {
+    color: white;
+    max-width: 600px;
+}
+
+.hero-content h2 {
+    font-size: 3.5rem;
+    font-family: 'Yatra One', cursive;
+    margin-bottom: 20px;
+    line-height: 1.2;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    font-family: Arial, sans-serif;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.play-now-btn {
+    display: inline-block;
+    background-color: #e2a849; /* ছবির মতো সোনালী/কমলা বাটন */
+    color: var(--dark-wood);
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 30px;
+    text-decoration: none;
+    font-family: Arial, sans-serif;
+    transition: transform 0.3s, background 0.3s;
+}
+
+.play-now-btn:hover {
+    transform: scale(1.05);
+    background-color: #f3be60;
+}
+
+/* =========================================
+   Main Game Area
+   ========================================= */
 .game-area {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 20px;
-    padding-bottom: 50px;
+    padding: 60px 0;
+    min-height: 100vh;
 }
 
 .theme-intro h1 {
     color: var(--royal-red);
     text-shadow: 1px 1px var(--gold);
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     text-align: center;
     transition: color 0.3s;
 }
 
+/* Board Styling */
 .board-wrapper {
     width: 100%;
     display: flex;
@@ -96,7 +203,6 @@ body {
     grid-template-columns: 240px 90px 240px; 
     grid-template-rows: 240px 90px 240px;
     gap: 0;
-    background-color: transparent; 
 }
 
 .arm {
@@ -106,15 +212,8 @@ body {
     box-shadow: 2px 2px 8px rgba(0,0,0,0.4);
 }
 
-.vertical-arm {
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(8, 1fr);
-}
-
-.horizontal-arm {
-    grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-}
+.vertical-arm { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(8, 1fr); }
+.horizontal-arm { grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(3, 1fr); }
 
 .top-arm { grid-column: 2 / 3; grid-row: 1 / 2; }
 .bottom-arm { grid-column: 2 / 3; grid-row: 3 / 4; }
@@ -139,7 +238,6 @@ body {
 .square {
     border: 1px solid var(--dark-wood);
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     min-height: 30px;
@@ -151,14 +249,12 @@ body {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    border: 2px solid var(--parchment);
+    border: 2px solid #fff;
     box-shadow: 0 2px 5px rgba(0,0,0,0.8);
-    display: inline-block;
-    margin: 2px;
-    cursor: pointer;
-    transition: transform 0.3s ease-in-out;
     position: relative;
     z-index: 10; 
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
 }
 
 .token:hover { transform: scale(1.3); }
@@ -170,13 +266,8 @@ body {
 
 /* Dice Bowl & 4-Sided Stick Animation */
 .dice-container {
-    margin-top: 20px;
+    margin-top: 30px;
     text-align: center;
-    background-color: rgba(244, 232, 211, 0.9);
-    padding: 15px 30px;
-    border-radius: 10px;
-    border: 2px solid var(--gold);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
 .bowl {
@@ -237,19 +328,23 @@ body {
     background-color: var(--royal-red);
     color: var(--gold);
     border: 2px solid var(--gold);
-    padding: 10px 20px;
+    padding: 10px 30px;
     font-size: 18px;
+    border-radius: 25px;
     cursor: pointer;
     font-family: 'Cinzel', serif;
     margin-top: 15px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .royal-btn:active { transform: scale(0.95); }
 .royal-btn:disabled { background-color: #555; cursor: not-allowed; border-color: #333; color: #aaa; }
+
+#dice-result {
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
 
 /* Modals */
 .modal {
@@ -264,7 +359,7 @@ body {
 .modal.hidden { display: none; }
 
 .modal-content {
-    background-color: var(--parchment);
+    background-color: var(--bg-cream);
     padding: 30px;
     border: 4px solid var(--gold);
     border-radius: 10px;
@@ -283,42 +378,17 @@ body {
     cursor: pointer;
 }
 
-.rules-content ul {
-    text-align: left;
-    line-height: 1.8;
-    margin-top: 15px;
-    padding-left: 20px;
-    font-family: Arial, sans-serif;
-}
-
-.project-card {
-    background: white;
-    border: 1px solid var(--gold);
-    padding: 15px;
-    margin-top: 15px;
-    border-radius: 5px;
-}
-
+/* Responsive */
 @media (max-width: 768px) {
-    .nav-links {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        position: absolute;
-        top: 65px;
-        left: 0;
-        background-color: var(--royal-red);
-        text-align: center;
-        padding: 20px 0;
-        border-bottom: 3px solid var(--gold);
-        z-index: 500;
-    }
-    .nav-links.active { display: flex; }
+    .navbar { padding: 15px 20px; }
+    .nav-links, .login-btn { display: none; }
     .hamburger { display: block; }
+    .hero-content h2 { font-size: 2.2rem; }
+    .hero-overlay { padding-left: 20px; padding-right: 20px; text-align: center; justify-content: center;}
     
     .board {
-        transform: scale(0.65);
+        transform: scale(0.60);
         transform-origin: top center;
-        margin-bottom: -150px; 
+        margin-bottom: -180px; 
     }
 }
