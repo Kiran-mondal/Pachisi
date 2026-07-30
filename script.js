@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return t;
     }
 
-    // Fresh Start Every Time (No LocalStorage)
+    // Fresh Start Every Time
     function placeInitialTokens() {
         const colors = ['black', 'yellow', 'green', 'red'];
         colors.forEach((color, index) => {
