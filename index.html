@@ -4,23 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- এসইও (SEO) & Meta Data -->
+    <!-- SEO Meta Data -->
     <meta name="description" content="Play Bharatiya Pasha (Pachisi) online. Experience the ancient Indian epic board game of strategy, heritage, and royal culture.">
     <meta name="keywords" content="Pachisi, Bharatiya Pasha, Indian Board Game, Chaupar, Ludo, Online Pachisi">
     <meta name="author" content="Your Name">
 
-    <!-- Open Graph for Social Media (Facebook, Twitter, WhatsApp) -->
-    <meta property="og:title" content="Bharatiya Pasha - The Ancient Epic">
-    <meta property="og:description" content="Play the traditional Indian board game Pachisi online with friends and experience ancient heritage.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://pachisi.vercel.app/">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1599839619722-39751411ea63?q=80&w=1200">
-
     <title>Bharatiya Pasha</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Yatra+One&display=swap" rel="stylesheet">
-    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -59,7 +50,7 @@
                     <div class="hero-content">
                         <h2>The World of Traditional<br>Indian Pasha</h2>
                         <p>Play online and experience the<br>glorious culture and heritage of India.</p>
-                        <button class="play-now-btn nav-btn" data-target="game-tab">Play Now</button>
+                        <button class="play-now-btn nav-btn" data-target="game-tab">Play Game</button>
                     </div>
                 </div>
             </div>
@@ -68,37 +59,81 @@
         <!-- 2. GAME TAB -->
         <section id="game-tab" class="tab-section">
             <div class="hero game-bg">
-                <div class="game-ui-wrapper">
+                
+                <!-- GAME SETUP SCREEN (Shows before playing) -->
+                <div id="game-setup-screen" class="setup-container">
+                    <div class="content-box setup-box">
+                        <h2>Game Settings</h2>
+                        
+                        <div class="setup-row">
+                            <label>Select Mode:</label>
+                            <select id="mode-select" class="royal-select">
+                                <option value="4">4 Players</option>
+                                <option value="2">2 Players (Red vs Black)</option>
+                            </select>
+                        </div>
+
+                        <div class="players-config">
+                            <div class="config-row" id="config-red">
+                                <div class="config-label"><span class="token-icon token-red"></span> Red Player:</div>
+                                <select id="type-red" class="royal-select"><option value="human">Human</option><option value="computer">Computer</option></select>
+                            </div>
+                            
+                            <div class="config-row" id="config-green">
+                                <div class="config-label"><span class="token-icon token-green"></span> Green Player:</div>
+                                <select id="type-green" class="royal-select"><option value="computer">Computer</option><option value="human">Human</option></select>
+                            </div>
+                            
+                            <div class="config-row" id="config-black">
+                                <div class="config-label"><span class="token-icon token-black"></span> Black Player:</div>
+                                <select id="type-black" class="royal-select"><option value="computer">Computer</option><option value="human">Human</option></select>
+                            </div>
+                            
+                            <div class="config-row" id="config-yellow">
+                                <div class="config-label"><span class="token-icon token-yellow"></span> Yellow Player:</div>
+                                <select id="type-yellow" class="royal-select"><option value="computer">Computer</option><option value="human">Human</option></select>
+                            </div>
+                        </div>
+
+                        <button id="start-game-btn" class="royal-btn start-btn">START GAME</button>
+                    </div>
+                </div>
+
+                <!-- ACTUAL GAME UI (Hidden until setup is done) -->
+                <div id="actual-game-screen" class="game-ui-wrapper" style="display: none;">
                     
                     <div class="turn-status-box">
                         <h3 id="turn-indicator" class="turn-text">YOUR TURN'S MOVE</h3>
                     </div>
 
-                    <!-- CENTER PANEL (Fluid Board with Corner Players) -->
+                    <!-- CENTER PANEL (Board with Corner Players matched to their arms) -->
                     <div class="center-panel">
                         <div class="board-ornate-border">
                             <div class="board">
                                 
-                                <!-- Players in the 4 Corners -->
-                                <div class="corner-player corner-tl" id="player-card-red">
-                                    <h4>YOUR TURN</h4>
-                                    <div class="avatar-box" aria-label="Player Avatar"><i class="fa-solid fa-user"></i></div>
-                                    <div class="token-icon token-red"></div>
-                                </div>
-                                <div class="corner-player corner-tr" id="player-card-green">
-                                    <h4>PLAYER 2</h4>
-                                    <div class="avatar-box" aria-label="Player Avatar"><i class="fa-solid fa-user"></i></div>
-                                    <div class="token-icon token-green"></div>
-                                </div>
-                                <div class="corner-player corner-bl" id="player-card-yellow">
-                                    <h4>PLAYER 3</h4>
-                                    <div class="avatar-box" aria-label="Player Avatar"><i class="fa-solid fa-user"></i></div>
+                                <!-- Top-Left (Yellow) -->
+                                <div class="corner-player corner-tl" id="player-card-yellow">
+                                    <h4 id="name-yellow">YELLOW</h4>
+                                    <div class="avatar-box"><i class="fa-solid fa-user"></i></div>
                                     <div class="token-icon token-yellow"></div>
                                 </div>
-                                <div class="corner-player corner-br" id="player-card-black">
-                                    <h4>PLAYER 4</h4>
-                                    <div class="avatar-box" aria-label="Player Avatar"><i class="fa-solid fa-user"></i></div>
+                                <!-- Top-Right (Black) -->
+                                <div class="corner-player corner-tr" id="player-card-black">
+                                    <h4 id="name-black">BLACK</h4>
+                                    <div class="avatar-box"><i class="fa-solid fa-user"></i></div>
                                     <div class="token-icon token-black"></div>
+                                </div>
+                                <!-- Bottom-Left (Red) -->
+                                <div class="corner-player corner-bl" id="player-card-red">
+                                    <h4 id="name-red">RED</h4>
+                                    <div class="avatar-box"><i class="fa-solid fa-user"></i></div>
+                                    <div class="token-icon token-red"></div>
+                                </div>
+                                <!-- Bottom-Right (Green) -->
+                                <div class="corner-player corner-br" id="player-card-green">
+                                    <h4 id="name-green">GREEN</h4>
+                                    <div class="avatar-box"><i class="fa-solid fa-user"></i></div>
+                                    <div class="token-icon token-green"></div>
                                 </div>
 
                                 <!-- Arms and Center -->
@@ -148,13 +183,13 @@
             </div>
         </section>
 
-        <!-- 4. HERITAGE TAB (Expanded for SEO Page Quality) -->
+        <!-- 4. HERITAGE TAB -->
         <section id="heritage-tab" class="tab-section">
             <div class="page-content">
                 <div class="content-box">
                     <h2>The Heritage of Chaupar</h2>
                     <p>Pachisi and Chaupar are ancient Indian board games that were famously played by the Maharajas and Royals. The history of games dates to the ancient human past, capturing the ideas and worldviews of their cultures and passing them on to the next generation[span_7](start_span)[span_7](end_span).</p>
-                    <p>Pachisi, dating back to roughly the 6th century, gave rise to the globally popular game Ludo[span_8](start_span)[span_8](end_span). Another game called Gyan Chaupar in north India inspired the classic Snakes & Ladders[span_9](start_span)[span_9](end_span). They hold a significant place in Indian mythology, most notably in the grand epic of the Mahabharata. By playing this game today, you are experiencing and preserving a piece of a 5,000-year-old tradition.</p>
+                    <p>Pachisi, dating back to roughly the 6th century, gave rise to the globally popular game Ludo[span_8](start_span)[span_8](end_span). They hold a significant place in Indian mythology. By playing this game today, you are preserving a piece of a 5,000-year-old tradition.</p>
                 </div>
             </div>
         </section>
@@ -169,20 +204,6 @@
             <div id="projects-container"></div>
         </div>
     </div>
-
-    <!-- SEO Footer & Badge (Boosts "Links" Score) -->
-    <footer style="text-align: center; padding: 30px 20px; background: #0b1a26; border-top: 2px solid #dcb360; margin-top: auto;">
-        <p style="color: #f4ead5; font-size: 14px; font-family: Arial, sans-serif;">
-            Developed with passion to preserve ancient traditions. Check out my other projects on 
-            <!-- Replace "#" with your actual GitHub Profile link to improve SEO external link score -->
-            <a href="https://github.com/" target="_blank" style="color: #dcb360; text-decoration: none; font-weight: bold;">GitHub</a>.
-        </p>
-        <div style="margin-top: 15px;">
-            <a href="https://www.seobility.net/en/seocheck/check?url=https%3A%2F%2Fpachisi.vercel.app%2F" target="_blank">
-                <img src="https://app.seobility.net/widget/widget.png?url=https%3A%2F%2Fpachisi.vercel.app%2F" alt="Seobility Score for pachisi.vercel.app">
-            </a>
-        </div>
-    </footer>
 
     <script src="script.js"></script>
 </body>
