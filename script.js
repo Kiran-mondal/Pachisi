@@ -91,16 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Save Game State to LocalStorage
-    function saveGameState() {
-        const tokensData = [];
-        document.querySelectorAll('.token').forEach(t => {
-            tokensData.push({ color: t.dataset.color, arm: t.dataset.arm, pos: t.dataset.pos });
-        });
-        const state = { currentPlayer: currentPlayer, tokens: tokensData };
-        localStorage.setItem('pachisi_save', JSON.stringify(state));
-    }
-
     function createTokenElem(color, armId, pos) {
         const t = document.createElement('div');
         t.classList.add('token', `token-${color}`);
@@ -110,42 +100,28 @@ document.addEventListener('DOMContentLoaded', () => {
         return t;
     }
 
-    // Load Game State or Set Default Initial Positions
-    function loadInitialOrSavedTokens() {
-        const savedData = localStorage.getItem('pachisi_save');
-        
-        if (savedData) {
-            // Resume saved game
-            const state = JSON.parse(savedData);
-            currentPlayer = state.currentPlayer;
+    // Fresh Start Every Time (No LocalStorage)
+    function placeInitialTokens() {
+        const colors = ['black', 'yellow', 'green', 'red'];
+        colors.forEach((color, index) => {
+            const armId = arms[index];
             
-            state.tokens.forEach(t => {
-                const sq = document.querySelector(`[data-id="${t.arm}-sq-${t.pos}"]`);
-                if(sq) sq.appendChild(createTokenElem(t.color, t.arm, t.pos));
-            });
-        } else {
-            // New Game default positions
-            const colors = ['black', 'yellow', 'green', 'red'];
-            colors.forEach((color, index) => {
-                const armId = arms[index];
-                
-                const sq6 = document.querySelector(`[data-id="${armId}-sq-6"]`);
-                if(sq6) sq6.appendChild(createTokenElem(color, armId, 6));
-                
-                const sq7 = document.querySelector(`[data-id="${armId}-sq-7"]`);
-                if(sq7) sq7.appendChild(createTokenElem(color, armId, 7));
-                
-                const sq12 = document.querySelector(`[data-id="${armId}-sq-12"]`);
-                if(sq12) { 
-                    sq12.appendChild(createTokenElem(color, armId, 12)); 
-                    sq12.appendChild(createTokenElem(color, armId, 12)); 
-                }
-            });
-        }
+            const sq6 = document.querySelector(`[data-id="${armId}-sq-6"]`);
+            if(sq6) sq6.appendChild(createTokenElem(color, armId, 6));
+            
+            const sq7 = document.querySelector(`[data-id="${armId}-sq-7"]`);
+            if(sq7) sq7.appendChild(createTokenElem(color, armId, 7));
+            
+            const sq12 = document.querySelector(`[data-id="${armId}-sq-12"]`);
+            if(sq12) { 
+                sq12.appendChild(createTokenElem(color, armId, 12)); 
+                sq12.appendChild(createTokenElem(color, armId, 12)); 
+            }
+        });
     }
     
     createBoard();
-    loadInitialOrSavedTokens();
+    placeInitialTokens();
 
     // --- 4. Game Turn & Dice Logic ---
     const turnIndicator = document.getElementById('turn-indicator');
@@ -253,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 800); 
     }
 
-    // --- 5. Token Real Movement Logic & Saving ---
+    // --- 5. Token Real Movement Logic ---
     function performMove(token) {
         let currentPos = parseInt(token.dataset.pos);
         let armId = token.dataset.arm;
@@ -275,10 +251,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 token.style.zIndex = "10";
                 
                 if (resultText) resultText.innerHTML = "Move<br>completed.";
-                
-                // Save state immediately after move completes
-                saveGameState();
-                
                 setTimeout(switchTurn, 500);
             }, 300); 
         }
@@ -326,7 +298,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentIndex = turnOrder.indexOf(currentPlayer);
         currentPlayer = turnOrder[(currentIndex + 1) % 4]; 
         
-        saveGameState(); // Ensure state is saved when turn changes
         updateTurnUI();
     }
 
