@@ -22,15 +22,19 @@
             </div>
         </div>
         
+        <!-- Navigation Links -->
         <ul class="nav-links" id="nav-links">
-            <li><a href="#hero-section">Home</a></li>
-            <li><a href="#game-section">Play</a></li>
-            <li><a href="#" id="rules-btn">Rules</a></li>
-            <li><a href="#" id="my-projects-btn">My Projects</a></li> <!-- Fixed: Added this back -->
+            <li><a href="#" class="nav-btn active" data-target="home-tab">Home</a></li>
+            <li><a href="#" class="nav-btn" data-target="game-tab">Play</a></li>
+            <li><a href="#" class="nav-btn" data-target="rules-tab">Rules</a></li>
+            <li><a href="#" class="nav-btn" data-target="heritage-tab">Heritage</a></li>
+            <li><a href="#" class="nav-btn" data-target="about-tab">About</a></li>
+            <li><a href="#" id="my-projects-btn">My Projects</a></li>
         </ul>
         
         <button class="login-btn">Login/Register</button>
         
+        <!-- Hamburger Menu for Mobile -->
         <div class="hamburger" id="hamburger">
             <span class="bar"></span>
             <span class="bar"></span>
@@ -38,32 +42,161 @@
         </div>
     </header>
 
-    <!-- Landing Page / Hero Section -->
-    <section id="hero-section" class="hero">
-        <div class="hero-overlay">
-            <div class="hero-content">
-                <h2>The World of Traditional<br>Indian Pasha</h2>
-                <p>Play online and experience the<br>glorious culture and heritage of India.</p>
-                <a href="#game-section" class="play-now-btn">Play Now</a>
-            </div>
-        </div>
-    </section>
+    <main class="main-content">
 
-    <!-- Rules Modal -->
-    <div id="rules-modal" class="modal hidden">
-        <div class="modal-content rules-content">
-            <span class="close-btn" id="close-rules">&times;</span>
-            <h2>Rules of Pachisi</h2>
-            <ul>
-                <li><strong>Players:</strong> Minimum 2, Maximum 4 players[span_0](start_span)[span_0](end_span). Pachisi is played in an anti-clockwise direction[span_1](start_span)[span_1](end_span).</li>
-                <li><strong>Tokens:</strong> The game involves 4 sets of 4 counters[span_2](start_span)[span_2](end_span).</li>
-                <li><strong>Pasha (Dice):</strong> Played with a pair of stick dice[span_3](start_span)[span_3](end_span). A doublet allows moving a pair of counters together, or as individual counters[span_4](start_span)[span_4](end_span).</li>
-                <li><strong>Safe Zones:</strong> Squares 1 to 7 are called the 'Belly[span_5](start_span)'[span_5](end_span). A counter cannot go into the bellies of other counters[span_6](start_span)[span_6](end_span).</li>
-                <li><strong>Capturing:</strong> A counter is captured when a player's counter lands on the other player's counter in the same square[span_7](start_span)[span_7](end_span).</li>
-                <li><strong>Winning:</strong> The first player to get all his 4 counters home is the winner[span_8](start_span)[span_8](end_span).</li>
-            </ul>
-        </div>
-    </div>
+        <!-- 1. HOME TAB -->
+        <section id="home-tab" class="tab-section active">
+            <div class="hero">
+                <div class="hero-overlay">
+                    <div class="hero-content">
+                        <h2>The World of Traditional<br>Indian Pasha</h2>
+                        <p>Play online and experience the<br>glorious culture and heritage of India.</p>
+                        <button class="play-now-btn nav-btn" data-target="game-tab">Play Now</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. GAME TAB (Based on 1785420629033.png) -->
+        <section id="game-tab" class="tab-section">
+            <div class="game-ui-wrapper">
+                
+                <!-- Left Panel (Player 1 & 3) -->
+                <div class="side-panel left-panel">
+                    <div class="player-card active-player" id="player-red">
+                        <h4>Your Turn (Red)</h4>
+                        <div class="avatar"><i class="fa-solid fa-user"></i></div>
+                        <div class="score">Score: 0</div>
+                    </div>
+                    
+                    <div class="status-message">
+                        <h3 id="turn-indicator">Waiting for move...</h3>
+                    </div>
+
+                    <div class="player-card" id="player-yellow">
+                        <h4>Player 3 (Yellow)</h4>
+                        <div class="avatar"><i class="fa-solid fa-user"></i></div>
+                        <div class="score">Score: 0</div>
+                    </div>
+                </div>
+
+                <!-- Center Board Panel -->
+                <div class="center-panel">
+                    <div class="ornate-board-border">
+                        <div class="board">
+                            <div class="arm vertical-arm top-arm" id="black-arm"></div>
+                            <div class="arm horizontal-arm left-arm" id="yellow-arm"></div>
+                            <div class="center-home">
+                                <span>HOME</span>
+                            </div>
+                            <div class="arm horizontal-arm right-arm" id="green-arm"></div>
+                            <div class="arm vertical-arm bottom-arm" id="red-arm"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Panel (Player 2, 4, Dice & Chat) -->
+                <div class="side-panel right-panel">
+                    <div class="player-card" id="player-green">
+                        <h4>Player 2 (Green)</h4>
+                        <div class="avatar"><i class="fa-solid fa-robot"></i></div>
+                        <div class="score">Score: 0</div>
+                    </div>
+
+                    <!-- Dice Roll UI -->
+                    <div class="dice-roll-card">
+                        <h4>Roll the Pasha</h4>
+                        <div class="bowl">
+                            <div class="pasha" id="pasha-1">
+                                <div class="dot-container" id="dot-container-1"></div>
+                            </div>
+                            <div class="pasha" id="pasha-2">
+                                <div class="dot-container" id="dot-container-2"></div>
+                            </div>
+                        </div>
+                        <button id="roll-dice-btn" class="royal-btn">Roll</button>
+                        <p id="dice-result">--</p>
+                    </div>
+
+                    <!-- Chat Box -->
+                    <div class="chat-box">
+                        <div class="chat-header">Chat <i class="fa-solid fa-comment"></i></div>
+                        <div class="chat-messages">
+                            <p><em>Welcome to Bharatiya Pasha!</em></p>
+                        </div>
+                        <div class="chat-input">
+                            <input type="text" placeholder="Chat here...">
+                            <button><i class="fa-solid fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 3. RULES TAB (Based on 1785420615177.png) -->
+        <section id="rules-tab" class="tab-section">
+            <div class="rules-page-wrapper">
+                <div class="rules-container">
+                    <div class="rules-header">
+                        <h2>Bharatiya Pasha Game Rules</h2>
+                    </div>
+                    
+                    <div class="rules-grid">
+                        <!-- Rule Card 1 -->
+                        <div class="rule-card">
+                            <div class="rule-icon"><i class="fa-solid fa-dice-d20"></i></div>
+                            <div class="rule-text">
+                                <h3>Rolling the Pasha</h3>
+                                <p>Played with a pair of stick dice. A doublet allows moving a pair of counters together, or as individual counters.</p>
+                            </div>
+                        </div>
+                        <!-- Rule Card 2 -->
+                        <div class="rule-card">
+                            <div class="rule-icon"><i class="fa-solid fa-chess-board"></i></div>
+                            <div class="rule-text">
+                                <h3>Movement & Board</h3>
+                                <p>The game involves 4 sets of 4 counters. Minimum 2, Maximum 4 players. Pachisi is played in an anti-clockwise direction.</p>
+                            </div>
+                        </div>
+                        <!-- Rule Card 3 -->
+                        <div class="rule-card">
+                            <div class="rule-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                            <div class="rule-text">
+                                <h3>Safe Zones & Capturing</h3>
+                                <p>Squares 1 to 7 are called the 'Belly'. A counter cannot go into the bellies of other counters. A counter is captured when a player's counter lands on the other player's counter in the same square.</p>
+                            </div>
+                        </div>
+                        <!-- Rule Card 4 -->
+                        <div class="rule-card">
+                            <div class="rule-icon"><i class="fa-solid fa-crown"></i></div>
+                            <div class="rule-text">
+                                <h3>Path to Victory</h3>
+                                <p>The first player to get all his 4 counters home is the winner.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. HERITAGE TAB -->
+        <section id="heritage-tab" class="tab-section page-content">
+            <div class="content-box">
+                <h2>The Heritage of Chaupar</h2>
+                <p>Pachisi and Chaupar are ancient Indian board games that were famously played by the Maharajas and Royals. They hold a significant place in Indian mythology, most notably in the grand epic of the Mahabharata. By playing this game, you are experiencing a piece of a 5,000-year-old tradition.</p>
+            </div>
+        </section>
+
+        <!-- 5. ABOUT TAB -->
+        <section id="about-tab" class="tab-section page-content">
+            <div class="content-box">
+                <h2>About the Developer</h2>
+                <p>This digital recreation of the Ancient Indian Epic was built to preserve tradition through modern web technologies. Stay tuned for multiplayer updates and more interactive features.</p>
+            </div>
+        </section>
+
+    </main>
 
     <!-- My Projects Modal -->
     <div id="projects-modal" class="modal hidden">
@@ -73,45 +206,6 @@
             <div id="projects-container"></div>
         </div>
     </div>
-
-    <!-- Main Game Area -->
-    <section id="game-section" class="game-area">
-        <div class="theme-intro">
-            <h1 id="turn-indicator">Maharaja, awaiting your move...</h1>
-        </div>
-        
-        <div class="board-wrapper">
-            <div class="board-container">
-                <div class="board">
-                    <!-- Top Arm (Black) -->
-                    <div class="arm vertical-arm top-arm" id="black-arm"></div>
-                    <!-- Left Arm (Yellow) -->
-                    <div class="arm horizontal-arm left-arm" id="yellow-arm"></div>
-                    <!-- Center Home -->
-                    <div class="center-home">
-                        <span>HOME</span>
-                    </div>
-                    <!-- Right Arm (Green) -->
-                    <div class="arm horizontal-arm right-arm" id="green-arm"></div>
-                    <!-- Bottom Arm (Red) -->
-                    <div class="arm vertical-arm bottom-arm" id="red-arm"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="dice-container">
-            <div class="bowl">
-                <div class="pasha" id="pasha-1">
-                    <div class="dot-container" id="dot-container-1"></div>
-                </div>
-                <div class="pasha" id="pasha-2">
-                    <div class="dot-container" id="dot-container-2"></div>
-                </div>
-            </div>
-            <button id="roll-dice-btn" class="royal-btn">Roll the Pasha</button>
-            <p id="dice-result">Result: --</p>
-        </div>
-    </section>
 
     <script src="script.js"></script>
 </body>
