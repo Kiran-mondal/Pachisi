@@ -11,12 +11,15 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const targetId = btn.getAttribute('data-target');
             
+            // Remove active from all tabs
             tabSections.forEach(section => section.classList.remove('active'));
             document.querySelectorAll('.nav-links .nav-btn').forEach(nav => nav.classList.remove('active'));
             
+            // Add active to the requested tab
             const targetSection = document.getElementById(targetId);
             if (targetSection) targetSection.classList.add('active');
             
+            // Add active to the clicked link in the navbar
             if (btn.parentElement.tagName === 'LI') {
                 btn.classList.add('active');
             } else if (targetId === 'game-tab') {
@@ -24,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (gameLink) gameLink.classList.add('active');
             }
 
+            // Close mobile menu if open
             if (navLinksContainer && navLinksContainer.classList.contains('active')) {
                 navLinksContainer.classList.remove('active');
             }
