@@ -1,6 +1,5 @@
 :root {
     --bg-cream: #f4ead5; 
-    --dark-blue: #0f2c41; 
     --gold: #dcb360; 
     --glow-gold: #ffdf70;
     --royal-red: #7a1f1f;
@@ -18,7 +17,7 @@ body { font-family: 'Cinzel', Arial, sans-serif; overflow-x: hidden; background:
 
 /* 🌟 Touch Sensitivity Optimization 🌟 */
 button, a, .token, .nav-btn, .royal-btn, .hamburger {
-    touch-action: manipulation; /* Removes 300ms tap delay on mobile */
+    touch-action: manipulation; 
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -31,7 +30,6 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger {
 .nav-links { list-style: none; display: flex; gap: 20px; }
 .nav-links li a { color: var(--royal-red); text-decoration: none; font-size: 16px; font-weight: bold; transition: color 0.3s; }
 .nav-links li a:hover, .nav-links li a.active { color: var(--dark-wood); }
-.login-btn { background-color: var(--dark-blue); color: white; border: none; padding: 8px 15px; border-radius: 5px; font-size: 12px; cursor: pointer;}
 .hamburger { display: none; cursor: pointer;}
 .hamburger .bar { display: block; width: 25px; height: 3px; background-color: var(--royal-red); margin: 5px auto; }
 
@@ -58,42 +56,57 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger {
 
 /* Game Background & UI Wrapper */
 .game-bg::before { content: ''; position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); }
-.game-ui-wrapper { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; padding: 15px; width: 100%; max-width: 600px; margin: 0 auto; gap: 15px; }
+.game-ui-wrapper { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; padding: 15px; width: 100%; max-width: 800px; margin: 0 auto; gap: 15px; }
 
 /* Turn Indicator Text */
 .turn-status-box { text-align: center; margin-bottom: -5px; }
 .turn-text { color: red; font-size: 16px; text-shadow: 1px 1px 2px black; font-weight: bold; letter-spacing: 1px;}
 
-/* Center Panel (Board) */
+/* 🌟 Responsive Center Panel & Board 🌟 */
 .center-panel { width: 100%; display: flex; justify-content: center; }
-.board-ornate-border { padding: 6px; background: var(--royal-red); border: 2px solid var(--gold); border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.8); }
+.board-ornate-border { 
+    width: 100%; 
+    max-width: 550px; /* Limits desktop size so it isn't too huge */
+    aspect-ratio: 1; /* Always keeps it a perfect square */
+    padding: 6px; 
+    background: var(--royal-red); 
+    border: 2px solid var(--gold); 
+    border-radius: 8px; 
+    box-shadow: 0 5px 20px rgba(0,0,0,0.8); 
+    display: flex;
+}
 
-/* 🌟 NEW: Board Grid with Corners 🌟 */
+/* Fluid Grid Layout matching exactly 8-3-8 standard of Pachisi */
 .board { 
+    width: 100%;
+    height: 100%;
     display: grid; 
-    grid-template-columns: 100px 40px 100px; 
-    grid-template-rows: 100px 40px 100px; 
+    grid-template-columns: 8fr 3fr 8fr; 
+    grid-template-rows: 8fr 3fr 8fr; 
     background: white;
 }
+
 .arm { display: grid; border: 1px solid var(--dark-wood); }
 .vertical-arm { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(8, 1fr); }
 .horizontal-arm { grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(3, 1fr); }
 .top-arm { grid-column: 2 / 3; grid-row: 1 / 2; } .bottom-arm { grid-column: 2 / 3; grid-row: 3 / 4; } .left-arm { grid-column: 1 / 2; grid-row: 2 / 3; } .right-arm { grid-column: 3 / 4; grid-row: 2 / 3; }
-.center-home { grid-column: 2 / 3; grid-row: 2 / 3; background: #d4af37; display: flex; justify-content: center; align-items: center; font-weight: bold; color: var(--royal-red); font-size: 10px; border: 1px solid var(--dark-wood);}
-.square { border: 1px solid rgba(0,0,0,0.3); display: flex; justify-content: center; align-items: center; position: relative; }
-.token { width: 12px; height: 12px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.8); position: relative; z-index: 10; cursor: pointer; }
+.center-home { grid-column: 2 / 3; grid-row: 2 / 3; background: #d4af37; display: flex; justify-content: center; align-items: center; font-weight: bold; color: var(--royal-red); font-size: 1.5vmin; border: 1px solid var(--dark-wood);}
+.square { border: 1px solid rgba(0,0,0,0.3); display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; }
+
+/* Responsive Tokens */
+.token { width: 65%; height: 65%; min-width: 8px; min-height: 8px; max-width: 18px; max-height: 18px; border-radius: 50%; border: 1px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.8); position: relative; z-index: 10; cursor: pointer; }
 .token-red { background-color: var(--token-red); } .token-green { background-color: var(--token-green); } .token-yellow { background-color: var(--token-yellow); } .token-black { background-color: var(--token-black); }
 
-/* 🌟 Players inside Corners 🌟 */
+/* Players inside Corners */
 .corner-player {
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
-    background: var(--panel-bg); border: 2px solid var(--gold); border-radius: 6px; margin: 3px;
+    background: var(--panel-bg); border: 2px solid var(--gold); border-radius: 6px; margin: 4px;
     color: var(--gold); box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
 }
 .corner-player.active-turn { border-color: var(--glow-gold); box-shadow: 0 0 10px var(--glow-gold); }
-.corner-player h4 { font-size: 9px; font-weight: bold; text-align: center; }
-.avatar-box { width: 25px; height: 25px; background: #666; border: 1px solid var(--gold); border-radius: 3px; display: flex; justify-content: center; align-items: center; color: white; font-size: 12px; }
-.token-icon { width: 15px; height: 20px; border-radius: 50% 50% 10% 10%; border: 1px solid white; }
+.corner-player h4 { font-size: 1.5vmin; font-weight: bold; text-align: center; }
+.avatar-box { width: 4vmin; height: 4vmin; min-width: 20px; min-height: 20px; background: #666; border: 1px solid var(--gold); border-radius: 3px; display: flex; justify-content: center; align-items: center; color: white; font-size: 1.8vmin; }
+.token-icon { width: 2vmin; height: 2.5vmin; min-width: 10px; min-height: 14px; border-radius: 50% 50% 10% 10%; border: 1px solid white; }
 
 .corner-tl { grid-column: 1 / 2; grid-row: 1 / 2; }
 .corner-tr { grid-column: 3 / 4; grid-row: 1 / 2; }
@@ -101,7 +114,7 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger {
 .corner-br { grid-column: 3 / 4; grid-row: 3 / 4; }
 
 /* BOTTOM PANEL (DICE) */
-.bottom-panel { width: 100%; max-width: 400px; }
+.bottom-panel { width: 100%; max-width: 450px; }
 .dice-panel { background: var(--panel-bg); border: 2px solid var(--gold); border-radius: 8px; padding: 10px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .oval-bowl { width: 70px; height: 110px; background: radial-gradient(ellipse at center, #8b5a2b, #3d2314); border-radius: 50%; border: 3px solid var(--gold); display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 8px; box-shadow: inset 0 5px 10px rgba(0,0,0,0.8); }
 .pasha { width: 15px; height: 45px; background: linear-gradient(to right, #cd853f, #a0522d); border-radius: 4px; display: flex; justify-content: center; align-items: center; box-shadow: 2px 2px 5px black;}
@@ -120,18 +133,19 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger {
 .modal-content { background: var(--bg-cream); padding: 30px; border: 4px solid var(--gold); border-radius: 10px; width: 80%; max-width: 600px; position: relative; }
 .close-btn { position: absolute; top: 10px; right: 20px; font-size: 30px; color: var(--royal-red); cursor: pointer; }
 
-/* Mobile Responsiveness */
+/* Mobile Menu Responsiveness */
 @media (max-width: 768px) {
     .nav-links { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; background: var(--bg-cream); padding: 20px 0; text-align: center; gap: 20px; box-shadow: 0 10px 10px rgba(0,0,0,0.1);}
     .nav-links.active { display: flex; }
     .hamburger { display: block; }
     .hero-content h2 { font-size: 2.2rem; }
     
-    .board { transform: scale(1.15); margin: 20px 0; }
+    /* Allow board to take full width on mobile */
+    .board-ornate-border { max-width: 95vw; padding: 4px; }
+    .corner-player h4 { font-size: 8px; }
 }
+
 @media (min-width: 1024px) {
-    .board { grid-template-columns: 140px 50px 140px; grid-template-rows: 140px 50px 140px; }
     .corner-player h4 { font-size: 12px; }
-    .avatar-box { width: 40px; height: 40px; font-size: 18px; }
-    .token-icon { width: 18px; height: 26px; }
+    .board-ornate-border { max-width: 600px; }
 }
