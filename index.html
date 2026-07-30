@@ -5,14 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bharatiya Pasha</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Yatra+One&display=swap" rel="stylesheet">
-    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
-    <!-- Premium Navigation Bar -->
     <header class="navbar">
         <div class="brand">
             <i class="fa-solid fa-dharmachakra logo-icon"></i>
@@ -41,7 +38,6 @@
 
     <main class="main-content">
         
-        <!-- 1. HOME TAB (Hero Section) -->
         <section id="home-tab" class="tab-section">
             <div class="hero">
                 <div class="hero-overlay">
@@ -54,20 +50,16 @@
             </div>
         </section>
 
-        <!-- 2. GAME TAB (Mobile & Desktop Responsive UI) -->
         <section id="game-tab" class="tab-section active">
             <div class="hero game-bg">
                 <div class="game-ui-wrapper">
                     
-                    <!-- TOP/LEFT PANEL (Player 1 & 3) -->
                     <div class="side-panel left-panel">
                         <div class="top-players-row">
                             <div class="player-card active-turn">
                                 <div class="player-info">
                                     <h4>YOUR TURN</h4>
-                                    <div class="avatar-box">
-                                        <i class="fa-solid fa-user"></i>
-                                    </div>
+                                    <div class="avatar-box"><i class="fa-solid fa-user"></i></div>
                                 </div>
                                 <div class="token-icon token-red"></div>
                             </div>
@@ -79,9 +71,7 @@
                             <div class="player-card">
                                 <div class="player-info">
                                     <h4>PLAYER 3</h4>
-                                    <div class="avatar-box">
-                                        <i class="fa-solid fa-user"></i>
-                                    </div>
+                                    <div class="avatar-box"><i class="fa-solid fa-user"></i></div>
                                 </div>
                                 <div class="token-icon token-yellow"></div>
                             </div>
@@ -91,7 +81,6 @@
                         </div>
                     </div>
 
-                    <!-- CENTER PANEL (The Board) -->
                     <div class="center-panel">
                         <div class="board-ornate-border">
                             <div class="board">
@@ -104,30 +93,23 @@
                         </div>
                     </div>
 
-                    <!-- BOTTOM/RIGHT PANEL (Player 2, Dice, Player 4, Chat) -->
                     <div class="side-panel right-panel">
-                        
                         <div class="player-card">
                             <div class="player-info">
                                 <h4>PLAYER 2</h4>
-                                <div class="avatar-box">
-                                    <i class="fa-solid fa-user"></i>
-                                </div>
+                                <div class="avatar-box"><i class="fa-solid fa-user"></i></div>
                             </div>
                             <div class="token-icon token-green"></div>
                         </div>
 
-                        <!-- Dice Panel (Horizontal Layout like the screenshot) -->
                         <div class="dice-panel">
                             <div class="bowl oval-bowl">
                                 <div class="pasha" id="pasha-1"><div class="dot-container" id="dot-container-1"></div></div>
                                 <div class="pasha" id="pasha-2"><div class="dot-container" id="dot-container-2"></div></div>
                             </div>
-                            
                             <div class="dice-action">
                                 <button id="roll-dice-btn" class="royal-btn">ROLL PASHA</button>
                             </div>
-
                             <div class="dice-text">
                                 <p id="dice-result">Roll Pasha<br>to move.</p>
                             </div>
@@ -136,14 +118,11 @@
                         <div class="player-card">
                             <div class="player-info">
                                 <h4>PLAYER 4</h4>
-                                <div class="avatar-box">
-                                    <i class="fa-solid fa-user"></i>
-                                </div>
+                                <div class="avatar-box"><i class="fa-solid fa-user"></i></div>
                             </div>
                             <div class="token-icon token-black"></div>
                         </div>
 
-                        <!-- Chat Box -->
                         <div class="chat-box">
                             <div class="chat-header">Chat <i class="fa-solid fa-comment"></i></div>
                             <div class="chat-messages">
@@ -160,32 +139,33 @@
             </div>
         </section>
 
-        <!-- 3. RULES TAB -->
-        <section id="rules-tab" class="tab-section page-content">
-            <div class="content-box">
-                <h2>Rules of Pachisi</h2>
-                <ul>
-                    <li><strong>Players:</strong> Minimum 2, Maximum 4 players. Pachisi is played in an anti-clockwise direction.</li>
-                    <li><strong>Tokens:</strong> The game involves 4 sets of 4 counters.</li>
-                    <li><strong>Pasha (Dice):</strong> Played with a pair of stick dice. A doublet allows moving a pair of counters together, or as individual counters.</li>
-                    <li><strong>Safe Zones:</strong> Squares 1 to 7 are called the 'Belly'. A counter cannot go into the bellies of other counters.</li>
-                    <li><strong>Capturing:</strong> A counter is captured when a player's counter lands on the other player's counter in the same square.</li>
-                    <li><strong>Winning:</strong> The first player to get all his 4 counters home is the winner.</li>
-                </ul>
+        <section id="rules-tab" class="tab-section">
+            <div class="page-content">
+                <div class="content-box">
+                    <h2>Rules of Pachisi</h2>
+                    <ul>
+                        <li><strong>Players:</strong> Minimum 2, Maximum 4 players. Pachisi is played in an anti-clockwise direction.</li>
+                        <li><strong>Tokens:</strong> The game involves 4 sets of 4 counters.</li>
+                        <li><strong>Pasha (Dice):</strong> Played with a pair of stick dice. A doublet allows moving a pair of counters together, or as individual counters.</li>
+                        <li><strong>Safe Zones:</strong> Squares 1 to 7 are called the 'Belly'. A counter cannot go into the bellies of other counters.</li>
+                        <li><strong>Capturing:</strong> A counter is captured when a player's counter lands on the other player's counter in the same square.</li>
+                        <li><strong>Winning:</strong> The first player to get all his 4 counters home is the winner.</li>
+                    </ul>
+                </div>
             </div>
         </section>
 
-        <!-- 4. HERITAGE TAB -->
-        <section id="heritage-tab" class="tab-section page-content">
-            <div class="content-box">
-                <h2>The Heritage of Chaupar</h2>
-                <p>Pachisi and Chaupar are ancient Indian board games that were famously played by the Maharajas and Royals. They hold a significant place in Indian mythology, most notably in the grand epic of the Mahabharata. By playing this game, you are experiencing a piece of a 5,000-year-old tradition.</p>
+        <section id="heritage-tab" class="tab-section">
+            <div class="page-content">
+                <div class="content-box">
+                    <h2>The Heritage of Chaupar</h2>
+                    <p>Pachisi and Chaupar are ancient Indian board games that were famously played by the Maharajas and Royals. They hold a significant place in Indian mythology, most notably in the grand epic of the Mahabharata. By playing this game, you are experiencing a piece of a 5,000-year-old tradition.</p>
+                </div>
             </div>
         </section>
 
     </main>
 
-    <!-- My Projects Modal -->
     <div id="projects-modal" class="modal hidden">
         <div class="modal-content">
             <span class="close-btn" id="close-modal">&times;</span>
