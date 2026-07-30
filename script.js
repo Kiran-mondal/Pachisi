@@ -73,7 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const setupScreen = document.getElementById('game-setup-screen');
     const actualGameScreen = document.getElementById('actual-game-screen');
 
-    // Toggle 2-Player / 4-Player config visibility
     if (modeSelect) {
         modeSelect.addEventListener('change', (e) => {
             if (e.target.value === '2') {
@@ -90,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
         arms.forEach(armId => {
             const container = document.getElementById(armId);
             if (!container) return; 
-            container.innerHTML = ''; // Clear if rebuilding
+            container.innerHTML = ''; 
             for (let i = 1; i <= 24; i++) {
                 const sq = document.createElement('div');
                 sq.classList.add('square');
@@ -113,12 +112,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return t;
     }
 
-    // Start Game Button Logic
     if (startGameBtn) {
         startGameBtn.addEventListener('click', () => {
             const is2Player = modeSelect.value === '2';
             
-            // Read types from dropdowns
             players.red.type = document.getElementById('type-red').value;
             players.black.type = document.getElementById('type-black').value;
             
@@ -129,13 +126,11 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 players.green.type = document.getElementById('type-green').value;
                 players.yellow.type = document.getElementById('type-yellow').value;
-                // Anti-clockwise turn order logic
                 turnOrder = ['red', 'green', 'black', 'yellow']; 
                 document.getElementById('player-card-green').style.visibility = 'visible';
                 document.getElementById('player-card-yellow').style.visibility = 'visible';
             }
 
-            // Update names on cards based on type
             turnOrder.forEach(color => {
                 const nameElem = document.getElementById(`name-${color}`);
                 if (nameElem) {
@@ -145,9 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             createBoard();
             
-            // Place initial tokens ONLY for active players
             turnOrder.forEach((color) => {
-                // Map color to its starting arm
                 const armId = color + '-arm'; 
                 
                 const sq6 = document.querySelector(`[data-id="${armId}-sq-6"]`);
@@ -165,7 +158,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             currentPlayer = turnOrder[0];
             
-            // Hide setup, show game
             setupScreen.style.display = 'none';
             actualGameScreen.style.display = 'flex';
             
@@ -191,7 +183,6 @@ document.addEventListener('DOMContentLoaded', () => {
         currentDiceRoll = 0; 
         if (resultText) resultText.innerHTML = "Roll Pasha<br>to move.";
 
-        // Highlight active corner player
         document.querySelectorAll('.corner-player').forEach(card => card.classList.remove('active-turn'));
         const activeCard = document.getElementById(players[currentPlayer].id);
         if(activeCard) activeCard.classList.add('active-turn');
@@ -202,7 +193,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 rollBtn.disabled = true;
                 rollBtn.innerText = "THINKING...";
             }
-            setTimeout(playComputerTurn, 1000); 
+            // Reduced thinking delay from 1000ms to 400ms
+            setTimeout(playComputerTurn, 400); 
         } else {
             isComputerTurn = false;
             if (rollBtn) {
@@ -243,13 +235,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (pasha1) pasha1.classList.add('rolling');
         if (pasha2) pasha2.classList.add('rolling');
 
+        // Sped up the rolling animation interval
         let shuffleInterval = setInterval(() => {
             let temp1 = validDiceFaces[Math.floor(Math.random() * validDiceFaces.length)];
             let temp2 = validDiceFaces[Math.floor(Math.random() * validDiceFaces.length)];
             drawDots('dot-container-1', temp1);
             drawDots('dot-container-2', temp2);
-        }, 100);
+        }, 60);
 
+        // Reduced roll total duration from 800ms to 400ms
         setTimeout(() => {
             clearInterval(shuffleInterval);
             if (pasha1) pasha1.classList.remove('rolling');
@@ -272,11 +266,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             if (isComputerTurn) {
-                setTimeout(moveComputerToken, 800);
+                // Reduced delay before computer moves token from 800ms to 350ms
+                setTimeout(moveComputerToken, 350);
             } else {
                 if (rollBtn) rollBtn.disabled = false;
             }
-        }, 800); 
+        }, 400); 
     }
 
     // --- 5. Token Real Movement Logic ---
@@ -293,6 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
             token.style.transform = "scale(1.5) translateY(-15px)";
             token.style.zIndex = "50";
             
+            // Reduced movement animation delay
             setTimeout(() => {
                 targetSquare.appendChild(token); 
                 token.dataset.pos = targetPos;   
@@ -301,8 +297,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 token.style.zIndex = "10";
                 
                 if (resultText) resultText.innerHTML = "Move<br>completed.";
-                setTimeout(switchTurn, 500);
-            }, 300); 
+                
+                // Reduced turn switching delay
+                setTimeout(switchTurn, 250);
+            }, 200); 
         }
     }
 
@@ -316,10 +314,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const tokenToMove = computerTokens[0]; 
             
             tokenToMove.style.transform = "scale(1.3)"; 
+            // Reduced pre-move computer hover delay
             setTimeout(() => {
                 tokenToMove.style.transform = "scale(1)";
                 performMove(tokenToMove); 
-            }, 500);
+            }, 250);
         } else {
             switchTurn();
         }
