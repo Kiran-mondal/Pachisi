@@ -40,7 +40,21 @@
     </header>
 
     <main class="main-content">
-        <!-- GAME TAB (Mobile & Desktop Responsive UI) -->
+        
+        <!-- 1. HOME TAB (Hero Section) -->
+        <section id="home-tab" class="tab-section">
+            <div class="hero">
+                <div class="hero-overlay">
+                    <div class="hero-content">
+                        <h2>The World of Traditional<br>Indian Pasha</h2>
+                        <p>Play online and experience the<br>glorious culture and heritage of India.</p>
+                        <button class="play-now-btn nav-btn" data-target="game-tab">Play Now</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. GAME TAB (Mobile & Desktop Responsive UI) -->
         <section id="game-tab" class="tab-section active">
             <div class="hero game-bg">
                 <div class="game-ui-wrapper">
@@ -146,8 +160,39 @@
             </div>
         </section>
 
-        <!-- (Keep your other sections like #home-tab, #rules-tab here from previous code) -->
+        <!-- 3. RULES TAB -->
+        <section id="rules-tab" class="tab-section page-content">
+            <div class="content-box">
+                <h2>Rules of Pachisi</h2>
+                <ul>
+                    <li><strong>Players:</strong> Minimum 2, Maximum 4 players. Pachisi is played in an anti-clockwise direction.</li>
+                    <li><strong>Tokens:</strong> The game involves 4 sets of 4 counters.</li>
+                    <li><strong>Pasha (Dice):</strong> Played with a pair of stick dice. A doublet allows moving a pair of counters together, or as individual counters.</li>
+                    <li><strong>Safe Zones:</strong> Squares 1 to 7 are called the 'Belly'. A counter cannot go into the bellies of other counters.</li>
+                    <li><strong>Capturing:</strong> A counter is captured when a player's counter lands on the other player's counter in the same square.</li>
+                    <li><strong>Winning:</strong> The first player to get all his 4 counters home is the winner.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 4. HERITAGE TAB -->
+        <section id="heritage-tab" class="tab-section page-content">
+            <div class="content-box">
+                <h2>The Heritage of Chaupar</h2>
+                <p>Pachisi and Chaupar are ancient Indian board games that were famously played by the Maharajas and Royals. They hold a significant place in Indian mythology, most notably in the grand epic of the Mahabharata. By playing this game, you are experiencing a piece of a 5,000-year-old tradition.</p>
+            </div>
+        </section>
+
     </main>
+
+    <!-- My Projects Modal -->
+    <div id="projects-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn" id="close-modal">&times;</span>
+            <h2>My Portfolio & Projects</h2>
+            <div id="projects-container"></div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
