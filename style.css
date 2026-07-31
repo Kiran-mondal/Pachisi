@@ -15,7 +15,6 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Cinzel', Arial, sans-serif; overflow-x: hidden; background: #000; }
 
-/* 🌟 Touch Sensitivity Optimization 🌟 */
 button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
     touch-action: manipulation; 
     -webkit-tap-highlight-color: transparent;
@@ -72,47 +71,28 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
 
 /* Responsive Center Panel & Board */
 .center-panel { width: 100%; display: flex; justify-content: center; }
-.board-ornate-border { 
-    width: 100%; max-width: 550px; aspect-ratio: 1; padding: 6px; 
-    background: var(--royal-red); border: 2px solid var(--gold); 
-    border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.8); display: flex;
-}
-
-.board { 
-    width: 100%; height: 100%; display: grid; 
-    grid-template-columns: 8fr 3fr 8fr; grid-template-rows: 8fr 3fr 8fr; background: white;
-}
+.board-ornate-border { width: 100%; max-width: 550px; aspect-ratio: 1; padding: 6px; background: var(--royal-red); border: 2px solid var(--gold); border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.8); display: flex;}
+.board { width: 100%; height: 100%; display: grid; grid-template-columns: 8fr 3fr 8fr; grid-template-rows: 8fr 3fr 8fr; background: white;}
 
 .arm { display: grid; border: 1px solid var(--dark-wood); }
 .vertical-arm { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(8, 1fr); }
 .horizontal-arm { grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(3, 1fr); }
 .top-arm { grid-column: 2 / 3; grid-row: 1 / 2; } .bottom-arm { grid-column: 2 / 3; grid-row: 3 / 4; } .left-arm { grid-column: 1 / 2; grid-row: 2 / 3; } .right-arm { grid-column: 3 / 4; grid-row: 2 / 3; }
 
-/* 🌟 UPDATED: Center Home for Finished Tokens 🌟 */
-.center-home { 
-    grid-column: 2 / 3; grid-row: 2 / 3; 
-    background: #d4af37; 
-    display: flex; flex-wrap: wrap; justify-content: center; align-items: center; align-content: center; gap: 2px;
-    font-weight: bold; color: var(--royal-red); font-size: 1.5vmin; 
-    border: 1px solid var(--dark-wood);
-    position: relative;
-}
-.center-home span { position: absolute; z-index: 1; opacity: 0.4; } /* Text behind tokens */
-.square { border: 1px solid rgba(0,0,0,0.3); display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; }
+.center-home { grid-column: 2 / 3; grid-row: 2 / 3; background: #d4af37; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; align-content: center; gap: 2px; font-weight: bold; color: var(--royal-red); font-size: 1.5vmin; border: 1px solid var(--dark-wood); position: relative;}
+.center-home span { position: absolute; z-index: 1; opacity: 0.4; }
 
-/* Responsive Tokens */
-.token { width: 65%; height: 65%; min-width: 8px; min-height: 8px; max-width: 18px; max-height: 18px; border-radius: 50%; border: 1px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.8); position: relative; z-index: 10; cursor: pointer; }
+/* 🌟 UPDATED: Square and Token Design to fit 4 tokens in one box 🌟 */
+.square { border: 1px solid rgba(0,0,0,0.3); display: flex; flex-wrap: wrap; justify-content: center; align-items: center; align-content: center; gap: 1px; position: relative; overflow: hidden; padding: 2px; }
+
+/* Made tokens slightly smaller so 4 can fit comfortably inside one square */
+.token { width: 45%; height: 45%; min-width: 6px; min-height: 6px; max-width: 14px; max-height: 14px; border-radius: 50%; border: 1px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.8); position: relative; z-index: 10; cursor: pointer; }
 .token-red { background-color: var(--token-red); } .token-green { background-color: var(--token-green); } .token-yellow { background-color: var(--token-yellow); } .token-black { background-color: var(--token-black); }
 
 /* Corners Matching the Arms */
-.corner-player {
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
-    background: var(--panel-bg); border: 2px solid var(--gold); border-radius: 6px; margin: 4px;
-    color: var(--gold); box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
-}
+.corner-player { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; background: var(--panel-bg); border: 2px solid var(--gold); border-radius: 6px; margin: 4px; color: var(--gold); box-shadow: inset 0 0 10px rgba(0,0,0,0.8);}
 .corner-player.active-turn { border-color: var(--glow-gold); box-shadow: 0 0 10px var(--glow-gold); }
 .corner-player h4 { font-size: 2.5vmin; font-weight: bold; text-align: center; } 
-
 .avatar-box { width: 8vmin; height: 8vmin; min-width: 35px; min-height: 35px; background: #666; border: 2px solid var(--gold); border-radius: 6px; display: flex; justify-content: center; align-items: center; color: white; font-size: 20px; }
 .token-icon { width: 3vmin; height: 4vmin; min-width: 15px; min-height: 20px; border-radius: 50% 50% 10% 10%; border: 2px solid white; }
 
@@ -153,4 +133,4 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
     .corner-player h4 { font-size: 14px; }
     .avatar-box { width: 50px; height: 50px; font-size: 24px; }
     .board-ornate-border { max-width: 600px; }
-}
+            }
