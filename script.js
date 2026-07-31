@@ -110,6 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return t;
     }
 
+    // 🌟 Setup Start Button Logic 🌟
     if (startGameBtn) {
         startGameBtn.addEventListener('click', () => {
             const is2Player = modeSelect.value === '2';
@@ -136,26 +137,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
+            // 1. Create the empty board
             createBoard();
             
+            // 2. Put 4 tokens on Square #1 for each active player
             turnOrder.forEach((color) => {
                 const armId = color + '-arm'; 
+                const startSquare = document.querySelector(`[data-id="${armId}-sq-1"]`);
                 
-                const sq6 = document.querySelector(`[data-id="${armId}-sq-6"]`);
-                if(sq6) sq6.appendChild(createTokenElem(color, armId, 6));
-                
-                const sq7 = document.querySelector(`[data-id="${armId}-sq-7"]`);
-                if(sq7) sq7.appendChild(createTokenElem(color, armId, 7));
-                
-                const sq12 = document.querySelector(`[data-id="${armId}-sq-12"]`);
-                if(sq12) { 
-                    sq12.appendChild(createTokenElem(color, armId, 12)); 
-                    sq12.appendChild(createTokenElem(color, armId, 12)); 
+                if(startSquare) {
+                    // Place 4 tokens inside the first square
+                    for (let i = 0; i < 4; i++) {
+                        startSquare.appendChild(createTokenElem(color, armId, 1));
+                    }
                 }
             });
 
             currentPlayer = turnOrder[0];
-            
             setupScreen.style.display = 'none';
             actualGameScreen.style.display = 'flex';
             
@@ -268,15 +266,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 400); 
     }
 
-    // --- 5. Token Movement & Home Logic 🌟 ---
+    // --- 5. Token Movement & Home Logic ---
     function performMove(token) {
-        if (token.classList.contains('finished')) return; // Ignore finished tokens
+        if (token.classList.contains('finished')) return; 
 
         let currentPos = parseInt(token.dataset.pos);
         let armId = token.dataset.arm;
         let targetPos = currentPos + currentDiceRoll;
         
-        // 🌟 If Token reaches the end (crosses 24), move to HOME 🌟
         if (targetPos > 24) {
             let homeSquare = document.querySelector('.center-home');
             
@@ -286,9 +283,9 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 homeSquare.appendChild(token); 
                 token.dataset.pos = "home";   
-                token.classList.add('finished'); // Mark as finished
+                token.classList.add('finished'); 
                 
-                token.style.transform = "scale(0.8) translateY(0)"; // Make it smaller to fit
+                token.style.transform = "scale(0.8) translateY(0)"; 
                 token.style.zIndex = "20";
                 
                 if (resultText) resultText.innerHTML = "Token reached<br>HOME!";
@@ -297,7 +294,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
-        // Normal Move within the arm
         let targetSquare = document.querySelector(`[data-id="${armId}-sq-${targetPos}"]`);
         
         if(targetSquare) {
@@ -322,7 +318,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function moveComputerToken() {
-        // 🌟 Computer only selects tokens that are NOT finished 🌟
         const computerTokens = document.querySelectorAll(`.token-${currentPlayer}:not(.finished)`);
         
         if (computerTokens.length > 0 && currentDiceRoll > 0) {
@@ -334,7 +329,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 performMove(tokenToMove); 
             }, 250);
         } else {
-            // Either all tokens are home, or no valid roll
             switchTurn();
         }
     }
@@ -368,4 +362,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 });
-                                                   
