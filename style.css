@@ -15,6 +15,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Cinzel', Arial, sans-serif; overflow-x: hidden; background: #000; }
 
+/* 🌟 Touch Sensitivity Optimization 🌟 */
 button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
     touch-action: manipulation; 
     -webkit-tap-highlight-color: transparent;
@@ -51,7 +52,7 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
 .content-box h2 { color: var(--royal-red); margin-bottom: 20px; text-align: center; }
 .content-box p, .content-box ul { font-size: 1rem; line-height: 1.8; font-family: Arial, sans-serif; color: var(--dark-wood); }
 
-/* 🌟 NEW: Game Setup Screen Styles 🌟 */
+/* Setup Screen */
 .setup-container { width: 100%; display: flex; justify-content: center; align-items: center; z-index: 20; position: relative;}
 .setup-box { background: var(--panel-bg); color: var(--gold); border: 3px solid var(--gold); text-align: center;}
 .setup-box h2 { color: var(--gold); border-bottom: 1px solid var(--gold); padding-bottom: 10px; margin-bottom: 20px;}
@@ -86,14 +87,24 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
 .vertical-arm { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(8, 1fr); }
 .horizontal-arm { grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(3, 1fr); }
 .top-arm { grid-column: 2 / 3; grid-row: 1 / 2; } .bottom-arm { grid-column: 2 / 3; grid-row: 3 / 4; } .left-arm { grid-column: 1 / 2; grid-row: 2 / 3; } .right-arm { grid-column: 3 / 4; grid-row: 2 / 3; }
-.center-home { grid-column: 2 / 3; grid-row: 2 / 3; background: #d4af37; display: flex; justify-content: center; align-items: center; font-weight: bold; color: var(--royal-red); font-size: 1.5vmin; border: 1px solid var(--dark-wood);}
+
+/* 🌟 UPDATED: Center Home for Finished Tokens 🌟 */
+.center-home { 
+    grid-column: 2 / 3; grid-row: 2 / 3; 
+    background: #d4af37; 
+    display: flex; flex-wrap: wrap; justify-content: center; align-items: center; align-content: center; gap: 2px;
+    font-weight: bold; color: var(--royal-red); font-size: 1.5vmin; 
+    border: 1px solid var(--dark-wood);
+    position: relative;
+}
+.center-home span { position: absolute; z-index: 1; opacity: 0.4; } /* Text behind tokens */
 .square { border: 1px solid rgba(0,0,0,0.3); display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; }
 
 /* Responsive Tokens */
 .token { width: 65%; height: 65%; min-width: 8px; min-height: 8px; max-width: 18px; max-height: 18px; border-radius: 50%; border: 1px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.8); position: relative; z-index: 10; cursor: pointer; }
 .token-red { background-color: var(--token-red); } .token-green { background-color: var(--token-green); } .token-yellow { background-color: var(--token-yellow); } .token-black { background-color: var(--token-black); }
 
-/* 🌟 Corners Matching the Arms 🌟 */
+/* Corners Matching the Arms */
 .corner-player {
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
     background: var(--panel-bg); border: 2px solid var(--gold); border-radius: 6px; margin: 4px;
@@ -105,11 +116,10 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
 .avatar-box { width: 8vmin; height: 8vmin; min-width: 35px; min-height: 35px; background: #666; border: 2px solid var(--gold); border-radius: 6px; display: flex; justify-content: center; align-items: center; color: white; font-size: 20px; }
 .token-icon { width: 3vmin; height: 4vmin; min-width: 15px; min-height: 20px; border-radius: 50% 50% 10% 10%; border: 2px solid white; }
 
-/* Grid Placing explicitly matches Arms */
-.corner-tl { grid-column: 1 / 2; grid-row: 1 / 2; } /* Top-Left matches Left Arm (Yellow) */
-.corner-tr { grid-column: 3 / 4; grid-row: 1 / 2; } /* Top-Right matches Top Arm (Black) */
-.corner-bl { grid-column: 1 / 2; grid-row: 3 / 4; } /* Bottom-Left matches Bottom Arm (Red) */
-.corner-br { grid-column: 3 / 4; grid-row: 3 / 4; } /* Bottom-Right matches Right Arm (Green) */
+.corner-tl { grid-column: 1 / 2; grid-row: 1 / 2; } 
+.corner-tr { grid-column: 3 / 4; grid-row: 1 / 2; } 
+.corner-bl { grid-column: 1 / 2; grid-row: 3 / 4; } 
+.corner-br { grid-column: 3 / 4; grid-row: 3 / 4; } 
 
 /* BOTTOM PANEL (DICE) */
 .bottom-panel { width: 100%; max-width: 450px; }
