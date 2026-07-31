@@ -60,7 +60,7 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
 .players-config { margin-bottom: 20px; display: flex; flex-direction: column; gap: 12px;}
 .config-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px;}
 .config-label { display: flex; align-items: center; gap: 10px; font-family: Arial, sans-serif; font-size: 14px; color: white;}
-.start-btn { padding: 15px; font-size: 18px; letter-spacing: 2px;}
+.start-btn { padding: 15px; font-size: 18px; letter-spacing: 2px; width: 100%;}
 
 /* Game Background & UI Wrapper */
 .game-bg::before { content: ''; position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); }
@@ -69,42 +69,64 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
 .turn-status-box { text-align: center; margin-bottom: -5px; }
 .turn-text { color: red; font-size: 16px; text-shadow: 1px 1px 2px black; font-weight: bold; letter-spacing: 1px;}
 
-/* Responsive Center Panel & Board */
+/* 🌟 CRITICAL FIX: Responsive Center Panel & Board 🌟 */
 .center-panel { width: 100%; display: flex; justify-content: center; }
-.board-ornate-border { width: 100%; max-width: 550px; aspect-ratio: 1; padding: 6px; background: var(--royal-red); border: 2px solid var(--gold); border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.8); display: flex;}
-.board { width: 100%; height: 100%; display: grid; grid-template-columns: 8fr 3fr 8fr; grid-template-rows: 8fr 3fr 8fr; background: white;}
+.board-ornate-border { 
+    width: 100%; max-width: 500px; padding: 6px; 
+    background: var(--royal-red); border: 2px solid var(--gold); 
+    border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.8); display: flex;
+}
 
-.arm { display: grid; border: 1px solid var(--dark-wood); }
+.board { 
+    width: 100%; aspect-ratio: 1 / 1; display: grid; 
+    grid-template-columns: 8fr 3fr 8fr; grid-template-rows: 8fr 3fr 8fr; background: white;
+}
+
+/* Strict Grid Positioning to prevent Blowout */
+.corner-tl { grid-area: 1 / 1 / 2 / 2; } 
+.top-arm   { grid-area: 1 / 2 / 2 / 3; } 
+.corner-tr { grid-area: 1 / 3 / 2 / 4; } 
+
+.left-arm  { grid-area: 2 / 1 / 3 / 2; } 
+.center-home{ grid-area: 2 / 2 / 3 / 3; } 
+.right-arm { grid-area: 2 / 3 / 3 / 4; } 
+
+.corner-bl { grid-area: 3 / 1 / 4 / 2; } 
+.bottom-arm{ grid-area: 3 / 2 / 4 / 3; } 
+.corner-br { grid-area: 3 / 3 / 4 / 4; } 
+
+.arm { display: grid; border: 1px solid var(--dark-wood); min-width: 0; min-height: 0; }
 .vertical-arm { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(8, 1fr); }
 .horizontal-arm { grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(3, 1fr); }
-.top-arm { grid-column: 2 / 3; grid-row: 1 / 2; } .bottom-arm { grid-column: 2 / 3; grid-row: 3 / 4; } .left-arm { grid-column: 1 / 2; grid-row: 2 / 3; } .right-arm { grid-column: 3 / 4; grid-row: 2 / 3; }
 
-.center-home { grid-column: 2 / 3; grid-row: 2 / 3; background: #d4af37; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; align-content: center; gap: 2px; font-weight: bold; color: var(--royal-red); font-size: 1.5vmin; border: 1px solid var(--dark-wood); position: relative;}
+.center-home { 
+    background: #d4af37; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; align-content: center; gap: 2px;
+    font-weight: bold; color: var(--royal-red); font-size: 1.5vmin; border: 1px solid var(--dark-wood); position: relative;
+    min-width: 0; min-height: 0;
+}
 .center-home span { position: absolute; z-index: 1; opacity: 0.4; }
+.square { border: 1px solid rgba(0,0,0,0.3); display: flex; flex-wrap: wrap; justify-content: center; align-items: center; align-content: center; gap: 1px; position: relative; overflow: hidden; padding: 2px; min-width: 0; min-height: 0; }
 
-/* 🌟 UPDATED: Square and Token Design to fit 4 tokens in one box 🌟 */
-.square { border: 1px solid rgba(0,0,0,0.3); display: flex; flex-wrap: wrap; justify-content: center; align-items: center; align-content: center; gap: 1px; position: relative; overflow: hidden; padding: 2px; }
-
-/* Made tokens slightly smaller so 4 can fit comfortably inside one square */
+/* Responsive Tokens */
 .token { width: 45%; height: 45%; min-width: 6px; min-height: 6px; max-width: 14px; max-height: 14px; border-radius: 50%; border: 1px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.8); position: relative; z-index: 10; cursor: pointer; }
 .token-red { background-color: var(--token-red); } .token-green { background-color: var(--token-green); } .token-yellow { background-color: var(--token-yellow); } .token-black { background-color: var(--token-black); }
 
-/* Corners Matching the Arms */
-.corner-player { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; background: var(--panel-bg); border: 2px solid var(--gold); border-radius: 6px; margin: 4px; color: var(--gold); box-shadow: inset 0 0 10px rgba(0,0,0,0.8);}
+/* 🌟 CRITICAL FIX: Safe Corner Players 🌟 */
+.corner-player { 
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; 
+    background: var(--panel-bg); border: 2px solid var(--gold); border-radius: 6px; margin: 4px; 
+    color: var(--gold); box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+    overflow: hidden; min-width: 0; min-height: 0; /* Prevents CSS Grid Blowout */
+}
 .corner-player.active-turn { border-color: var(--glow-gold); box-shadow: 0 0 10px var(--glow-gold); }
-.corner-player h4 { font-size: 2.5vmin; font-weight: bold; text-align: center; } 
-.avatar-box { width: 8vmin; height: 8vmin; min-width: 35px; min-height: 35px; background: #666; border: 2px solid var(--gold); border-radius: 6px; display: flex; justify-content: center; align-items: center; color: white; font-size: 20px; }
-.token-icon { width: 3vmin; height: 4vmin; min-width: 15px; min-height: 20px; border-radius: 50% 50% 10% 10%; border: 2px solid white; }
-
-.corner-tl { grid-column: 1 / 2; grid-row: 1 / 2; } 
-.corner-tr { grid-column: 3 / 4; grid-row: 1 / 2; } 
-.corner-bl { grid-column: 1 / 2; grid-row: 3 / 4; } 
-.corner-br { grid-column: 3 / 4; grid-row: 3 / 4; } 
+.corner-player h4 { font-size: clamp(8px, 2.5vw, 14px); font-weight: bold; text-align: center; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 90%; } 
+.avatar-box { width: clamp(25px, 8vw, 45px); height: clamp(25px, 8vw, 45px); background: #666; border: 2px solid var(--gold); border-radius: 6px; display: flex; justify-content: center; align-items: center; color: white; font-size: clamp(12px, 4vw, 20px); }
+.token-icon { width: clamp(12px, 3vw, 20px); height: clamp(16px, 4vw, 26px); border-radius: 50% 50% 10% 10%; border: 2px solid white; }
 
 /* BOTTOM PANEL (DICE) */
 .bottom-panel { width: 100%; max-width: 450px; }
 .dice-panel { background: var(--panel-bg); border: 2px solid var(--gold); border-radius: 8px; padding: 10px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-.oval-bowl { width: 70px; height: 110px; background: radial-gradient(ellipse at center, #8b5a2b, #3d2314); border-radius: 50%; border: 3px solid var(--gold); display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 8px; box-shadow: inset 0 5px 10px rgba(0,0,0,0.8); }
+.oval-bowl { width: 70px; height: 110px; background: radial-gradient(ellipse at center, #8b5a2b, #3d2314); border-radius: 50%; border: 3px solid var(--gold); display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 8px; box-shadow: inset 0 5px 10px rgba(0,0,0,0.8); flex-shrink: 0;}
 .pasha { width: 15px; height: 45px; background: linear-gradient(to right, #cd853f, #a0522d); border-radius: 4px; display: flex; justify-content: center; align-items: center; box-shadow: 2px 2px 5px black;}
 .dot-container { display: flex; flex-direction: column; gap: 3px; }
 .dot { width: 4px; height: 4px; background-color: #1e1008; border-radius: 50%; }
@@ -113,7 +135,7 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
 .royal-btn { background: var(--royal-red); color: var(--gold); border: 1px solid var(--gold); padding: 12px 15px; font-size: 14px; font-weight: bold; cursor: pointer; text-align: center; width: 100%; border-radius: 3px;}
 .royal-btn:active { transform: scale(0.95); }
 .royal-btn:disabled { background: #555; border-color: #333; color: #999; cursor: not-allowed; }
-.dice-text { width: 80px; text-align: center; color: white; font-size: 14px; font-family: Arial, sans-serif;}
+.dice-text { width: 80px; text-align: center; color: white; font-size: 14px; font-family: Arial, sans-serif; flex-shrink: 0;}
 
 /* Modals */
 .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 2000; }
@@ -121,16 +143,10 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
 .modal-content { background: var(--bg-cream); padding: 30px; border: 4px solid var(--gold); border-radius: 10px; width: 80%; max-width: 600px; position: relative; }
 .close-btn { position: absolute; top: 10px; right: 20px; font-size: 30px; color: var(--royal-red); cursor: pointer; }
 
-/* Mobile Menu Responsiveness */
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
     .nav-links { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; background: var(--bg-cream); padding: 20px 0; text-align: center; gap: 20px; box-shadow: 0 10px 10px rgba(0,0,0,0.1);}
     .nav-links.active { display: flex; }
     .hamburger { display: block; }
-    .board-ornate-border { max-width: 95vw; padding: 4px; }
-    .corner-player h4 { font-size: 12px; }
-}
-@media (min-width: 1024px) {
-    .corner-player h4 { font-size: 14px; }
-    .avatar-box { width: 50px; height: 50px; font-size: 24px; }
-    .board-ornate-border { max-width: 600px; }
+    .board-ornate-border { max-width: 95vw; padding: 4px; margin: 0 auto;}
             }
