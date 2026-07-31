@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    activateTab('home-tab'); // Start fresh on home
+    activateTab('home-tab');
 
     navButtons.forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -57,7 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let isComputerTurn = false;
     let turnOrder = [];
     
-    // Core player data
     const players = {
         red: { type: 'human', displayColor: '#d32f2f', displayName: 'RED', id: 'player-card-red' },
         green: { type: 'computer', displayColor: '#388e3c', displayName: 'GREEN', id: 'player-card-green' }, 
@@ -65,7 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
         yellow: { type: 'computer', displayColor: '#fbc02d', displayName: 'YELLOW', id: 'player-card-yellow' }
     };
 
-    // Setup Screen Elements
     const modeSelect = document.getElementById('mode-select');
     const configGreen = document.getElementById('config-green');
     const configYellow = document.getElementById('config-yellow');
@@ -193,7 +191,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 rollBtn.disabled = true;
                 rollBtn.innerText = "THINKING...";
             }
-            // Reduced thinking delay from 1000ms to 400ms
             setTimeout(playComputerTurn, 400); 
         } else {
             isComputerTurn = false;
@@ -235,7 +232,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (pasha1) pasha1.classList.add('rolling');
         if (pasha2) pasha2.classList.add('rolling');
 
-        // Sped up the rolling animation interval
         let shuffleInterval = setInterval(() => {
             let temp1 = validDiceFaces[Math.floor(Math.random() * validDiceFaces.length)];
             let temp2 = validDiceFaces[Math.floor(Math.random() * validDiceFaces.length)];
@@ -243,7 +239,6 @@ document.addEventListener('DOMContentLoaded', () => {
             drawDots('dot-container-2', temp2);
         }, 60);
 
-        // Reduced roll total duration from 800ms to 400ms
         setTimeout(() => {
             clearInterval(shuffleInterval);
             if (pasha1) pasha1.classList.remove('rolling');
@@ -266,7 +261,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             if (isComputerTurn) {
-                // Reduced delay before computer moves token from 800ms to 350ms
                 setTimeout(moveComputerToken, 350);
             } else {
                 if (rollBtn) rollBtn.disabled = false;
@@ -274,21 +268,42 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 400); 
     }
 
-    // --- 5. Token Real Movement Logic ---
+    // --- 5. Token Movement & Home Logic 🌟 ---
     function performMove(token) {
+        if (token.classList.contains('finished')) return; // Ignore finished tokens
+
         let currentPos = parseInt(token.dataset.pos);
         let armId = token.dataset.arm;
-        
         let targetPos = currentPos + currentDiceRoll;
-        if (targetPos > 24) targetPos = 24; 
         
+        // 🌟 If Token reaches the end (crosses 24), move to HOME 🌟
+        if (targetPos > 24) {
+            let homeSquare = document.querySelector('.center-home');
+            
+            token.style.transform = "scale(1.5) translateY(-15px)";
+            token.style.zIndex = "50";
+            
+            setTimeout(() => {
+                homeSquare.appendChild(token); 
+                token.dataset.pos = "home";   
+                token.classList.add('finished'); // Mark as finished
+                
+                token.style.transform = "scale(0.8) translateY(0)"; // Make it smaller to fit
+                token.style.zIndex = "20";
+                
+                if (resultText) resultText.innerHTML = "Token reached<br>HOME!";
+                setTimeout(switchTurn, 250);
+            }, 200); 
+            return;
+        }
+        
+        // Normal Move within the arm
         let targetSquare = document.querySelector(`[data-id="${armId}-sq-${targetPos}"]`);
         
         if(targetSquare) {
             token.style.transform = "scale(1.5) translateY(-15px)";
             token.style.zIndex = "50";
             
-            // Reduced movement animation delay
             setTimeout(() => {
                 targetSquare.appendChild(token); 
                 token.dataset.pos = targetPos;   
@@ -297,8 +312,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 token.style.zIndex = "10";
                 
                 if (resultText) resultText.innerHTML = "Move<br>completed.";
-                
-                // Reduced turn switching delay
                 setTimeout(switchTurn, 250);
             }, 200); 
         }
@@ -309,17 +322,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function moveComputerToken() {
-        const computerTokens = document.querySelectorAll(`.token-${currentPlayer}`);
+        // 🌟 Computer only selects tokens that are NOT finished 🌟
+        const computerTokens = document.querySelectorAll(`.token-${currentPlayer}:not(.finished)`);
+        
         if (computerTokens.length > 0 && currentDiceRoll > 0) {
             const tokenToMove = computerTokens[0]; 
             
             tokenToMove.style.transform = "scale(1.3)"; 
-            // Reduced pre-move computer hover delay
             setTimeout(() => {
                 tokenToMove.style.transform = "scale(1)";
                 performMove(tokenToMove); 
             }, 250);
         } else {
+            // Either all tokens are home, or no valid roll
             switchTurn();
         }
     }
@@ -329,6 +344,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const token = e.target;
             const tokenColor = token.dataset.color;
             
+            if (token.classList.contains('finished')) {
+                alert("This token is already Home!");
+                return;
+            }
             if (isComputerTurn) return; 
             if (tokenColor !== currentPlayer) {
                 alert(`It's ${players[currentPlayer].displayName}'s turn!`);
@@ -349,3 +368,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 });
+                                                   
