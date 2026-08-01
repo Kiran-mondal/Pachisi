@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPlayer = 'red'; 
     let currentDiceRoll = 0;
     let isComputerTurn = false;
-    let hasExtraTurn = false; // 🌟 Doublet or Capture gives extra turn
+    let hasExtraTurn = false; 
     let turnOrder = [];
     
     const players = {
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         yellow: { type: 'computer', displayColor: '#fbc02d', displayName: 'YELLOW', id: 'player-card-yellow' }
     };
 
-    // 🌟 COMPLETE PERIMETER PATH (Anti-clockwise) 🌟
+    // PERIMETER PATH (Anti-clockwise)
     const perimeter = [
         'red-arm-sq-1', 'red-arm-sq-4', 'red-arm-sq-7', 'red-arm-sq-10', 'red-arm-sq-13', 'red-arm-sq-16', 'red-arm-sq-19', 'red-arm-sq-22',
         'red-arm-sq-24', 'red-arm-sq-21', 'red-arm-sq-18', 'red-arm-sq-15', 'red-arm-sq-12', 'red-arm-sq-9', 'red-arm-sq-6', 'red-arm-sq-3',
@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
         'yellow-arm-sq-17', 'yellow-arm-sq-18', 'yellow-arm-sq-19', 'yellow-arm-sq-20', 'yellow-arm-sq-21', 'yellow-arm-sq-22', 'yellow-arm-sq-23', 'yellow-arm-sq-24'
     ];
 
-    // Belly / Home Stretches
     const homeStretches = {
         red: ['red-arm-sq-2', 'red-arm-sq-5', 'red-arm-sq-8', 'red-arm-sq-11', 'red-arm-sq-14', 'red-arm-sq-17', 'red-arm-sq-20', 'red-arm-sq-23'],
         green: ['green-arm-sq-9', 'green-arm-sq-10', 'green-arm-sq-11', 'green-arm-sq-12', 'green-arm-sq-13', 'green-arm-sq-14', 'green-arm-sq-15', 'green-arm-sq-16'],
@@ -75,7 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const sqId = `${armId}-sq-${i}`;
                 sq.dataset.id = sqId;
                 
-                // Add Safe Zone Star
                 if (safeZones.includes(sqId)) {
                     sq.classList.add('safe-zone');
                     sq.innerHTML = '<i class="fa-solid fa-star" style="color: rgba(212, 175, 55, 0.5); font-size: 14px; position: absolute;"></i>';
@@ -89,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const t = document.createElement('div');
         t.classList.add('token', `token-${color}`);
         t.dataset.color = color;
-        t.dataset.step = 1; // All start at Step 1 (their first square)
+        t.dataset.step = 1; 
         return t;
     }
 
@@ -122,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTurnUI();
     });
 
-    // --- 4. DICE LOGIC ---
+    // --- 4. DICE LOGIC & SMART AI ---
     const rollBtn = document.getElementById('roll-dice-btn');
     const resultText = document.getElementById('dice-result');
 
@@ -138,17 +136,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (players[currentPlayer].type === 'computer') {
             isComputerTurn = true;
-            rollBtn.disabled = true; rollBtn.innerText = "THINKING...";
+            if(rollBtn) { rollBtn.disabled = true; rollBtn.innerText = "THINKING..."; }
             setTimeout(rollTheDice, 600); 
         } else {
             isComputerTurn = false;
-            rollBtn.disabled = false; rollBtn.innerText = "ROLL PASHA";
+            if(rollBtn) { rollBtn.disabled = false; rollBtn.innerText = "ROLL PASHA"; }
         }
     }
 
     function drawDots(containerId, number) {
         const container = document.getElementById(containerId);
-        container.innerHTML = ''; 
+        if(!container) return; container.innerHTML = ''; 
         for (let i = 0; i < number; i++) {
             const dot = document.createElement('div'); dot.classList.add('dot'); container.appendChild(dot);
         }
@@ -159,10 +157,18 @@ document.addEventListener('DOMContentLoaded', () => {
         rollTheDice();
     });
 
+    // 🌟 SMART VALIDATION: Check if any token can move legally 🌟
+    function hasValidMoves(playerColor, rollValue) {
+        let tokens = Array.from(document.querySelectorAll(`.token-${playerColor}:not(.finished)`));
+        let validTokens = tokens.filter(t => (parseInt(t.dataset.step) + rollValue) <= 73);
+        return validTokens.length > 0;
+    }
+
     function rollTheDice() {
-        rollBtn.disabled = true; resultText.innerText = "Rolling...";
+        if(rollBtn) rollBtn.disabled = true; 
+        resultText.innerText = "Rolling...";
         const p1 = document.getElementById('pasha-1'); const p2 = document.getElementById('pasha-2');
-        p1.classList.add('rolling'); p2.classList.add('rolling');
+        p1?.classList.add('rolling'); p2?.classList.add('rolling');
 
         const faces = [1, 3, 4, 6];
         let shuffle = setInterval(() => {
@@ -171,29 +177,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 60);
 
         setTimeout(() => {
-            clearInterval(shuffle); p1.classList.remove('rolling'); p2.classList.remove('rolling');
+            clearInterval(shuffle); p1?.classList.remove('rolling'); p2?.classList.remove('rolling');
             const v1 = faces[Math.floor(Math.random() * 4)]; const v2 = faces[Math.floor(Math.random() * 4)];
             drawDots('dot-container-1', v1); drawDots('dot-container-2', v2);
             
             currentDiceRoll = v1 + v2; 
-            hasExtraTurn = (v1 === v2); // 🌟 Extra turn on Doublet!
+            hasExtraTurn = (v1 === v2); // Extra turn on Doublet!
             
             resultText.innerHTML = (v1===v2) ? `Doublet: ${v1} & ${v2}<br>Move: ${currentDiceRoll}` : `Result: ${v1} & ${v2}<br>Move: ${currentDiceRoll}`;
             
-            if (isComputerTurn) setTimeout(moveComputerToken, 400);
-            else rollBtn.disabled = false;
-        }, 400); 
+            // 🌟 SMART FALLBACK: Auto-skip turn if player/bot has no valid moves 🌟
+            if (!hasValidMoves(currentPlayer, currentDiceRoll)) {
+                resultText.innerHTML += "<br><span style='color:red;'>No Valid Moves!</span>";
+                setTimeout(switchTurn, 1500);
+                return;
+            }
+
+            if (isComputerTurn) setTimeout(moveComputerToken, 500);
+            else if(rollBtn) rollBtn.disabled = false;
+        }, 500); 
     }
 
-    // --- 5. MOVEMENT & CAPTURING LOGIC 🌟 ---
+    // --- 5. MOVEMENT & CAPTURING LOGIC ---
     function performMove(token) {
         if (token.classList.contains('finished')) return; 
 
         let currentStep = parseInt(token.dataset.step);
         let targetStep = currentStep + currentDiceRoll;
+        
+        // Block invalid human click
         if (targetStep > 73) {
             if(!isComputerTurn) alert("You need exact number to reach home!");
-            else setTimeout(switchTurn, 300);
             return; 
         }
         
@@ -205,15 +219,16 @@ document.addEventListener('DOMContentLoaded', () => {
             token.style.zIndex = "50";
             
             setTimeout(() => {
-                // 🌟 CAPTURING LOGIC 🌟
+                // CAPTURING LOGIC
                 if (targetId !== 'home' && !safeZones.includes(targetId)) {
                     let enemyTokens = Array.from(targetSquare.querySelectorAll('.token')).filter(t => t.dataset.color !== currentPlayer);
                     if (enemyTokens.length > 0) {
                         enemyTokens.forEach(enemy => {
-                            enemy.dataset.step = 1; // Send back to start
-                            document.querySelector(`[data-id="${getSquareId(enemy.dataset.color, 1)}"]`).appendChild(enemy);
+                            enemy.dataset.step = 1; 
+                            let startNode = document.querySelector(`[data-id="${getSquareId(enemy.dataset.color, 1)}"]`);
+                            if(startNode) startNode.appendChild(enemy);
                         });
-                        hasExtraTurn = true; // Capture gives extra turn!
+                        hasExtraTurn = true; 
                         resultText.innerHTML = "CAPTURE!<br>Extra Turn!";
                     }
                 }
@@ -224,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (targetId === 'home') {
                     token.classList.add('finished'); 
                     token.style.transform = "scale(0.8)";
-                    hasExtraTurn = true; // Reaching home gives extra turn!
+                    hasExtraTurn = true; 
                     resultText.innerHTML = "Reached HOME!<br>Extra Turn!";
                 } else {
                     token.style.transform = "scale(1)";
@@ -233,15 +248,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 setTimeout(switchTurn, 400);
             }, 300); 
+        } else {
+            // Failsafe
+            setTimeout(switchTurn, 300);
         }
     }
 
     function moveComputerToken() {
-        const tokens = Array.from(document.querySelectorAll(`.token-${currentPlayer}:not(.finished)`));
-        if (tokens.length > 0 && currentDiceRoll > 0) {
-            // Simple bot: move the token that is furthest ahead
-            tokens.sort((a,b) => parseInt(b.dataset.step) - parseInt(a.dataset.step));
-            let tokenToMove = tokens[0];
+        let tokens = Array.from(document.querySelectorAll(`.token-${currentPlayer}:not(.finished)`));
+        // Filter out tokens that will overshoot the Home
+        let validTokens = tokens.filter(t => (parseInt(t.dataset.step) + currentDiceRoll) <= 73);
+        
+        if (validTokens.length > 0) {
+            // Bot Logic: Move the token that is furthest ahead
+            validTokens.sort((a,b) => parseInt(b.dataset.step) - parseInt(a.dataset.step));
+            let tokenToMove = validTokens[0];
             
             tokenToMove.style.transform = "scale(1.3)"; 
             setTimeout(() => performMove(tokenToMove), 300);
@@ -268,4 +289,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 });
-            
