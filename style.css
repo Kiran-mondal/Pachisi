@@ -69,31 +69,18 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
 .turn-status-box { text-align: center; margin-bottom: -5px; }
 .turn-text { color: red; font-size: 16px; text-shadow: 1px 1px 2px black; font-weight: bold; letter-spacing: 1px;}
 
-/* 🌟 CRITICAL FIX: Responsive Center Panel & Board 🌟 */
+/* Board Layout */
 .center-panel { width: 100%; display: flex; justify-content: center; }
 .board-ornate-border { 
     width: 100%; max-width: 500px; padding: 6px; 
     background: var(--royal-red); border: 2px solid var(--gold); 
     border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.8); display: flex;
 }
+.board { width: 100%; aspect-ratio: 1 / 1; display: grid; grid-template-columns: 8fr 3fr 8fr; grid-template-rows: 8fr 3fr 8fr; background: white;}
 
-.board { 
-    width: 100%; aspect-ratio: 1 / 1; display: grid; 
-    grid-template-columns: 8fr 3fr 8fr; grid-template-rows: 8fr 3fr 8fr; background: white;
-}
-
-/* Strict Grid Positioning to prevent Blowout */
-.corner-tl { grid-area: 1 / 1 / 2 / 2; } 
-.top-arm   { grid-area: 1 / 2 / 2 / 3; } 
-.corner-tr { grid-area: 1 / 3 / 2 / 4; } 
-
-.left-arm  { grid-area: 2 / 1 / 3 / 2; } 
-.center-home{ grid-area: 2 / 2 / 3 / 3; } 
-.right-arm { grid-area: 2 / 3 / 3 / 4; } 
-
-.corner-bl { grid-area: 3 / 1 / 4 / 2; } 
-.bottom-arm{ grid-area: 3 / 2 / 4 / 3; } 
-.corner-br { grid-area: 3 / 3 / 4 / 4; } 
+.corner-tl { grid-area: 1 / 1 / 2 / 2; } .top-arm   { grid-area: 1 / 2 / 2 / 3; } .corner-tr { grid-area: 1 / 3 / 2 / 4; } 
+.left-arm  { grid-area: 2 / 1 / 3 / 2; } .center-home{ grid-area: 2 / 2 / 3 / 3; } .right-arm { grid-area: 2 / 3 / 3 / 4; } 
+.corner-bl { grid-area: 3 / 1 / 4 / 2; } .bottom-arm{ grid-area: 3 / 2 / 4 / 3; } .corner-br { grid-area: 3 / 3 / 4 / 4; } 
 
 .arm { display: grid; border: 1px solid var(--dark-wood); min-width: 0; min-height: 0; }
 .vertical-arm { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(8, 1fr); }
@@ -105,18 +92,20 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
     min-width: 0; min-height: 0;
 }
 .center-home span { position: absolute; z-index: 1; opacity: 0.4; }
+
+/* 🌟 Safe Zone Highlights 🌟 */
 .square { border: 1px solid rgba(0,0,0,0.3); display: flex; flex-wrap: wrap; justify-content: center; align-items: center; align-content: center; gap: 1px; position: relative; overflow: hidden; padding: 2px; min-width: 0; min-height: 0; }
+.safe-zone { background-color: rgba(212, 175, 55, 0.2) !important; }
 
 /* Responsive Tokens */
-.token { width: 45%; height: 45%; min-width: 6px; min-height: 6px; max-width: 14px; max-height: 14px; border-radius: 50%; border: 1px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.8); position: relative; z-index: 10; cursor: pointer; }
+.token { width: 45%; height: 45%; min-width: 6px; min-height: 6px; max-width: 14px; max-height: 14px; border-radius: 50%; border: 1px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.8); position: relative; z-index: 10; cursor: pointer; transition: transform 0.2s ease;}
 .token-red { background-color: var(--token-red); } .token-green { background-color: var(--token-green); } .token-yellow { background-color: var(--token-yellow); } .token-black { background-color: var(--token-black); }
 
-/* 🌟 CRITICAL FIX: Safe Corner Players 🌟 */
+/* Corner Players */
 .corner-player { 
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; 
     background: var(--panel-bg); border: 2px solid var(--gold); border-radius: 6px; margin: 4px; 
-    color: var(--gold); box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
-    overflow: hidden; min-width: 0; min-height: 0; /* Prevents CSS Grid Blowout */
+    color: var(--gold); box-shadow: inset 0 0 10px rgba(0,0,0,0.8); overflow: hidden; min-width: 0; min-height: 0; 
 }
 .corner-player.active-turn { border-color: var(--glow-gold); box-shadow: 0 0 10px var(--glow-gold); }
 .corner-player h4 { font-size: clamp(8px, 2.5vw, 14px); font-weight: bold; text-align: center; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 90%; } 
@@ -137,16 +126,9 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
 .royal-btn:disabled { background: #555; border-color: #333; color: #999; cursor: not-allowed; }
 .dice-text { width: 80px; text-align: center; color: white; font-size: 14px; font-family: Arial, sans-serif; flex-shrink: 0;}
 
-/* Modals */
-.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 2000; }
-.modal.hidden { display: none !important; }
-.modal-content { background: var(--bg-cream); padding: 30px; border: 4px solid var(--gold); border-radius: 10px; width: 80%; max-width: 600px; position: relative; }
-.close-btn { position: absolute; top: 10px; right: 20px; font-size: 30px; color: var(--royal-red); cursor: pointer; }
-
-/* Mobile Responsiveness */
 @media (max-width: 768px) {
     .nav-links { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; background: var(--bg-cream); padding: 20px 0; text-align: center; gap: 20px; box-shadow: 0 10px 10px rgba(0,0,0,0.1);}
     .nav-links.active { display: flex; }
     .hamburger { display: block; }
     .board-ornate-border { max-width: 95vw; padding: 4px; margin: 0 auto;}
-            }
+}
