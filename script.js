@@ -183,7 +183,6 @@ document.addEventListener('DOMContentLoaded', () => {
             p1?.classList.remove('rolling-1'); 
             p2?.classList.remove('rolling-2');
             
-            // 🌟 Force the dice to land with the 'front' face showing up, but slightly angled 🌟
             if(p1) p1.style.transform = `rotateZ(${Math.floor(Math.random() * 30 - 15)}deg) rotateX(0deg) rotateY(0deg)`;
             if(p2) p2.style.transform = `rotateZ(${Math.floor(Math.random() * 30 - 15)}deg) rotateX(0deg) rotateY(0deg)`;
 
@@ -292,5 +291,29 @@ document.addEventListener('DOMContentLoaded', () => {
         hasExtraTurn = false;
         updateTurnUI();
     }
+
+    // --- 6. MY PROJECTS MODAL LOGIC ---
+    const myProjectsBtn = document.getElementById('my-projects-btn');
+    const projectsModal = document.getElementById('projects-modal');
+    const closeModalBtn = document.getElementById('close-modal');
+
+    if(myProjectsBtn && projectsModal) {
+        myProjectsBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            projectsModal.classList.remove('hidden');
+        });
+    }
+
+    if(closeModalBtn && projectsModal) {
+        closeModalBtn.addEventListener('click', () => {
+            projectsModal.classList.add('hidden');
+        });
+    }
+
+    window.addEventListener('click', (e) => {
+        if (e.target === projectsModal) {
+            projectsModal.classList.add('hidden');
+        }
+    });
 
 });
