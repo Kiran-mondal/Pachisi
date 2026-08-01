@@ -93,7 +93,7 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
 }
 .center-home span { position: absolute; z-index: 1; opacity: 0.4; }
 
-/* 🌟 Safe Zone Highlights 🌟 */
+/* Safe Zone Highlights */
 .square { border: 1px solid rgba(0,0,0,0.3); display: flex; flex-wrap: wrap; justify-content: center; align-items: center; align-content: center; gap: 1px; position: relative; overflow: hidden; padding: 2px; min-width: 0; min-height: 0; }
 .safe-zone { background-color: rgba(212, 175, 55, 0.2) !important; }
 
@@ -112,13 +112,53 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
 .avatar-box { width: clamp(25px, 8vw, 45px); height: clamp(25px, 8vw, 45px); background: #666; border: 2px solid var(--gold); border-radius: 6px; display: flex; justify-content: center; align-items: center; color: white; font-size: clamp(12px, 4vw, 20px); }
 .token-icon { width: clamp(12px, 3vw, 20px); height: clamp(16px, 4vw, 26px); border-radius: 50% 50% 10% 10%; border: 2px solid white; }
 
-/* BOTTOM PANEL (DICE) */
+
+/* 🌟 PREMIUM BOWL & DICE SECTION 🌟 */
 .bottom-panel { width: 100%; max-width: 450px; }
 .dice-panel { background: var(--panel-bg); border: 2px solid var(--gold); border-radius: 8px; padding: 10px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-.oval-bowl { width: 70px; height: 110px; background: radial-gradient(ellipse at center, #8b5a2b, #3d2314); border-radius: 50%; border: 3px solid var(--gold); display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 8px; box-shadow: inset 0 5px 10px rgba(0,0,0,0.8); flex-shrink: 0;}
-.pasha { width: 15px; height: 45px; background: linear-gradient(to right, #cd853f, #a0522d); border-radius: 4px; display: flex; justify-content: center; align-items: center; box-shadow: 2px 2px 5px black;}
-.dot-container { display: flex; flex-direction: column; gap: 3px; }
-.dot { width: 4px; height: 4px; background-color: #1e1008; border-radius: 50%; }
+
+/* 3D Deep Bowl Illusion */
+.oval-bowl { 
+    width: 80px; height: 120px; 
+    background: radial-gradient(ellipse at center, #2e180d 0%, #1e1008 70%, #000 100%); 
+    border-radius: 50%; 
+    border: 3px solid var(--gold); 
+    display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 10px; 
+    box-shadow: inset 0 20px 30px rgba(0,0,0,0.9), 0 5px 15px rgba(0,0,0,0.6); 
+    perspective: 800px; /* Essential for 3D depth */
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+}
+
+/* Realistic Stick Dice (Pasha) */
+.pasha { 
+    width: 16px; height: 50px; 
+    background: linear-gradient(135deg, #e5a95b, #a0522d); 
+    border-radius: 4px; 
+    display: flex; justify-content: center; align-items: center; 
+    box-shadow: 2px 5px 10px rgba(0,0,0,0.8), inset 1px 1px 2px rgba(255,255,255,0.4);
+    transform-style: preserve-3d;
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1); /* Smooth settle */
+}
+.dot-container { display: flex; flex-direction: column; gap: 4px; transform: translateZ(2px); }
+.dot { width: 4px; height: 4px; background-color: #1e1008; border-radius: 50%; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.8); }
+
+/* ✨ 3D Tumbling Keyframes ✨ */
+.rolling-1 { animation: tumble1 0.7s ease-in-out infinite alternate; }
+.rolling-2 { animation: tumble2 0.6s ease-in-out infinite alternate; }
+
+@keyframes tumble1 {
+    0% { transform: translate3d(-15px, -20px, -20px) rotateX(0deg) rotateY(0deg) rotateZ(15deg); }
+    50% { transform: translate3d(5px, 15px, 30px) rotateX(180deg) rotateY(90deg) rotateZ(-30deg) scale(1.2); }
+    100% { transform: translate3d(15px, -10px, -10px) rotateX(360deg) rotateY(180deg) rotateZ(45deg); }
+}
+
+@keyframes tumble2 {
+    0% { transform: translate3d(15px, 20px, -10px) rotateX(0deg) rotateY(0deg) rotateZ(-15deg); }
+    50% { transform: translate3d(-5px, -15px, 30px) rotateX(-180deg) rotateY(-90deg) rotateZ(30deg) scale(1.2); }
+    100% { transform: translate3d(-15px, 10px, -20px) rotateX(-360deg) rotateY(-180deg) rotateZ(-45deg); }
+}
 
 .dice-action { flex: 1; display: flex; justify-content: center; }
 .royal-btn { background: var(--royal-red); color: var(--gold); border: 1px solid var(--gold); padding: 12px 15px; font-size: 14px; font-weight: bold; cursor: pointer; text-align: center; width: 100%; border-radius: 3px;}
@@ -126,9 +166,15 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
 .royal-btn:disabled { background: #555; border-color: #333; color: #999; cursor: not-allowed; }
 .dice-text { width: 80px; text-align: center; color: white; font-size: 14px; font-family: Arial, sans-serif; flex-shrink: 0;}
 
+/* Modals */
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 2000; }
+.modal.hidden { display: none !important; }
+.modal-content { background: var(--bg-cream); padding: 30px; border: 4px solid var(--gold); border-radius: 10px; width: 80%; max-width: 600px; position: relative; }
+.close-btn { position: absolute; top: 10px; right: 20px; font-size: 30px; color: var(--royal-red); cursor: pointer; }
+
 @media (max-width: 768px) {
     .nav-links { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; background: var(--bg-cream); padding: 20px 0; text-align: center; gap: 20px; box-shadow: 0 10px 10px rgba(0,0,0,0.1);}
     .nav-links.active { display: flex; }
     .hamburger { display: block; }
     .board-ornate-border { max-width: 95vw; padding: 4px; margin: 0 auto;}
-}
+         }
