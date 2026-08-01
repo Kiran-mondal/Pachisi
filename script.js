@@ -32,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
         yellow: { type: 'computer', displayColor: '#fbc02d', displayName: 'YELLOW', id: 'player-card-yellow' }
     };
 
-    // PERIMETER PATH (Anti-clockwise)
     const perimeter = [
         'red-arm-sq-1', 'red-arm-sq-4', 'red-arm-sq-7', 'red-arm-sq-10', 'red-arm-sq-13', 'red-arm-sq-16', 'red-arm-sq-19', 'red-arm-sq-22',
         'red-arm-sq-24', 'red-arm-sq-21', 'red-arm-sq-18', 'red-arm-sq-15', 'red-arm-sq-12', 'red-arm-sq-9', 'red-arm-sq-6', 'red-arm-sq-3',
@@ -120,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTurnUI();
     });
 
-    // --- 4. DICE LOGIC & SMART AI ---
+    // --- 4. 🌟 PREMIUM DICE LOGIC & AI 🌟 ---
     const rollBtn = document.getElementById('roll-dice-btn');
     const resultText = document.getElementById('dice-result');
 
@@ -137,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (players[currentPlayer].type === 'computer') {
             isComputerTurn = true;
             if(rollBtn) { rollBtn.disabled = true; rollBtn.innerText = "THINKING..."; }
-            setTimeout(rollTheDice, 600); 
+            setTimeout(rollTheDice, 800); 
         } else {
             isComputerTurn = false;
             if(rollBtn) { rollBtn.disabled = false; rollBtn.innerText = "ROLL PASHA"; }
@@ -157,7 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
         rollTheDice();
     });
 
-    // 🌟 SMART VALIDATION: Check if any token can move legally 🌟
     function hasValidMoves(playerColor, rollValue) {
         let tokens = Array.from(document.querySelectorAll(`.token-${playerColor}:not(.finished)`));
         let validTokens = tokens.filter(t => (parseInt(t.dataset.step) + rollValue) <= 73);
@@ -167,45 +165,58 @@ document.addEventListener('DOMContentLoaded', () => {
     function rollTheDice() {
         if(rollBtn) rollBtn.disabled = true; 
         resultText.innerText = "Rolling...";
-        const p1 = document.getElementById('pasha-1'); const p2 = document.getElementById('pasha-2');
-        p1?.classList.add('rolling'); p2?.classList.add('rolling');
+        
+        const p1 = document.getElementById('pasha-1'); 
+        const p2 = document.getElementById('pasha-2');
+        
+        // ✨ Add the premium 3D CSS classes ✨
+        p1?.classList.add('rolling-1'); 
+        p2?.classList.add('rolling-2');
 
         const faces = [1, 3, 4, 6];
         let shuffle = setInterval(() => {
             drawDots('dot-container-1', faces[Math.floor(Math.random() * 4)]);
             drawDots('dot-container-2', faces[Math.floor(Math.random() * 4)]);
-        }, 60);
+        }, 100);
 
+        // Extended time slightly to let the gorgeous animation play out
         setTimeout(() => {
-            clearInterval(shuffle); p1?.classList.remove('rolling'); p2?.classList.remove('rolling');
-            const v1 = faces[Math.floor(Math.random() * 4)]; const v2 = faces[Math.floor(Math.random() * 4)];
-            drawDots('dot-container-1', v1); drawDots('dot-container-2', v2);
+            clearInterval(shuffle); 
+            p1?.classList.remove('rolling-1'); 
+            p2?.classList.remove('rolling-2');
+            
+            // Give them a slight random resting angle for realism
+            if(p1) p1.style.transform = `rotate(${Math.floor(Math.random() * 30 - 15)}deg)`;
+            if(p2) p2.style.transform = `rotate(${Math.floor(Math.random() * 30 - 15)}deg)`;
+
+            const v1 = faces[Math.floor(Math.random() * 4)]; 
+            const v2 = faces[Math.floor(Math.random() * 4)];
+            drawDots('dot-container-1', v1); 
+            drawDots('dot-container-2', v2);
             
             currentDiceRoll = v1 + v2; 
-            hasExtraTurn = (v1 === v2); // Extra turn on Doublet!
+            hasExtraTurn = (v1 === v2); 
             
             resultText.innerHTML = (v1===v2) ? `Doublet: ${v1} & ${v2}<br>Move: ${currentDiceRoll}` : `Result: ${v1} & ${v2}<br>Move: ${currentDiceRoll}`;
             
-            // 🌟 SMART FALLBACK: Auto-skip turn if player/bot has no valid moves 🌟
             if (!hasValidMoves(currentPlayer, currentDiceRoll)) {
                 resultText.innerHTML += "<br><span style='color:red;'>No Valid Moves!</span>";
                 setTimeout(switchTurn, 1500);
                 return;
             }
 
-            if (isComputerTurn) setTimeout(moveComputerToken, 500);
+            if (isComputerTurn) setTimeout(moveComputerToken, 600);
             else if(rollBtn) rollBtn.disabled = false;
-        }, 500); 
+        }, 900); 
     }
 
-    // --- 5. MOVEMENT & CAPTURING LOGIC ---
+    // --- 5. MOVEMENT LOGIC ---
     function performMove(token) {
         if (token.classList.contains('finished')) return; 
 
         let currentStep = parseInt(token.dataset.step);
         let targetStep = currentStep + currentDiceRoll;
         
-        // Block invalid human click
         if (targetStep > 73) {
             if(!isComputerTurn) alert("You need exact number to reach home!");
             return; 
@@ -219,7 +230,6 @@ document.addEventListener('DOMContentLoaded', () => {
             token.style.zIndex = "50";
             
             setTimeout(() => {
-                // CAPTURING LOGIC
                 if (targetId !== 'home' && !safeZones.includes(targetId)) {
                     let enemyTokens = Array.from(targetSquare.querySelectorAll('.token')).filter(t => t.dataset.color !== currentPlayer);
                     if (enemyTokens.length > 0) {
@@ -249,18 +259,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(switchTurn, 400);
             }, 300); 
         } else {
-            // Failsafe
             setTimeout(switchTurn, 300);
         }
     }
 
     function moveComputerToken() {
         let tokens = Array.from(document.querySelectorAll(`.token-${currentPlayer}:not(.finished)`));
-        // Filter out tokens that will overshoot the Home
         let validTokens = tokens.filter(t => (parseInt(t.dataset.step) + currentDiceRoll) <= 73);
         
         if (validTokens.length > 0) {
-            // Bot Logic: Move the token that is furthest ahead
             validTokens.sort((a,b) => parseInt(b.dataset.step) - parseInt(a.dataset.step));
             let tokenToMove = validTokens[0];
             
@@ -289,3 +296,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 });
+                          
