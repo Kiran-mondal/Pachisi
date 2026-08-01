@@ -4,57 +4,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabSections = document.querySelectorAll('.tab-section');
     const navButtons = document.querySelectorAll('.nav-btn');
     const navLinksContainer = document.getElementById('nav-links');
-    const hamburger = document.getElementById('hamburger');
 
     function activateTab(targetId) {
         tabSections.forEach(section => section.classList.remove('active'));
         document.querySelectorAll('.nav-links .nav-btn').forEach(nav => nav.classList.remove('active'));
-        
-        const targetSection = document.getElementById(targetId);
-        if (targetSection) targetSection.classList.add('active');
-        
-        const targetNav = document.querySelector(`.nav-links [data-target="${targetId}"]`);
-        if (targetNav) targetNav.classList.add('active');
-
-        if (navLinksContainer && navLinksContainer.classList.contains('active')) {
-            navLinksContainer.classList.remove('active');
-        }
+        document.getElementById(targetId)?.classList.add('active');
+        document.querySelector(`.nav-links [data-target="${targetId}"]`)?.classList.add('active');
+        navLinksContainer?.classList.remove('active');
     }
+    activateTab('home-tab'); 
 
-    activateTab('home-tab');
+    navButtons.forEach(btn => btn.addEventListener('click', (e) => { e.preventDefault(); activateTab(btn.getAttribute('data-target')); }));
+    document.getElementById('hamburger')?.addEventListener('click', () => navLinksContainer.classList.toggle('active'));
 
-    navButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            activateTab(btn.getAttribute('data-target'));
-        });
-    });
-
-    if (hamburger && navLinksContainer) {
-        hamburger.addEventListener('click', () => {
-            navLinksContainer.classList.toggle('active');
-        });
-    }
-
-    // --- 2. My Projects Modal ---
-    const myProjectsBtn = document.getElementById('my-projects-btn');
-    const projectsModal = document.getElementById('projects-modal');
-    const closeModal = document.getElementById('close-modal');
-
-    if (myProjectsBtn && projectsModal && closeModal) {
-        myProjectsBtn.addEventListener('click', (e) => { 
-            e.preventDefault(); 
-            projectsModal.classList.remove('hidden'); 
-            if (navLinksContainer && navLinksContainer.classList.contains('active')) navLinksContainer.classList.remove('active');
-        });
-        closeModal.addEventListener('click', () => projectsModal.classList.add('hidden'));
-    }
-
-    // --- 3. GAME SETUP & INITIALIZATION ---
+    // --- 2. GAME VARIABLES & PATH MAPPING ---
     const arms = ['black-arm', 'yellow-arm', 'green-arm', 'red-arm'];
     let currentPlayer = 'red'; 
     let currentDiceRoll = 0;
     let isComputerTurn = false;
+    let hasExtraTurn = false; // 🌟 Doublet or Capture gives extra turn
     let turnOrder = [];
     
     const players = {
@@ -64,270 +32,219 @@ document.addEventListener('DOMContentLoaded', () => {
         yellow: { type: 'computer', displayColor: '#fbc02d', displayName: 'YELLOW', id: 'player-card-yellow' }
     };
 
-    const modeSelect = document.getElementById('mode-select');
-    const configGreen = document.getElementById('config-green');
-    const configYellow = document.getElementById('config-yellow');
-    const startGameBtn = document.getElementById('start-game-btn');
-    const setupScreen = document.getElementById('game-setup-screen');
-    const actualGameScreen = document.getElementById('actual-game-screen');
+    // 🌟 COMPLETE PERIMETER PATH (Anti-clockwise) 🌟
+    const perimeter = [
+        'red-arm-sq-1', 'red-arm-sq-4', 'red-arm-sq-7', 'red-arm-sq-10', 'red-arm-sq-13', 'red-arm-sq-16', 'red-arm-sq-19', 'red-arm-sq-22',
+        'red-arm-sq-24', 'red-arm-sq-21', 'red-arm-sq-18', 'red-arm-sq-15', 'red-arm-sq-12', 'red-arm-sq-9', 'red-arm-sq-6', 'red-arm-sq-3',
+        
+        'green-arm-sq-17', 'green-arm-sq-18', 'green-arm-sq-19', 'green-arm-sq-20', 'green-arm-sq-21', 'green-arm-sq-22', 'green-arm-sq-23', 'green-arm-sq-24',
+        'green-arm-sq-8', 'green-arm-sq-7', 'green-arm-sq-6', 'green-arm-sq-5', 'green-arm-sq-4', 'green-arm-sq-3', 'green-arm-sq-2', 'green-arm-sq-1',
+        
+        'black-arm-sq-24', 'black-arm-sq-21', 'black-arm-sq-18', 'black-arm-sq-15', 'black-arm-sq-12', 'black-arm-sq-9', 'black-arm-sq-6', 'black-arm-sq-3',
+        'black-arm-sq-1', 'black-arm-sq-4', 'black-arm-sq-7', 'black-arm-sq-10', 'black-arm-sq-13', 'black-arm-sq-16', 'black-arm-sq-19', 'black-arm-sq-22',
+        
+        'yellow-arm-sq-8', 'yellow-arm-sq-7', 'yellow-arm-sq-6', 'yellow-arm-sq-5', 'yellow-arm-sq-4', 'yellow-arm-sq-3', 'yellow-arm-sq-2', 'yellow-arm-sq-1',
+        'yellow-arm-sq-17', 'yellow-arm-sq-18', 'yellow-arm-sq-19', 'yellow-arm-sq-20', 'yellow-arm-sq-21', 'yellow-arm-sq-22', 'yellow-arm-sq-23', 'yellow-arm-sq-24'
+    ];
 
-    if (modeSelect) {
-        modeSelect.addEventListener('change', (e) => {
-            if (e.target.value === '2') {
-                configGreen.style.display = 'none';
-                configYellow.style.display = 'none';
-            } else {
-                configGreen.style.display = 'flex';
-                configYellow.style.display = 'flex';
-            }
-        });
+    // Belly / Home Stretches
+    const homeStretches = {
+        red: ['red-arm-sq-2', 'red-arm-sq-5', 'red-arm-sq-8', 'red-arm-sq-11', 'red-arm-sq-14', 'red-arm-sq-17', 'red-arm-sq-20', 'red-arm-sq-23'],
+        green: ['green-arm-sq-9', 'green-arm-sq-10', 'green-arm-sq-11', 'green-arm-sq-12', 'green-arm-sq-13', 'green-arm-sq-14', 'green-arm-sq-15', 'green-arm-sq-16'],
+        black: ['black-arm-sq-23', 'black-arm-sq-20', 'black-arm-sq-17', 'black-arm-sq-14', 'black-arm-sq-11', 'black-arm-sq-8', 'black-arm-sq-5', 'black-arm-sq-2'],
+        yellow: ['yellow-arm-sq-16', 'yellow-arm-sq-15', 'yellow-arm-sq-14', 'yellow-arm-sq-13', 'yellow-arm-sq-12', 'yellow-arm-sq-11', 'yellow-arm-sq-10', 'yellow-arm-sq-9']
+    };
+
+    const startIndexes = { red: 0, green: 16, black: 32, yellow: 48 };
+    const safeZones = ['red-arm-sq-1', 'red-arm-sq-24', 'green-arm-sq-17', 'green-arm-sq-8', 'black-arm-sq-24', 'black-arm-sq-1', 'yellow-arm-sq-8', 'yellow-arm-sq-17'];
+
+    function getSquareId(color, step) {
+        if (step >= 1 && step <= 64) return perimeter[(startIndexes[color] + step - 1) % 64];
+        if (step >= 65 && step <= 72) return homeStretches[color][step - 65];
+        return 'home';
     }
 
+    // --- 3. INITIALIZATION ---
     function createBoard() {
         arms.forEach(armId => {
             const container = document.getElementById(armId);
-            if (!container) return; 
-            container.innerHTML = ''; 
+            if (!container) return; container.innerHTML = ''; 
             for (let i = 1; i <= 24; i++) {
                 const sq = document.createElement('div');
                 sq.classList.add('square');
-                sq.dataset.id = `${armId}-sq-${i}`;
+                const sqId = `${armId}-sq-${i}`;
+                sq.dataset.id = sqId;
                 
-                if (i >= 1 && i <= 7) {
-                    sq.style.backgroundColor = 'rgba(212, 175, 55, 0.3)';
+                // Add Safe Zone Star
+                if (safeZones.includes(sqId)) {
+                    sq.classList.add('safe-zone');
+                    sq.innerHTML = '<i class="fa-solid fa-star" style="color: rgba(212, 175, 55, 0.5); font-size: 14px; position: absolute;"></i>';
                 }
                 container.appendChild(sq);
             }
         });
     }
 
-    function createTokenElem(color, armId, pos) {
+    function createTokenElem(color) {
         const t = document.createElement('div');
         t.classList.add('token', `token-${color}`);
         t.dataset.color = color;
-        t.dataset.arm = armId;
-        t.dataset.pos = pos; 
+        t.dataset.step = 1; // All start at Step 1 (their first square)
         return t;
     }
 
-    // 🌟 Setup Start Button Logic 🌟
-    if (startGameBtn) {
-        startGameBtn.addEventListener('click', () => {
-            const is2Player = modeSelect.value === '2';
-            
-            players.red.type = document.getElementById('type-red').value;
-            players.black.type = document.getElementById('type-black').value;
-            
-            if (is2Player) {
-                turnOrder = ['red', 'black'];
-                document.getElementById('player-card-green').style.visibility = 'hidden';
-                document.getElementById('player-card-yellow').style.visibility = 'hidden';
-            } else {
-                players.green.type = document.getElementById('type-green').value;
-                players.yellow.type = document.getElementById('type-yellow').value;
-                turnOrder = ['red', 'green', 'black', 'yellow']; 
-                document.getElementById('player-card-green').style.visibility = 'visible';
-                document.getElementById('player-card-yellow').style.visibility = 'visible';
-            }
+    document.getElementById('start-game-btn')?.addEventListener('click', () => {
+        const mode = document.getElementById('mode-select').value;
+        players.red.type = document.getElementById('type-red').value;
+        players.black.type = document.getElementById('type-black').value;
+        
+        if (mode === '2') {
+            turnOrder = ['red', 'black'];
+            document.getElementById('player-card-green').style.visibility = 'hidden';
+            document.getElementById('player-card-yellow').style.visibility = 'hidden';
+        } else {
+            players.green.type = document.getElementById('type-green').value;
+            players.yellow.type = document.getElementById('type-yellow').value;
+            turnOrder = ['red', 'green', 'black', 'yellow']; 
+        }
 
-            turnOrder.forEach(color => {
-                const nameElem = document.getElementById(`name-${color}`);
-                if (nameElem) {
-                    nameElem.innerText = players[color].type === 'human' ? `P-${color.toUpperCase()}` : `BOT-${color.toUpperCase()}`;
-                }
-            });
+        turnOrder.forEach(c => document.getElementById(`name-${c}`).innerText = players[c].type === 'human' ? `P-${c.toUpperCase()}` : `BOT-${c.toUpperCase()}`);
 
-            // 1. Create the empty board
-            createBoard();
-            
-            // 2. Put 4 tokens on Square #1 for each active player
-            turnOrder.forEach((color) => {
-                const armId = color + '-arm'; 
-                const startSquare = document.querySelector(`[data-id="${armId}-sq-1"]`);
-                
-                if(startSquare) {
-                    // Place 4 tokens inside the first square
-                    for (let i = 0; i < 4; i++) {
-                        startSquare.appendChild(createTokenElem(color, armId, 1));
-                    }
-                }
-            });
-
-            currentPlayer = turnOrder[0];
-            setupScreen.style.display = 'none';
-            actualGameScreen.style.display = 'flex';
-            
-            updateTurnUI();
+        createBoard();
+        turnOrder.forEach((color) => {
+            const startSquare = document.querySelector(`[data-id="${getSquareId(color, 1)}"]`);
+            if(startSquare) { for (let i = 0; i < 4; i++) startSquare.appendChild(createTokenElem(color)); }
         });
-    }
 
-    // --- 4. Game Turn & Dice Logic ---
-    const turnIndicator = document.getElementById('turn-indicator');
+        currentPlayer = turnOrder[0];
+        document.getElementById('game-setup-screen').style.display = 'none';
+        document.getElementById('actual-game-screen').style.display = 'flex';
+        updateTurnUI();
+    });
+
+    // --- 4. DICE LOGIC ---
     const rollBtn = document.getElementById('roll-dice-btn');
     const resultText = document.getElementById('dice-result');
-    const pasha1 = document.getElementById('pasha-1');
-    const pasha2 = document.getElementById('pasha-2');
-    const validDiceFaces = [1, 3, 4, 6];
 
     function updateTurnUI() {
-        const turnText = `${players[currentPlayer].displayName}'S TURN`;
-        if (turnIndicator) {
-            turnIndicator.innerText = turnText;
-            turnIndicator.style.color = players[currentPlayer].displayColor;
-        }
+        document.getElementById('turn-indicator').innerText = `${players[currentPlayer].displayName}'S TURN`;
+        document.getElementById('turn-indicator').style.color = players[currentPlayer].displayColor;
         
         currentDiceRoll = 0; 
-        if (resultText) resultText.innerHTML = "Roll Pasha<br>to move.";
+        resultText.innerHTML = hasExtraTurn ? "EXTRA TURN!<br>Roll again." : "Roll Pasha<br>to move.";
 
         document.querySelectorAll('.corner-player').forEach(card => card.classList.remove('active-turn'));
-        const activeCard = document.getElementById(players[currentPlayer].id);
-        if(activeCard) activeCard.classList.add('active-turn');
+        document.getElementById(players[currentPlayer].id)?.classList.add('active-turn');
 
         if (players[currentPlayer].type === 'computer') {
             isComputerTurn = true;
-            if (rollBtn) {
-                rollBtn.disabled = true;
-                rollBtn.innerText = "THINKING...";
-            }
-            setTimeout(playComputerTurn, 400); 
+            rollBtn.disabled = true; rollBtn.innerText = "THINKING...";
+            setTimeout(rollTheDice, 600); 
         } else {
             isComputerTurn = false;
-            if (rollBtn) {
-                rollBtn.disabled = false;
-                rollBtn.innerText = "ROLL PASHA";
-            }
+            rollBtn.disabled = false; rollBtn.innerText = "ROLL PASHA";
         }
     }
 
     function drawDots(containerId, number) {
         const container = document.getElementById(containerId);
-        if (!container) return;
         container.innerHTML = ''; 
         for (let i = 0; i < number; i++) {
-            const dot = document.createElement('div');
-            dot.classList.add('dot');
-            container.appendChild(dot);
+            const dot = document.createElement('div'); dot.classList.add('dot'); container.appendChild(dot);
         }
     }
-    drawDots('dot-container-1', 1);
-    drawDots('dot-container-2', 4);
 
-    if (rollBtn) {
-        rollBtn.addEventListener('click', () => {
-            if (isComputerTurn) return; 
-            if (currentDiceRoll > 0) {
-                alert("You have already rolled! Please click on your token to move.");
-                return;
-            }
-            rollTheDice();
-        });
-    }
+    rollBtn?.addEventListener('click', () => {
+        if (isComputerTurn || currentDiceRoll > 0) return;
+        rollTheDice();
+    });
 
     function rollTheDice() {
-        if (rollBtn) rollBtn.disabled = true; 
-        if (resultText) resultText.innerText = "Rolling...";
-        
-        if (pasha1) pasha1.classList.add('rolling');
-        if (pasha2) pasha2.classList.add('rolling');
+        rollBtn.disabled = true; resultText.innerText = "Rolling...";
+        const p1 = document.getElementById('pasha-1'); const p2 = document.getElementById('pasha-2');
+        p1.classList.add('rolling'); p2.classList.add('rolling');
 
-        let shuffleInterval = setInterval(() => {
-            let temp1 = validDiceFaces[Math.floor(Math.random() * validDiceFaces.length)];
-            let temp2 = validDiceFaces[Math.floor(Math.random() * validDiceFaces.length)];
-            drawDots('dot-container-1', temp1);
-            drawDots('dot-container-2', temp2);
+        const faces = [1, 3, 4, 6];
+        let shuffle = setInterval(() => {
+            drawDots('dot-container-1', faces[Math.floor(Math.random() * 4)]);
+            drawDots('dot-container-2', faces[Math.floor(Math.random() * 4)]);
         }, 60);
 
         setTimeout(() => {
-            clearInterval(shuffleInterval);
-            if (pasha1) pasha1.classList.remove('rolling');
-            if (pasha2) pasha2.classList.remove('rolling');
-
-            const val1 = validDiceFaces[Math.floor(Math.random() * validDiceFaces.length)];
-            const val2 = validDiceFaces[Math.floor(Math.random() * validDiceFaces.length)];
+            clearInterval(shuffle); p1.classList.remove('rolling'); p2.classList.remove('rolling');
+            const v1 = faces[Math.floor(Math.random() * 4)]; const v2 = faces[Math.floor(Math.random() * 4)];
+            drawDots('dot-container-1', v1); drawDots('dot-container-2', v2);
             
-            drawDots('dot-container-1', val1);
-            drawDots('dot-container-2', val2);
+            currentDiceRoll = v1 + v2; 
+            hasExtraTurn = (v1 === v2); // 🌟 Extra turn on Doublet!
             
-            currentDiceRoll = val1 + val2; 
-
-            if (resultText) {
-                if (val1 === val2) {
-                    resultText.innerHTML = `Doublet: ${val1} & ${val2}<br>Move: ${currentDiceRoll}`;
-                } else {
-                    resultText.innerHTML = `Result: ${val1} & ${val2}<br>Move: ${currentDiceRoll}`;
-                }
-            }
+            resultText.innerHTML = (v1===v2) ? `Doublet: ${v1} & ${v2}<br>Move: ${currentDiceRoll}` : `Result: ${v1} & ${v2}<br>Move: ${currentDiceRoll}`;
             
-            if (isComputerTurn) {
-                setTimeout(moveComputerToken, 350);
-            } else {
-                if (rollBtn) rollBtn.disabled = false;
-            }
+            if (isComputerTurn) setTimeout(moveComputerToken, 400);
+            else rollBtn.disabled = false;
         }, 400); 
     }
 
-    // --- 5. Token Movement & Home Logic ---
+    // --- 5. MOVEMENT & CAPTURING LOGIC 🌟 ---
     function performMove(token) {
         if (token.classList.contains('finished')) return; 
 
-        let currentPos = parseInt(token.dataset.pos);
-        let armId = token.dataset.arm;
-        let targetPos = currentPos + currentDiceRoll;
-        
-        if (targetPos > 24) {
-            let homeSquare = document.querySelector('.center-home');
-            
-            token.style.transform = "scale(1.5) translateY(-15px)";
-            token.style.zIndex = "50";
-            
-            setTimeout(() => {
-                homeSquare.appendChild(token); 
-                token.dataset.pos = "home";   
-                token.classList.add('finished'); 
-                
-                token.style.transform = "scale(0.8) translateY(0)"; 
-                token.style.zIndex = "20";
-                
-                if (resultText) resultText.innerHTML = "Token reached<br>HOME!";
-                setTimeout(switchTurn, 250);
-            }, 200); 
-            return;
+        let currentStep = parseInt(token.dataset.step);
+        let targetStep = currentStep + currentDiceRoll;
+        if (targetStep > 73) {
+            if(!isComputerTurn) alert("You need exact number to reach home!");
+            else setTimeout(switchTurn, 300);
+            return; 
         }
         
-        let targetSquare = document.querySelector(`[data-id="${armId}-sq-${targetPos}"]`);
+        let targetId = getSquareId(currentPlayer, targetStep);
+        let targetSquare = targetId === 'home' ? document.querySelector('.center-home') : document.querySelector(`[data-id="${targetId}"]`);
         
         if(targetSquare) {
             token.style.transform = "scale(1.5) translateY(-15px)";
             token.style.zIndex = "50";
             
             setTimeout(() => {
+                // 🌟 CAPTURING LOGIC 🌟
+                if (targetId !== 'home' && !safeZones.includes(targetId)) {
+                    let enemyTokens = Array.from(targetSquare.querySelectorAll('.token')).filter(t => t.dataset.color !== currentPlayer);
+                    if (enemyTokens.length > 0) {
+                        enemyTokens.forEach(enemy => {
+                            enemy.dataset.step = 1; // Send back to start
+                            document.querySelector(`[data-id="${getSquareId(enemy.dataset.color, 1)}"]`).appendChild(enemy);
+                        });
+                        hasExtraTurn = true; // Capture gives extra turn!
+                        resultText.innerHTML = "CAPTURE!<br>Extra Turn!";
+                    }
+                }
+
                 targetSquare.appendChild(token); 
-                token.dataset.pos = targetPos;   
+                token.dataset.step = targetStep;   
                 
-                token.style.transform = "scale(1) translateY(0)";
+                if (targetId === 'home') {
+                    token.classList.add('finished'); 
+                    token.style.transform = "scale(0.8)";
+                    hasExtraTurn = true; // Reaching home gives extra turn!
+                    resultText.innerHTML = "Reached HOME!<br>Extra Turn!";
+                } else {
+                    token.style.transform = "scale(1)";
+                }
                 token.style.zIndex = "10";
                 
-                if (resultText) resultText.innerHTML = "Move<br>completed.";
-                setTimeout(switchTurn, 250);
-            }, 200); 
+                setTimeout(switchTurn, 400);
+            }, 300); 
         }
     }
 
-    function playComputerTurn() {
-        rollTheDice();
-    }
-
     function moveComputerToken() {
-        const computerTokens = document.querySelectorAll(`.token-${currentPlayer}:not(.finished)`);
-        
-        if (computerTokens.length > 0 && currentDiceRoll > 0) {
-            const tokenToMove = computerTokens[0]; 
+        const tokens = Array.from(document.querySelectorAll(`.token-${currentPlayer}:not(.finished)`));
+        if (tokens.length > 0 && currentDiceRoll > 0) {
+            // Simple bot: move the token that is furthest ahead
+            tokens.sort((a,b) => parseInt(b.dataset.step) - parseInt(a.dataset.step));
+            let tokenToMove = tokens[0];
             
             tokenToMove.style.transform = "scale(1.3)"; 
-            setTimeout(() => {
-                tokenToMove.style.transform = "scale(1)";
-                performMove(tokenToMove); 
-            }, 250);
+            setTimeout(() => performMove(tokenToMove), 300);
         } else {
             switchTurn();
         }
@@ -336,29 +253,19 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', (e) => {
         if (e.target.classList.contains('token')) {
             const token = e.target;
-            const tokenColor = token.dataset.color;
-            
-            if (token.classList.contains('finished')) {
-                alert("This token is already Home!");
-                return;
-            }
-            if (isComputerTurn) return; 
-            if (tokenColor !== currentPlayer) {
-                alert(`It's ${players[currentPlayer].displayName}'s turn!`);
-                return;
-            }
-            if (currentDiceRoll === 0) {
-                alert("Please roll the Pasha first!");
-                return;
-            }
+            if (token.classList.contains('finished') || isComputerTurn || token.dataset.color !== currentPlayer || currentDiceRoll === 0) return;
             performMove(token); 
         }
     });
 
     function switchTurn() {
-        const currentIndex = turnOrder.indexOf(currentPlayer);
-        currentPlayer = turnOrder[(currentIndex + 1) % turnOrder.length]; 
+        if (!hasExtraTurn) {
+            const currentIndex = turnOrder.indexOf(currentPlayer);
+            currentPlayer = turnOrder[(currentIndex + 1) % turnOrder.length]; 
+        }
+        hasExtraTurn = false;
         updateTurnUI();
     }
 
 });
+            
