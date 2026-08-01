@@ -113,51 +113,59 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
 .token-icon { width: clamp(12px, 3vw, 20px); height: clamp(16px, 4vw, 26px); border-radius: 50% 50% 10% 10%; border: 2px solid white; }
 
 
-/* 🌟 PREMIUM BOWL & DICE SECTION 🌟 */
+/* 🌟 PREMIUM 3D BOWL & SOLID DICE SECTION 🌟 */
 .bottom-panel { width: 100%; max-width: 450px; }
 .dice-panel { background: var(--panel-bg); border: 2px solid var(--gold); border-radius: 8px; padding: 10px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 
-/* 3D Deep Bowl Illusion */
+/* 3D Deep Bowl */
 .oval-bowl { 
     width: 80px; height: 120px; 
     background: radial-gradient(ellipse at center, #2e180d 0%, #1e1008 70%, #000 100%); 
-    border-radius: 50%; 
-    border: 3px solid var(--gold); 
-    display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 10px; 
+    border-radius: 50%; border: 3px solid var(--gold); 
+    display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 12px; 
     box-shadow: inset 0 20px 30px rgba(0,0,0,0.9), 0 5px 15px rgba(0,0,0,0.6); 
-    perspective: 800px; /* Essential for 3D depth */
-    overflow: hidden;
-    position: relative;
-    flex-shrink: 0;
+    perspective: 800px; 
+    overflow: hidden; position: relative; flex-shrink: 0;
 }
 
-/* Realistic Stick Dice (Pasha) */
-.pasha { 
-    width: 16px; height: 50px; 
-    background: linear-gradient(135deg, #e5a95b, #a0522d); 
-    border-radius: 4px; 
-    display: flex; justify-content: center; align-items: center; 
-    box-shadow: 2px 5px 10px rgba(0,0,0,0.8), inset 1px 1px 2px rgba(255,255,255,0.4);
-    transform-style: preserve-3d;
-    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1); /* Smooth settle */
-}
-.dot-container { display: flex; flex-direction: column; gap: 4px; transform: translateZ(2px); }
-.dot { width: 4px; height: 4px; background-color: #1e1008; border-radius: 50%; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.8); }
+/* 🌟 TRUE 3D SOLID PASHA (CUBOID) 🌟 */
+.pasha-wrapper { width: 16px; height: 50px; perspective: 1000px; }
 
-/* ✨ 3D Tumbling Keyframes ✨ */
-.rolling-1 { animation: tumble1 0.7s ease-in-out infinite alternate; }
-.rolling-2 { animation: tumble2 0.6s ease-in-out infinite alternate; }
-
-@keyframes tumble1 {
-    0% { transform: translate3d(-15px, -20px, -20px) rotateX(0deg) rotateY(0deg) rotateZ(15deg); }
-    50% { transform: translate3d(5px, 15px, 30px) rotateX(180deg) rotateY(90deg) rotateZ(-30deg) scale(1.2); }
-    100% { transform: translate3d(15px, -10px, -10px) rotateX(360deg) rotateY(180deg) rotateZ(45deg); }
+.pasha-3d { 
+    width: 100%; height: 100%; position: relative; 
+    transform-style: preserve-3d; /* Creates true 3D volume */
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
 }
 
-@keyframes tumble2 {
-    0% { transform: translate3d(15px, 20px, -10px) rotateX(0deg) rotateY(0deg) rotateZ(-15deg); }
-    50% { transform: translate3d(-5px, -15px, 30px) rotateX(-180deg) rotateY(-90deg) rotateZ(30deg) scale(1.2); }
-    100% { transform: translate3d(-15px, 10px, -20px) rotateX(-360deg) rotateY(-180deg) rotateZ(-45deg); }
+/* The 6 faces of the solid wood block */
+.face { 
+    position: absolute; width: 100%; height: 100%; 
+    background: linear-gradient(135deg, #c47b3b, #7d3c1a); 
+    border: 1px solid rgba(0,0,0,0.8); 
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.5); 
+}
+
+/* Positioning each face in 3D Space (Width:16, Height:50, Depth:16) */
+.front  { transform: translateZ(8px); display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px; }
+.back   { transform: rotateY(180deg) translateZ(8px); background: #5c2c13;}
+.right  { transform: rotateY(90deg) translateZ(8px); background: #964820;}
+.left   { transform: rotateY(-90deg) translateZ(8px); background: #7d3c1a;}
+.top    { height: 16px; top: 0; transform-origin: top; transform: rotateX(-90deg); background: #e5a95b;}
+.bottom { height: 16px; bottom: 0; transform-origin: bottom; transform: rotateX(90deg); background: #3d1b0b;}
+
+.dot { width: 4px; height: 4px; background-color: #0b0502; border-radius: 50%; box-shadow: inset 1px 1px 2px rgba(255,255,255,0.3); }
+
+/* ✨ 3D Solid Tumbling Animation ✨ */
+.rolling-1 { animation: tumbleSolid1 0.6s linear infinite; }
+.rolling-2 { animation: tumbleSolid2 0.7s linear infinite; }
+
+@keyframes tumbleSolid1 {
+    0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg) translate3d(0,0,0); }
+    100% { transform: rotateX(720deg) rotateY(1080deg) rotateZ(180deg) translate3d(10px, -15px, 20px); }
+}
+@keyframes tumbleSolid2 {
+    0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+    100% { transform: rotateX(-720deg) rotateY(-1080deg) rotateZ(-180deg) translate3d(-10px, 15px, -10px); }
 }
 
 .dice-action { flex: 1; display: flex; justify-content: center; }
@@ -177,4 +185,4 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
     .nav-links.active { display: flex; }
     .hamburger { display: block; }
     .board-ornate-border { max-width: 95vw; padding: 4px; margin: 0 auto;}
-         }
+                }
