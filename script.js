@@ -169,7 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const p1 = document.getElementById('pasha-1'); 
         const p2 = document.getElementById('pasha-2');
         
-        // ✨ Add the premium 3D CSS classes ✨
         p1?.classList.add('rolling-1'); 
         p2?.classList.add('rolling-2');
 
@@ -179,15 +178,14 @@ document.addEventListener('DOMContentLoaded', () => {
             drawDots('dot-container-2', faces[Math.floor(Math.random() * 4)]);
         }, 100);
 
-        // Extended time slightly to let the gorgeous animation play out
         setTimeout(() => {
             clearInterval(shuffle); 
             p1?.classList.remove('rolling-1'); 
             p2?.classList.remove('rolling-2');
             
-            // Give them a slight random resting angle for realism
-            if(p1) p1.style.transform = `rotate(${Math.floor(Math.random() * 30 - 15)}deg)`;
-            if(p2) p2.style.transform = `rotate(${Math.floor(Math.random() * 30 - 15)}deg)`;
+            // 🌟 Force the dice to land with the 'front' face showing up, but slightly angled 🌟
+            if(p1) p1.style.transform = `rotateZ(${Math.floor(Math.random() * 30 - 15)}deg) rotateX(0deg) rotateY(0deg)`;
+            if(p2) p2.style.transform = `rotateZ(${Math.floor(Math.random() * 30 - 15)}deg) rotateX(0deg) rotateY(0deg)`;
 
             const v1 = faces[Math.floor(Math.random() * 4)]; 
             const v2 = faces[Math.floor(Math.random() * 4)];
@@ -296,4 +294,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 });
-                          
