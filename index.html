@@ -9,6 +9,9 @@
     <meta name="keywords" content="Pachisi, Bharatiya Pasha, Indian Board Game, Chaupar, Ludo, Online Pachisi">
     <meta name="author" content="Your Name">
 
+    <!-- Favicon (Ashoka Chakra Logo) -->
+    <link rel="icon" type="image/png" href="favicon.png">
+
     <title>Bharatiya Pasha</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Yatra+One&display=swap" rel="stylesheet">
@@ -137,11 +140,32 @@
                         </div>
                     </div>
 
+                    <!-- BOTTOM PANEL (3D DICE) -->
                     <div class="bottom-panel">
                         <div class="dice-panel">
                             <div class="bowl oval-bowl">
-                                <div class="pasha" id="pasha-1"><div class="dot-container" id="dot-container-1"></div></div>
-                                <div class="pasha" id="pasha-2"><div class="dot-container" id="dot-container-2"></div></div>
+                                <!-- 3D Pasha 1 -->
+                                <div class="pasha-wrapper">
+                                    <div class="pasha-3d" id="pasha-1">
+                                        <div class="face front" id="dot-container-1"></div>
+                                        <div class="face back"></div>
+                                        <div class="face right"></div>
+                                        <div class="face left"></div>
+                                        <div class="face top"></div>
+                                        <div class="face bottom"></div>
+                                    </div>
+                                </div>
+                                <!-- 3D Pasha 2 -->
+                                <div class="pasha-wrapper">
+                                    <div class="pasha-3d" id="pasha-2">
+                                        <div class="face front" id="dot-container-2"></div>
+                                        <div class="face back"></div>
+                                        <div class="face right"></div>
+                                        <div class="face left"></div>
+                                        <div class="face top"></div>
+                                        <div class="face bottom"></div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="dice-action">
                                 <button id="roll-dice-btn" class="royal-btn">ROLL PASHA</button>
