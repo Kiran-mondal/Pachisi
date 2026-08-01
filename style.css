@@ -20,7 +20,7 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
     -webkit-tap-highlight-color: transparent;
 }
 
-/* 🌟 Navbar 🌟 */
+/* Navbar */
 .navbar { display: flex; justify-content: space-between; align-items: center; background-color: var(--bg-cream); padding: 10px 20px; z-index: 1000; position: sticky; top:0; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
 .brand { display: flex; align-items: center; gap: 10px; }
 .logo-icon { font-size: 30px; color: var(--royal-red); }
@@ -32,12 +32,12 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
 .hamburger { display: none; cursor: pointer;}
 .hamburger .bar { display: block; width: 25px; height: 3px; background-color: var(--royal-red); margin: 5px auto; }
 
-/* 🌟 Tabs Logic 🌟 */
+/* Tabs Logic */
 .tab-section { display: none !important; animation: fadeIn 0.3s ease-in-out; }
 .tab-section.active { display: block !important; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-/* 🌟 Home & Content Pages 🌟 */
+/* Home & Content Pages */
 .hero { background: url('https://images.unsplash.com/photo-1599839619722-39751411ea63?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat; min-height: calc(100vh - 60px); position: relative; display: flex; align-items: center; justify-content: center; }
 .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: center; }
 .hero-content { color: white; text-align: center; max-width: 600px; padding: 20px; }
@@ -51,7 +51,7 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
 .content-box h2 { color: var(--royal-red); margin-bottom: 20px; text-align: center; }
 .content-box p, .content-box ul { font-size: 1rem; line-height: 1.8; font-family: Arial, sans-serif; color: var(--dark-wood); }
 
-/* 🌟 Setup Screen 🌟 */
+/* Setup Screen */
 .setup-container { width: 100%; display: flex; justify-content: center; align-items: center; z-index: 20; position: relative;}
 .setup-box { background: var(--panel-bg); color: var(--gold); border: 3px solid var(--gold); text-align: center;}
 .setup-box h2 { color: var(--gold); border-bottom: 1px solid var(--gold); padding-bottom: 10px; margin-bottom: 20px;}
@@ -62,14 +62,14 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
 .config-label { display: flex; align-items: center; gap: 10px; font-family: Arial, sans-serif; font-size: 14px; color: white;}
 .start-btn { padding: 15px; font-size: 18px; letter-spacing: 2px; width: 100%;}
 
-/* 🌟 Game Background & UI Wrapper 🌟 */
+/* Game Background & UI Wrapper */
 .game-bg::before { content: ''; position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); }
 .game-ui-wrapper { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; padding: 15px; width: 100%; max-width: 800px; margin: 0 auto; gap: 15px; }
 
 .turn-status-box { text-align: center; margin-bottom: -5px; }
 .turn-text { color: red; font-size: 16px; text-shadow: 1px 1px 2px black; font-weight: bold; letter-spacing: 1px;}
 
-/* 🌟 Board Layout (Responsive Grid Blowout Fixed) 🌟 */
+/* Board Layout */
 .center-panel { width: 100%; display: flex; justify-content: center; }
 .board-ornate-border { 
     width: 100%; max-width: 500px; padding: 6px; 
@@ -93,15 +93,15 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
 }
 .center-home span { position: absolute; z-index: 1; opacity: 0.4; }
 
-/* 🌟 Safe Zone Highlights 🌟 */
+/* Safe Zone Highlights */
 .square { border: 1px solid rgba(0,0,0,0.3); display: flex; flex-wrap: wrap; justify-content: center; align-items: center; align-content: center; gap: 1px; position: relative; overflow: hidden; padding: 2px; min-width: 0; min-height: 0; }
 .safe-zone { background-color: rgba(212, 175, 55, 0.2) !important; }
 
-/* 🌟 Responsive Tokens 🌟 */
+/* Responsive Tokens */
 .token { width: 45%; height: 45%; min-width: 6px; min-height: 6px; max-width: 14px; max-height: 14px; border-radius: 50%; border: 1px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.8); position: relative; z-index: 10; cursor: pointer; transition: transform 0.2s ease;}
 .token-red { background-color: var(--token-red); } .token-green { background-color: var(--token-green); } .token-yellow { background-color: var(--token-yellow); } .token-black { background-color: var(--token-black); }
 
-/* 🌟 Corner Players 🌟 */
+/* Corner Players */
 .corner-player { 
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; 
     background: var(--panel-bg); border: 2px solid var(--gold); border-radius: 6px; margin: 4px; 
@@ -133,7 +133,7 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
 
 .pasha-3d { 
     width: 100%; height: 100%; position: relative; 
-    transform-style: preserve-3d; /* Creates true 3D volume */
+    transform-style: preserve-3d; 
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
 }
 
@@ -174,18 +174,17 @@ button, a, .token, .nav-btn, .royal-btn, .hamburger, select {
 .royal-btn:disabled { background: #555; border-color: #333; color: #999; cursor: not-allowed; }
 .dice-text { width: 80px; text-align: center; color: white; font-size: 14px; font-family: Arial, sans-serif; flex-shrink: 0;}
 
-/* 🌟 Modals Overlay Base 🌟 */
+/* Modals Overlay Base */
 .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 2000; }
 .modal.hidden { display: none !important; }
 .modal-content { background: var(--bg-cream); border: 4px solid var(--gold); border-radius: 10px; position: relative; }
 .close-btn { position: absolute; top: 15px; right: 25px; font-size: 35px; color: var(--royal-red); cursor: pointer; transition: transform 0.2s; }
 .close-btn:hover { transform: scale(1.1); }
 
-/* 🌟 Mobile Responsiveness 🌟 */
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
     .nav-links { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; background: var(--bg-cream); padding: 20px 0; text-align: center; gap: 20px; box-shadow: 0 10px 10px rgba(0,0,0,0.1);}
     .nav-links.active { display: flex; }
     .hamburger { display: block; }
     .board-ornate-border { max-width: 95vw; padding: 4px; margin: 0 auto;}
-            }
-                                                                 
+}
