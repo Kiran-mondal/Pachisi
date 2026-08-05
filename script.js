@@ -292,17 +292,9 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTurnUI();
     }
 
-    // --- 6. MY PROJECTS MODAL LOGIC ---
-    const myProjectsBtn = document.getElementById('my-projects-btn');
+    // --- 6. CLOSE MODAL LOGIC ---
     const projectsModal = document.getElementById('projects-modal');
     const closeModalBtn = document.getElementById('close-modal');
-
-    if(myProjectsBtn && projectsModal) {
-        myProjectsBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            projectsModal.classList.remove('hidden');
-        });
-    }
 
     if(closeModalBtn && projectsModal) {
         closeModalBtn.addEventListener('click', () => {
@@ -317,3 +309,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 });
+                
