@@ -1,7 +1,7 @@
 <div align="center">
   <img src="https://pachisi.quarry.dpdns.org/favicon.svg" alt="Bharatiya Pasha Logo" width="250" height="250" style="margin-bottom: 20px;">
   
-  # 👑 BHARATIYA PASHA - THE ANCIENT EPIC 👑
+  # 👑 PACHISI - THE ANCIENT EPIC 👑
   
   **A Premium, Web-Based Multiplayer Board Game Experience (Pachisi & Chaupar)**
   
