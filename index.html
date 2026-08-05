@@ -49,7 +49,8 @@
             <li><a href="#" class="nav-btn" data-target="game-tab">Play</a></li>
             <li><a href="#" class="nav-btn" data-target="rules-tab">Rules</a></li>
             <li><a href="#" class="nav-btn" data-target="heritage-tab">Heritage</a></li>
-            <li><a href="#" id="my-projects-btn">My Projects</a></li>
+            <!-- Modal trigger -->
+            <li><a href="#" id="my-projects-btn" onclick="document.getElementById('projects-modal').classList.remove('hidden')">My Projects</a></li>
         </ul>
         
         <div class="hamburger" id="hamburger">
@@ -225,18 +226,22 @@
 
     </main>
 
-    <!-- My Projects Modal -->
+    <!-- 🌟 My Projects Modal (With Animations & Watermark) 🌟 -->
     <div id="projects-modal" class="modal hidden">
-        <div class="modal-content" style="max-width: 800px; padding: 30px; max-height: 90vh; overflow-y: auto;">
+        <div class="modal-content" style="max-width: 800px; padding: 30px; max-height: 90vh; overflow-y: auto; overflow-x: hidden; position: relative;">
             <span class="close-btn" id="close-modal">&times;</span>
             
-            <div class="container" style="display: block; padding-top: 20px;">
+            <!-- Background Watermark -->
+            <img src="favicon.svg" alt="Watermark" class="modal-watermark">
+            
+            <div class="container" style="display: block; padding-top: 20px; position: relative; z-index: 10;">
+                
                 <!-- GitHub Profile -->
                 <div class="github-profile" style="text-align: center;">
-                    <img src="https://github.com/Kiran-mondal.png" alt="Kiran Mondal" style="width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--gold); box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
+                    <img src="https://github.com/Kiran-mondal.png" alt="Kiran Mondal" class="profile-float-img">
                     <h2 style="color: var(--royal-red); font-family: 'Cinzel', serif; margin-top: 15px; margin-bottom: 5px;">Kiran Mondal</h2>
                     <p style="color: var(--dark-wood); font-weight: bold; font-family: Arial, sans-serif; margin-bottom: 20px;">Full-Stack Developer & Cyber Security Enthusiast</p>
-                    <a href="https://github.com/Kiran-mondal" target="_blank" style="display: inline-block; background: var(--royal-red); color: var(--gold); padding: 10px 25px; border-radius: 25px; text-decoration: none; font-weight: bold; font-family: Arial, sans-serif; border: 2px solid var(--gold); transition: transform 0.2s;">View Full GitHub Profile</a>
+                    <a href="https://github.com/Kiran-mondal" target="_blank" class="btn-github-main">View Full GitHub Profile</a>
                 </div>
                 
                 <!-- Title -->
@@ -249,54 +254,54 @@
                 <div class="repo-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
                     
                     <!-- Password Guard -->
-                    <div style="background: white; border: 2px solid var(--gold); border-radius: 8px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column;">
+                    <div class="repo-card animated-card">
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
                             <svg width="36" height="36" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="512" height="512" rx="120" fill="#0D4FF0"/><path d="M256 80L120 140V240C120 330 176 407 256 432C336 407 392 330 392 240V140L256 80Z" fill="white"/><circle cx="256" cy="255" r="70" fill="#0D4FF0"/><rect x="235" y="240" width="42" height="75" rx="8" fill="white"/></svg>
                             <h3 style="margin: 0; font-size: 1.3rem; color: var(--royal-red); font-family: 'Cinzel', serif;">Password Guard</h3>
                         </div>
                         <p style="font-family: Arial, sans-serif; font-size: 0.95rem; color: var(--dark-wood); margin-bottom: 15px; line-height: 1.6; flex-grow: 1;">Advanced AI-powered password protection & vault management tool with 3D Cyber UI.</p>
                         <div style="display: flex; gap: 10px;">
-                            <a href="https://passwordguard.quarry.dpdns.org" target="_blank" style="flex: 1; text-align: center; padding: 10px; background: var(--gold); color: var(--dark-wood); text-decoration: none; font-weight: bold; border-radius: 4px; border: 1px solid var(--dark-wood); font-family: Arial, sans-serif;">Live App</a>
-                            <a href="https://github.com/Kiran-mondal/Password-Guard" target="_blank" style="flex: 1; text-align: center; padding: 10px; border: 1px solid var(--royal-red); color: var(--royal-red); text-decoration: none; font-weight: bold; border-radius: 4px; font-family: Arial, sans-serif;">Source Code</a>
+                            <a href="https://passwordguard.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
+                            <a href="https://github.com/Kiran-mondal/Password-Guard" target="_blank" class="code-btn">Source Code</a>
                         </div>
                     </div>
 
                     <!-- ZenDrift -->
-                    <div style="background: white; border: 2px solid var(--gold); border-radius: 8px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column;">
+                    <div class="repo-card animated-card">
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="36" height="36"><path d="M 120 390 C 120 270, 392 350, 392 210 C 392 130, 310 90, 256 90" fill="none" stroke="#58a6ff" stroke-width="45" stroke-linecap="round" /><circle cx="256" cy="90" r="45" fill="#58a6ff" /></svg>
                             <h3 style="margin: 0; font-size: 1.3rem; color: var(--royal-red); font-family: 'Cinzel', serif;">ZenDrift</h3>
                         </div>
                         <p style="font-family: Arial, sans-serif; font-size: 0.95rem; color: var(--dark-wood); margin-bottom: 15px; line-height: 1.6; flex-grow: 1;">Dynamic performance tracking system built for an engaging and smooth web experience.</p>
                         <div style="display: flex; gap: 10px;">
-                            <a href="https://zendrift.quarry.dpdns.org" target="_blank" style="flex: 1; text-align: center; padding: 10px; background: var(--gold); color: var(--dark-wood); text-decoration: none; font-weight: bold; border-radius: 4px; border: 1px solid var(--dark-wood); font-family: Arial, sans-serif;">Live App</a>
-                            <a href="https://github.com/Kiran-mondal" target="_blank" style="flex: 1; text-align: center; padding: 10px; border: 1px solid var(--royal-red); color: var(--royal-red); text-decoration: none; font-weight: bold; border-radius: 4px; font-family: Arial, sans-serif;">Source Code</a>
+                            <a href="https://zendrift.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
+                            <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">Source Code</a>
                         </div>
                     </div>
 
-                     <!-- Omlang -->
-                    <div style="background: white; border: 2px solid var(--gold); border-radius: 8px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column;">
+                    <!-- Omlang -->
+                    <div class="repo-card animated-card">
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="36" height="36"><path d="M 280 250 C 420 250, 420 380, 350 400 C 450 420, 450 580, 280 580" stroke="#00f2fe" stroke-width="45" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="450" cy="120" r="30" fill="#00f2fe" /></svg>
                             <h3 style="margin: 0; font-size: 1.3rem; color: var(--royal-red); font-family: 'Cinzel', serif;">Omlang</h3>
                         </div>
                         <p style="font-family: Arial, sans-serif; font-size: 0.95rem; color: var(--dark-wood); margin-bottom: 15px; line-height: 1.6; flex-grow: 1;">A modern language and communication-focused platform with an intuitive user interface.</p>
                         <div style="display: flex; gap: 10px;">
-                            <a href="https://omlang.quarry.dpdns.org" target="_blank" style="flex: 1; text-align: center; padding: 10px; background: var(--gold); color: var(--dark-wood); text-decoration: none; font-weight: bold; border-radius: 4px; border: 1px solid var(--dark-wood); font-family: Arial, sans-serif;">Live App</a>
-                            <a href="https://github.com/Kiran-mondal" target="_blank" style="flex: 1; text-align: center; padding: 10px; border: 1px solid var(--royal-red); color: var(--royal-red); text-decoration: none; font-weight: bold; border-radius: 4px; font-family: Arial, sans-serif;">Source Code</a>
+                            <a href="https://omlang.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
+                            <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">Source Code</a>
                         </div>
                     </div>
 
                     <!-- Chaturanga -->
-                    <div style="background: white; border: 2px solid var(--gold); border-radius: 8px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column;">
+                    <div class="repo-card animated-card">
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
                             <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="36" height="36"><circle cx="50" cy="50" r="48" fill="#d97706" stroke="#ffffff" stroke-width="2"/><path d="M50 20 L75 55 L50 80 L25 55 Z" fill="#ffffff" /></svg>
                             <h3 style="margin: 0; font-size: 1.3rem; color: var(--royal-red); font-family: 'Cinzel', serif;">Chaturanga</h3>
                         </div>
                         <p style="font-family: Arial, sans-serif; font-size: 0.95rem; color: var(--dark-wood); margin-bottom: 15px; line-height: 1.6; flex-grow: 1;">Interactive web-based application focused on deep logic, planning, and strategy.</p>
                         <div style="display: flex; gap: 10px;">
-                            <a href="https://chaturanga.quarry.dpdns.org" target="_blank" style="flex: 1; text-align: center; padding: 10px; background: var(--gold); color: var(--dark-wood); text-decoration: none; font-weight: bold; border-radius: 4px; border: 1px solid var(--dark-wood); font-family: Arial, sans-serif;">Live App</a>
-                            <a href="https://github.com/Kiran-mondal" target="_blank" style="flex: 1; text-align: center; padding: 10px; border: 1px solid var(--royal-red); color: var(--royal-red); text-decoration: none; font-weight: bold; border-radius: 4px; font-family: Arial, sans-serif;">Source Code</a>
+                            <a href="https://chaturanga.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
+                            <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">Source Code</a>
                         </div>
                     </div>
 
