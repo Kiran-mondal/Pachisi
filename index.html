@@ -3,23 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <title>Pachisi - The Ancient Epic</title>
     <meta name="description" content="Play Pachisi online. Experience the ancient Indian epic board game of strategy, heritage, and royal culture.">
-    <meta name="keywords" content="Pachisi, Chaupar, Indian Board Game, Ludo, Online Pachisi, pachisi.quarry.dpdns.org">
-    <meta name="author" content="Kiran Mondal">
-    <link rel="canonical" href="https://pachisi.quarry.dpdns.org/">
-
-    <!-- Social Media Sharing -->
-    <meta property="og:title" content="Pachisi - The Ancient Epic">
-    <meta property="og:description" content="Play the royal game of Pachisi online! Roll 3D pasha stick dice, capture opponents, and experience India's heritage.">
-    <meta property="og:image" content="https://pachisi.quarry.dpdns.org/favicon.svg">
-    <meta property="og:url" content="https://pachisi.quarry.dpdns.org/">
-
-    <!-- Favicon -->
+    
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-
+    
+    <!-- CSS Files Linked -->
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="game/game.css">
+    
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Yatra+One&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -40,7 +32,7 @@
             <li><a href="#" class="nav-btn" data-target="game-tab">Play</a></li>
             <li><a href="#" class="nav-btn" data-target="rules-tab">Rules</a></li>
             <li><a href="#" class="nav-btn" data-target="heritage-tab">Heritage</a></li>
-            <li><a href="#" id="my-projects-btn" onclick="document.getElementById('projects-modal').classList.remove('hidden')">My Projects</a></li>
+            <li><a href="#" id="my-projects-btn">My Projects</a></li>
         </ul>
         
         <div class="hamburger" id="hamburger">
@@ -74,16 +66,23 @@
                     <div class="content-box setup-box">
                         <h2>Game Settings</h2>
                         
+                        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: left; font-family: Arial, sans-serif; font-size: 14px; color: #f4ead5; border: 1px solid rgba(220,179,96,0.3);">
+                            <h4 style="color: var(--gold); margin-bottom: 8px;"><i class="fa-solid fa-circle-info"></i> How to Setup:</h4>
+                            <ul style="margin-left: 20px; line-height: 1.6;">
+                                <li>Select exactly <b>2, 3, or 4 players</b> to start the game.</li>
+                                <li>Pick your favorite token colors from below!</li>
+                                <li>Set a color as <b>'Human'</b> (for yourself), <b>'Bot'</b> (to play against AI), or <b>'Disabled'</b> (if you don't want that color).</li>
+                            </ul>
+                        </div>
+
                         <div class="setup-row">
                             <label>Game Variant:</label>
                             <select id="variant-select" class="royal-select">
-                                <option value="pachisi">Pachisi (Safe Zones Enabled)</option>
-                                <option value="chaupar">Chaupar (No Safe Zones - Aggressive)</option>
+                                <option value="pachisi">Pachisi</option>
+                                <option value="chaupar">Chaupar</option>
                             </select>
                         </div>
 
-                        <p style="font-size: 13px; color: var(--gold); margin-bottom: 12px; font-family: Arial, sans-serif;">Configure Players (At least 2 active players required):</p>
-                        
                         <div class="players-config">
                             <div class="config-row" id="config-red">
                                 <div class="config-label"><div class="token token-red" style="position:static; margin-right:5px;"></div> Red Player:</div>
@@ -125,7 +124,6 @@
 
                 <!-- ACTUAL GAME UI -->
                 <div id="actual-game-screen" class="game-ui-wrapper" style="display: none;">
-                    
                     <div class="turn-status-box">
                         <h3 id="turn-indicator" class="turn-text">YOUR TURN'S MOVE</h3>
                     </div>
@@ -133,23 +131,10 @@
                     <div class="center-panel">
                         <div class="board-ornate-border">
                             <div class="board">
-                                
-                                <div class="corner-player corner-tl" id="player-card-yellow">
-                                    <h4 id="name-yellow">YELLOW</h4>
-                                    <div class="token-yard" id="yard-yellow"></div>
-                                </div>
-                                <div class="corner-player corner-tr" id="player-card-black">
-                                    <h4 id="name-black">BLACK</h4>
-                                    <div class="token-yard" id="yard-black"></div>
-                                </div>
-                                <div class="corner-player corner-bl" id="player-card-red">
-                                    <h4 id="name-red">RED</h4>
-                                    <div class="token-yard" id="yard-red"></div>
-                                </div>
-                                <div class="corner-player corner-br" id="player-card-green">
-                                    <h4 id="name-green">GREEN</h4>
-                                    <div class="token-yard" id="yard-green"></div>
-                                </div>
+                                <div class="corner-player corner-tl" id="player-card-yellow"><h4 id="name-yellow">YELLOW</h4><div class="token-yard" id="yard-yellow"></div></div>
+                                <div class="corner-player corner-tr" id="player-card-black"><h4 id="name-black">BLACK</h4><div class="token-yard" id="yard-black"></div></div>
+                                <div class="corner-player corner-bl" id="player-card-red"><h4 id="name-red">RED</h4><div class="token-yard" id="yard-red"></div></div>
+                                <div class="corner-player corner-br" id="player-card-green"><h4 id="name-green">GREEN</h4><div class="token-yard" id="yard-green"></div></div>
 
                                 <div class="arm vertical-arm top-arm" id="black-arm"></div>
                                 <div class="arm horizontal-arm left-arm" id="yellow-arm"></div>
@@ -167,9 +152,7 @@
                                 <div class="pasha-wrapper"><div class="pasha-3d" id="pasha-1"><div class="face front" id="dot-container-1"></div><div class="face back"></div><div class="face right"></div><div class="face left"></div><div class="face top"></div><div class="face bottom"></div></div></div>
                                 <div class="pasha-wrapper"><div class="pasha-3d" id="pasha-2"><div class="face front" id="dot-container-2"></div><div class="face back"></div><div class="face right"></div><div class="face left"></div><div class="face top"></div><div class="face bottom"></div></div></div>
                             </div>
-                            <div class="dice-action">
-                                <button id="roll-dice-btn" class="royal-btn">ROLL PASHA</button>
-                            </div>
+                            <div class="dice-action"><button id="roll-dice-btn" class="royal-btn">ROLL PASHA</button></div>
                             <div class="dice-text"><p id="dice-result">Roll Pasha<br>to move.</p></div>
                         </div>
                     </div>
@@ -201,24 +184,20 @@
             <div class="page-content">
                 <div class="content-box">
                     <h2>The Royal Heritage of Chaupar & Pachisi</h2>
-                    <p>Pachisi and Chaupar are ancient Indian board games that were famously played by Maharajas, Emperors, and Royals. Dating back to as early as the 4th to 6th century, these games hold a significant place in Indian mythology and history—most notably featured in the epic epic saga of Mahabharata.</p>
+                    <p>Pachisi and Chaupar are ancient Indian board games that were famously played by Maharajas, Emperors, and Royals. Dating back to as early as the 4th to 6th century, these games hold a significant place in Indian mythology and history—most notably featured in the epic saga of Mahabharata.</p>
                     <br>
                     <p>Mughal Emperor Akbar was known to play Pachisi on a grand scale in his palace courtyard at Fatehpur Sikri, using living court maidens as human pawns moving across giant inlaid stone squares! Historically, Pachisi also served as the primary ancestor to the modern western board game <i>Ludo</i>.</p>
-                    <br>
-                    <p>By playing this game today, you are engaging with a 5,000-year-old living tradition of strategy, luck, and Indian royal heritage.</p>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <!-- 🌟 MY PROJECTS MODAL PORTFOLIO (Full Content Restored) 🌟 -->
+    <!-- MY PROJECTS MODAL -->
     <div id="projects-modal" class="modal hidden">
         <div class="modal-content" style="max-width: 800px; padding: 30px; max-height: 90vh; overflow-y: auto; overflow-x: hidden; position: relative;">
             <span class="close-btn" id="close-modal">&times;</span>
-            
             <img src="favicon.svg" alt="Watermark" class="modal-watermark">
-            
             <div class="container" style="display: block; padding-top: 10px; position: relative; z-index: 10;">
                 
                 <div class="github-profile" style="text-align: center;">
@@ -234,47 +213,39 @@
                 </div>
                 
                 <div class="repo-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
-                    
-                    <!-- Password Guard -->
                     <div class="repo-card animated-card">
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
                             <svg width="36" height="36" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="512" height="512" rx="120" fill="#0D4FF0"/><path d="M256 80L120 140V240C120 330 176 407 256 432C336 407 392 330 392 240V140L256 80Z" fill="white"/><circle cx="256" cy="255" r="70" fill="#0D4FF0"/><rect x="235" y="240" width="42" height="75" rx="8" fill="white"/></svg>
                             <h3 style="margin: 0; font-size: 1.2rem; color: var(--royal-red); font-family: 'Cinzel', serif;">Password Guard</h3>
                         </div>
-                        <p style="font-family: Arial, sans-serif; font-size: 0.9rem; color: var(--dark-wood); margin-bottom: 15px; line-height: 1.5; flex-grow: 1;">Advanced AI-powered password protection & vault management tool with 3D Cyber UI.</p>
+                        <p style="font-family: Arial, sans-serif; font-size: 0.9rem; color: var(--dark-wood); margin-bottom: 15px; line-height: 1.5; flex-grow: 1;">Advanced AI-powered password protection & vault management tool.</p>
                         <div style="display: flex; gap: 10px;">
                             <a href="https://passwordguard.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
                             <a href="https://github.com/Kiran-mondal/Password-Guard" target="_blank" class="code-btn">Source Code</a>
                         </div>
                     </div>
-
-                    <!-- ZenDrift -->
                     <div class="repo-card animated-card">
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="36" height="36"><path d="M 120 390 C 120 270, 392 350, 392 210 C 392 130, 310 90, 256 90" fill="none" stroke="#58a6ff" stroke-width="45" stroke-linecap="round" /><circle cx="256" cy="90" r="45" fill="#58a6ff" /></svg>
                             <h3 style="margin: 0; font-size: 1.2rem; color: var(--royal-red); font-family: 'Cinzel', serif;">ZenDrift</h3>
                         </div>
-                        <p style="font-family: Arial, sans-serif; font-size: 0.9rem; color: var(--dark-wood); margin-bottom: 15px; line-height: 1.5; flex-grow: 1;">Dynamic performance tracking system built for an engaging and smooth web experience.</p>
+                        <p style="font-family: Arial, sans-serif; font-size: 0.9rem; color: var(--dark-wood); margin-bottom: 15px; line-height: 1.5; flex-grow: 1;">Dynamic performance tracking system built for an engaging web experience.</p>
                         <div style="display: flex; gap: 10px;">
                             <a href="https://zendrift.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
                             <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">Source Code</a>
                         </div>
                     </div>
-
-                    <!-- Omlang -->
                     <div class="repo-card animated-card">
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="36" height="36"><path d="M 280 250 C 420 250, 420 380, 350 400 C 450 420, 450 580, 280 580" stroke="#00f2fe" stroke-width="45" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="450" cy="120" r="30" fill="#00f2fe" /></svg>
                             <h3 style="margin: 0; font-size: 1.2rem; color: var(--royal-red); font-family: 'Cinzel', serif;">Omlang</h3>
                         </div>
-                        <p style="font-family: Arial, sans-serif; font-size: 0.9rem; color: var(--dark-wood); margin-bottom: 15px; line-height: 1.5; flex-grow: 1;">A modern language and communication-focused platform with an intuitive user interface.</p>
+                        <p style="font-family: Arial, sans-serif; font-size: 0.9rem; color: var(--dark-wood); margin-bottom: 15px; line-height: 1.5; flex-grow: 1;">A modern language and communication-focused platform with an intuitive UI.</p>
                         <div style="display: flex; gap: 10px;">
                             <a href="https://omlang.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
                             <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">Source Code</a>
                         </div>
                     </div>
-
-                    <!-- Chaturanga -->
                     <div class="repo-card animated-card">
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
                             <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="36" height="36"><circle cx="50" cy="50" r="48" fill="#d97706" stroke="#ffffff" stroke-width="2"/><path d="M50 20 L75 55 L50 80 L25 55 Z" fill="#ffffff" /></svg>
@@ -286,12 +257,14 @@
                             <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">Source Code</a>
                         </div>
                     </div>
-
-                 </div>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- JS Files Linked -->
     <script src="script.js"></script>
+    <script src="game/game.js"></script>
 </body>
 </html>
+                                    
