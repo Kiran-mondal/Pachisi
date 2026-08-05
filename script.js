@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function activateTab(targetId) {
         tabSections.forEach(section => section.classList.remove('active'));
         document.getElementById(targetId)?.classList.add('active');
-        navLinksContainer?.classList.remove('active'); // Close menu on click
+        navLinksContainer?.classList.remove('active');
     }
     
     document.querySelectorAll('.nav-btn').forEach(btn => btn.addEventListener('click', (e) => { 
@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
         activateTab(btn.getAttribute('data-target')); 
     }));
 
-    // Mobile Hamburger Logic
     document.getElementById('hamburger')?.addEventListener('click', () => {
         navLinksContainer.classList.toggle('active');
     });
@@ -91,26 +90,27 @@ document.addEventListener('DOMContentLoaded', () => {
         return t;
     }
 
+    // Fixed Start Button Logic
     document.getElementById('start-game-btn')?.addEventListener('click', () => {
         const allColors = ['red', 'green', 'black', 'yellow'];
         turnOrder = allColors.filter(c => document.getElementById(`status-${c}`).value !== 'none');
         
         if(turnOrder.length < 2) {
-            alert("Please select at least 2 players to start the game!");
+            alert("Please enable at least 2 players to start!");
             return;
         }
 
         turnOrder.forEach(c => {
             players[c].type = document.getElementById(`status-${c}`).value;
             document.getElementById(`name-${c}`).innerText = players[c].type === 'human' ? `${c.toUpperCase()}` : `BOT-${c.toUpperCase()}`;
-            document.getElementById(players[c].id).style.visibility = 'visible';
-            document.getElementById(players[c].id).style.opacity = '1';
+            const card = document.getElementById(players[c].id);
+            if(card) { card.style.visibility = 'visible'; card.style.opacity = '1'; }
         });
 
         allColors.forEach(c => {
             if(!turnOrder.includes(c)) {
-                document.getElementById(players[c].id).style.visibility = 'hidden';
-                document.getElementById(players[c].id).style.opacity = '0.3';
+                const card = document.getElementById(players[c].id);
+                if(card) { card.style.visibility = 'hidden'; card.style.opacity = '0.3'; }
             }
         });
 
@@ -119,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         createBoard();
 
+        // Spawn 4 tokens in yard for each selected player
         turnOrder.forEach((color) => {
             const yard = document.getElementById(`yard-${color}`);
             if(yard) { yard.innerHTML = ''; for (let i = 0; i < 4; i++) yard.appendChild(createTokenElem(color)); }
@@ -291,5 +292,17 @@ document.addEventListener('DOMContentLoaded', () => {
         hasExtraTurn = false;
         updateTurnUI();
     }
+
+    // Modal Close Logic
+    const projectsModal = document.getElementById('projects-modal');
+    document.getElementById('close-modal')?.addEventListener('click', () => {
+        projectsModal?.classList.add('hidden');
+    });
+
+    window.addEventListener('click', (e) => {
+        if (e.target === projectsModal) {
+            projectsModal?.classList.add('hidden');
+        }
+    });
 });
-                 
+                     
