@@ -4,33 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- 🌟 SEO & Meta Data 🌟 -->
     <title>Bharatiya Pasha - The Ancient Epic</title>
     <meta name="description" content="Play Bharatiya Pasha (Pachisi) online. Experience the ancient Indian epic board game of strategy, heritage, and royal culture.">
-    <meta name="keywords" content="Pachisi, Bharatiya Pasha, Indian Board Game, Chaupar, Ludo, Online Pachisi, pachisi.quarry.dpdns.org">
-    <meta name="author" content="Kiran Mondal">
-    <link rel="canonical" href="https://pachisi.quarry.dpdns.org/">
-
-    <!-- 🌟 Social Media Sharing (Open Graph / WhatsApp / Facebook) 🌟 -->
-    <meta property="og:title" content="Bharatiya Pasha - The Ancient Epic">
-    <meta property="og:description" content="Play the royal game of Pachisi online! Roll the 3D stick dice, capture opponents, and experience the glorious heritage of India.">
-    <meta property="og:image" content="https://pachisi.quarry.dpdns.org/favicon.svg">
-    <meta property="og:url" content="https://pachisi.quarry.dpdns.org/">
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Bharatiya Pasha">
-
-    <!-- 🌟 Twitter Card 🌟 -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Bharatiya Pasha - The Ancient Epic">
-    <meta name="twitter:description" content="Play the royal game of Pachisi online! Roll the 3D stick dice and experience the glorious heritage of India.">
-    <meta name="twitter:image" content="https://pachisi.quarry.dpdns.org/favicon.svg">
-
+    
     <!-- Favicon (SVG) -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Yatra+One&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
@@ -49,15 +29,8 @@
             <li><a href="#" class="nav-btn" data-target="game-tab">Play</a></li>
             <li><a href="#" class="nav-btn" data-target="rules-tab">Rules</a></li>
             <li><a href="#" class="nav-btn" data-target="heritage-tab">Heritage</a></li>
-            <!-- Modal trigger -->
             <li><a href="#" id="my-projects-btn" onclick="document.getElementById('projects-modal').classList.remove('hidden')">My Projects</a></li>
         </ul>
-        
-        <div class="hamburger" id="hamburger">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </div>
     </header>
 
     <main class="main-content">
@@ -79,39 +52,56 @@
         <section id="game-tab" class="tab-section">
             <div class="hero game-bg">
                 
-                <!-- GAME SETUP SCREEN -->
+                <!-- 🌟 ADVANCED GAME SETUP SCREEN 🌟 -->
                 <div id="game-setup-screen" class="setup-container">
                     <div class="content-box setup-box">
                         <h2>Game Settings</h2>
                         
                         <div class="setup-row">
-                            <label>Select Mode:</label>
-                            <select id="mode-select" class="royal-select">
-                                <option value="4">4 Players</option>
-                                <option value="2">2 Players (Red vs Black)</option>
+                            <label>Game Rules:</label>
+                            <select id="variant-select" class="royal-select">
+                                <option value="pachisi">Pachisi (Safe Zones On)</option>
+                                <option value="chaupar">Chaupar (No Safe Zones)</option>
                             </select>
                         </div>
 
-                        <div class="players-config">
+                        <p style="font-size: 13px; color: #dcb360; margin-bottom: 10px;">Select your preferred colors (Minimum 2 required):</p>
+                                                <div class="players-config">
                             <div class="config-row" id="config-red">
-                                <div class="config-label"><span class="token-icon token-red"></span> Red Player:</div>
-                                <select id="type-red" class="royal-select"><option value="human">Human</option><option value="computer">Computer</option></select>
+                                <div class="config-label"><div class="token token-red" style="position:static; margin-right:5px;"></div> Red:</div>
+                                <select id="status-red" class="royal-select">
+                                    <option value="human">Human Player</option>
+                                    <option value="computer">Computer Bot</option>
+                                    <option value="none">Not Playing</option>
+                                </select>
                             </div>
                             <div class="config-row" id="config-green">
-                                <div class="config-label"><span class="token-icon token-green"></span> Green Player:</div>
-                                <select id="type-green" class="royal-select"><option value="computer">Computer</option><option value="human">Human</option></select>
+                                <div class="config-label"><div class="token token-green" style="position:static; margin-right:5px;"></div> Green:</div>
+                                <select id="status-green" class="royal-select">
+                                    <option value="none">Not Playing</option>
+                                    <option value="computer">Computer Bot</option>
+                                    <option value="human">Human Player</option>
+                                </select>
                             </div>
                             <div class="config-row" id="config-black">
-                                <div class="config-label"><span class="token-icon token-black"></span> Black Player:</div>
-                                <select id="type-black" class="royal-select"><option value="computer">Computer</option><option value="human">Human</option></select>
+                                <div class="config-label"><div class="token token-black" style="position:static; margin-right:5px;"></div> Black:</div>
+                                <select id="status-black" class="royal-select">
+                                    <option value="computer">Computer Bot</option>
+                                    <option value="human">Human Player</option>
+                                    <option value="none">Not Playing</option>
+                                </select>
                             </div>
                             <div class="config-row" id="config-yellow">
-                                <div class="config-label"><span class="token-icon token-yellow"></span> Yellow Player:</div>
-                                <select id="type-yellow" class="royal-select"><option value="computer">Computer</option><option value="human">Human</option></select>
+                                <div class="config-label"><div class="token token-yellow" style="position:static; margin-right:5px;"></div> Yellow:</div>
+                                <select id="status-yellow" class="royal-select">
+                                    <option value="none">Not Playing</option>
+                                    <option value="computer">Computer Bot</option>
+                                    <option value="human">Human Player</option>
+                                </select>
                             </div>
                         </div>
 
-                        <button id="start-game-btn" class="royal-btn start-btn">START GAME</button>
+                        <button id="start-game-btn" class="royal-btn start-btn">START EPIC BATTLE</button>
                     </div>
                 </div>
 
@@ -126,25 +116,22 @@
                         <div class="board-ornate-border">
                             <div class="board">
                                 
+                                <!-- PLAYER CARDS WITH TOKEN YARDS -->
                                 <div class="corner-player corner-tl" id="player-card-yellow">
                                     <h4 id="name-yellow">YELLOW</h4>
-                                    <div class="avatar-box"><i class="fa-solid fa-user"></i></div>
-                                    <div class="token-icon token-yellow"></div>
+                                    <div class="token-yard" id="yard-yellow"></div>
                                 </div>
                                 <div class="corner-player corner-tr" id="player-card-black">
                                     <h4 id="name-black">BLACK</h4>
-                                    <div class="avatar-box"><i class="fa-solid fa-user"></i></div>
-                                    <div class="token-icon token-black"></div>
+                                    <div class="token-yard" id="yard-black"></div>
                                 </div>
                                 <div class="corner-player corner-bl" id="player-card-red">
                                     <h4 id="name-red">RED</h4>
-                                    <div class="avatar-box"><i class="fa-solid fa-user"></i></div>
-                                    <div class="token-icon token-red"></div>
+                                    <div class="token-yard" id="yard-red"></div>
                                 </div>
                                 <div class="corner-player corner-br" id="player-card-green">
                                     <h4 id="name-green">GREEN</h4>
-                                    <div class="avatar-box"><i class="fa-solid fa-user"></i></div>
-                                    <div class="token-icon token-green"></div>
+                                    <div class="token-yard" id="yard-green"></div>
                                 </div>
 
                                 <div class="arm vertical-arm top-arm" id="black-arm"></div>
@@ -160,35 +147,13 @@
                     <div class="bottom-panel">
                         <div class="dice-panel">
                             <div class="bowl oval-bowl">
-                                <!-- 3D Pasha 1 -->
-                                <div class="pasha-wrapper">
-                                    <div class="pasha-3d" id="pasha-1">
-                                        <div class="face front" id="dot-container-1"></div>
-                                        <div class="face back"></div>
-                                        <div class="face right"></div>
-                                        <div class="face left"></div>
-                                        <div class="face top"></div>
-                                        <div class="face bottom"></div>
-                                    </div>
-                                </div>
-                                <!-- 3D Pasha 2 -->
-                                <div class="pasha-wrapper">
-                                    <div class="pasha-3d" id="pasha-2">
-                                        <div class="face front" id="dot-container-2"></div>
-                                        <div class="face back"></div>
-                                        <div class="face right"></div>
-                                        <div class="face left"></div>
-                                        <div class="face top"></div>
-                                        <div class="face bottom"></div>
-                                    </div>
-                                </div>
+                                <div class="pasha-wrapper"><div class="pasha-3d" id="pasha-1"><div class="face front" id="dot-container-1"></div><div class="face back"></div><div class="face right"></div><div class="face left"></div><div class="face top"></div><div class="face bottom"></div></div></div>
+                                <div class="pasha-wrapper"><div class="pasha-3d" id="pasha-2"><div class="face front" id="dot-container-2"></div><div class="face back"></div><div class="face right"></div><div class="face left"></div><div class="face top"></div><div class="face bottom"></div></div></div>
                             </div>
                             <div class="dice-action">
                                 <button id="roll-dice-btn" class="royal-btn">ROLL PASHA</button>
                             </div>
-                            <div class="dice-text">
-                                <p id="dice-result">Roll Pasha<br>to move.</p>
-                            </div>
+                            <div class="dice-text"><p id="dice-result">Roll Pasha<br>to move.</p></div>
                         </div>
                     </div>
 
@@ -196,120 +161,20 @@
             </div>
         </section>
 
-        <!-- 3. RULES TAB -->
-        <section id="rules-tab" class="tab-section">
-            <div class="page-content">
-                <div class="content-box">
-                    <h2>Rules of Pachisi</h2>
-                    <ul>
-                        <li><strong>Players:</strong> Minimum 2, Maximum 4 players. Pachisi is played in an anti-clockwise direction.</li>
-                        <li><strong>Tokens:</strong> The game involves 4 sets of 4 counters.</li>
-                        <li><strong>Pasha (Dice):</strong> Played with a pair of stick dice. A doublet allows moving a pair of counters together, or as individual counters.</li>
-                        <li><strong>Safe Zones:</strong> Squares 1 to 7 are called the 'Belly'. A counter cannot go into the bellies of other counters.</li>
-                        <li><strong>Capturing:</strong> A counter is captured when a player's counter lands on the other player's counter in the same square.</li>
-                        <li><strong>Winning:</strong> The first player to get all his 4 counters home is the winner.</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- 4. HERITAGE TAB -->
-        <section id="heritage-tab" class="tab-section">
-            <div class="page-content">
-                <div class="content-box">
-                    <h2>The Heritage of Chaupar</h2>
-                    <p>Pachisi and Chaupar are ancient Indian board games that were famously played by the Maharajas and Royals. The history of games dates to the ancient human past, capturing the ideas and worldviews of their cultures and passing them on to the next generation.</p>
-                    <p>Pachisi, dating back to roughly the 6th century, gave rise to the globally popular game Ludo. They hold a significant place in Indian mythology. By playing this game today, you are preserving a piece of a 5,000-year-old tradition.</p>
-                </div>
-            </div>
-        </section>
-
+        <!-- 3. RULES & 4. HERITAGE -->
+        <section id="rules-tab" class="tab-section"><div class="page-content"><div class="content-box"><h2>Rules</h2><p>Roll dice to enter and move. Safe zones protect pawns. First to home wins!</p></div></div></section>
+        <section id="heritage-tab" class="tab-section"><div class="page-content"><div class="content-box"><h2>Heritage</h2><p>Chaupar is an epic ancient Indian game...</p></div></div></section>
     </main>
 
-    <!-- 🌟 My Projects Modal (With Animations & Watermark) 🌟 -->
+    <!-- My Projects Modal -->
     <div id="projects-modal" class="modal hidden">
-        <div class="modal-content" style="max-width: 800px; padding: 30px; max-height: 90vh; overflow-y: auto; overflow-x: hidden; position: relative;">
+        <div class="modal-content" style="max-width: 800px; padding: 30px; max-height: 90vh; overflow-y: auto;">
             <span class="close-btn" id="close-modal">&times;</span>
-            
-            <!-- Background Watermark -->
-            <img src="favicon.svg" alt="Watermark" class="modal-watermark">
-            
-            <div class="container" style="display: block; padding-top: 20px; position: relative; z-index: 10;">
-                
-                <!-- GitHub Profile -->
-                <div class="github-profile" style="text-align: center;">
-                    <img src="https://github.com/Kiran-mondal.png" alt="Kiran Mondal" class="profile-float-img">
-                    <h2 style="color: var(--royal-red); font-family: 'Cinzel', serif; margin-top: 15px; margin-bottom: 5px;">Kiran Mondal</h2>
-                    <p style="color: var(--dark-wood); font-weight: bold; font-family: Arial, sans-serif; margin-bottom: 20px;">Full-Stack Developer & Cyber Security Enthusiast</p>
-                    <a href="https://github.com/Kiran-mondal" target="_blank" class="btn-github-main">View Full GitHub Profile</a>
-                </div>
-                
-                <!-- Title -->
-                <div style="text-align: center; margin-bottom: 35px; margin-top: 50px;">
-                    <h3 style="color: var(--royal-red); font-size: 1.6rem; margin: 0; font-family: 'Cinzel', serif;">🌐 My Other Live Projects</h3>
-                    <div style="width: 180px; height: 2px; background: var(--gold); margin: 15px auto 0 auto;"></div>
-                </div>
-                
-                <!-- Projects Grid -->
-                <div class="repo-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
-                    
-                    <!-- Password Guard -->
-                    <div class="repo-card animated-card">
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
-                            <svg width="36" height="36" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="512" height="512" rx="120" fill="#0D4FF0"/><path d="M256 80L120 140V240C120 330 176 407 256 432C336 407 392 330 392 240V140L256 80Z" fill="white"/><circle cx="256" cy="255" r="70" fill="#0D4FF0"/><rect x="235" y="240" width="42" height="75" rx="8" fill="white"/></svg>
-                            <h3 style="margin: 0; font-size: 1.3rem; color: var(--royal-red); font-family: 'Cinzel', serif;">Password Guard</h3>
-                        </div>
-                        <p style="font-family: Arial, sans-serif; font-size: 0.95rem; color: var(--dark-wood); margin-bottom: 15px; line-height: 1.6; flex-grow: 1;">Advanced AI-powered password protection & vault management tool with 3D Cyber UI.</p>
-                        <div style="display: flex; gap: 10px;">
-                            <a href="https://passwordguard.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
-                            <a href="https://github.com/Kiran-mondal/Password-Guard" target="_blank" class="code-btn">Source Code</a>
-                        </div>
-                    </div>
-
-                    <!-- ZenDrift -->
-                    <div class="repo-card animated-card">
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="36" height="36"><path d="M 120 390 C 120 270, 392 350, 392 210 C 392 130, 310 90, 256 90" fill="none" stroke="#58a6ff" stroke-width="45" stroke-linecap="round" /><circle cx="256" cy="90" r="45" fill="#58a6ff" /></svg>
-                            <h3 style="margin: 0; font-size: 1.3rem; color: var(--royal-red); font-family: 'Cinzel', serif;">ZenDrift</h3>
-                        </div>
-                        <p style="font-family: Arial, sans-serif; font-size: 0.95rem; color: var(--dark-wood); margin-bottom: 15px; line-height: 1.6; flex-grow: 1;">Dynamic performance tracking system built for an engaging and smooth web experience.</p>
-                        <div style="display: flex; gap: 10px;">
-                            <a href="https://zendrift.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
-                            <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">Source Code</a>
-                        </div>
-                    </div>
-
-                    <!-- Omlang -->
-                    <div class="repo-card animated-card">
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="36" height="36"><path d="M 280 250 C 420 250, 420 380, 350 400 C 450 420, 450 580, 280 580" stroke="#00f2fe" stroke-width="45" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="450" cy="120" r="30" fill="#00f2fe" /></svg>
-                            <h3 style="margin: 0; font-size: 1.3rem; color: var(--royal-red); font-family: 'Cinzel', serif;">Omlang</h3>
-                        </div>
-                        <p style="font-family: Arial, sans-serif; font-size: 0.95rem; color: var(--dark-wood); margin-bottom: 15px; line-height: 1.6; flex-grow: 1;">A modern language and communication-focused platform with an intuitive user interface.</p>
-                        <div style="display: flex; gap: 10px;">
-                            <a href="https://omlang.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
-                            <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">Source Code</a>
-                        </div>
-                    </div>
-
-                    <!-- Chaturanga -->
-                    <div class="repo-card animated-card">
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
-                            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="36" height="36"><circle cx="50" cy="50" r="48" fill="#d97706" stroke="#ffffff" stroke-width="2"/><path d="M50 20 L75 55 L50 80 L25 55 Z" fill="#ffffff" /></svg>
-                            <h3 style="margin: 0; font-size: 1.3rem; color: var(--royal-red); font-family: 'Cinzel', serif;">Chaturanga</h3>
-                        </div>
-                        <p style="font-family: Arial, sans-serif; font-size: 0.95rem; color: var(--dark-wood); margin-bottom: 15px; line-height: 1.6; flex-grow: 1;">Interactive web-based application focused on deep logic, planning, and strategy.</p>
-                        <div style="display: flex; gap: 10px;">
-                            <a href="https://chaturanga.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
-                            <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">Source Code</a>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
+            <h2 style="text-align: center; color: var(--royal-red); font-family: Cinzel;">My Projects</h2>
         </div>
     </div>
 
     <script src="script.js"></script>
 </body>
-</html>
+    </html>
+                                    
