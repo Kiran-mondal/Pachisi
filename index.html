@@ -32,7 +32,8 @@
             <li><a href="#" class="nav-btn" data-target="game-tab">Play</a></li>
             <li><a href="#" class="nav-btn" data-target="rules-tab">Rules</a></li>
             <li><a href="#" class="nav-btn" data-target="heritage-tab">Heritage</a></li>
-            <li><a href="#" id="my-projects-btn">My Projects</a></li>
+            <!-- 🌟 FIX 2: My Projects Button explicitly opening the modal 🌟 -->
+            <li><a href="#" id="my-projects-btn" onclick="document.getElementById('projects-modal').classList.remove('hidden')">My Projects</a></li>
         </ul>
         
         <div class="hamburger" id="hamburger">
@@ -66,9 +67,10 @@
                     <div class="content-box setup-box">
                         <h2>Game Settings</h2>
                         
-                        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: left; font-family: Arial, sans-serif; font-size: 14px; color: #f4ead5; border: 1px solid rgba(220,179,96,0.3);">
+                        <!-- 🌟 FIX 1: Text color manually forced to light cream (#f4ead5) 🌟 -->
+                        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: left; font-family: Arial, sans-serif; font-size: 14px; border: 1px solid rgba(220,179,96,0.3);">
                             <h4 style="color: var(--gold); margin-bottom: 8px;"><i class="fa-solid fa-circle-info"></i> How to Setup:</h4>
-                            <ul style="margin-left: 20px; line-height: 1.6;">
+                            <ul style="margin-left: 20px; line-height: 1.6; color: #f4ead5;">
                                 <li>Select exactly <b>2, 3, or 4 players</b> to start the game.</li>
                                 <li>Pick your favorite token colors from below!</li>
                                 <li>Set a color as <b>'Human'</b> (for yourself), <b>'Bot'</b> (to play against AI), or <b>'Disabled'</b> (if you don't want that color).</li>
@@ -196,7 +198,10 @@
     <!-- MY PROJECTS MODAL -->
     <div id="projects-modal" class="modal hidden">
         <div class="modal-content" style="max-width: 800px; padding: 30px; max-height: 90vh; overflow-y: auto; overflow-x: hidden; position: relative;">
-            <span class="close-btn" id="close-modal">&times;</span>
+            
+            <!-- Explicit inline close action -->
+            <span class="close-btn" id="close-modal" onclick="document.getElementById('projects-modal').classList.add('hidden')">&times;</span>
+            
             <img src="favicon.svg" alt="Watermark" class="modal-watermark">
             <div class="container" style="display: block; padding-top: 10px; position: relative; z-index: 10;">
                 
@@ -267,4 +272,4 @@
     <script src="game/game.js"></script>
 </body>
 </html>
-                                    
+                            
