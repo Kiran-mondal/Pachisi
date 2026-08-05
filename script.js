@@ -1,12 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- 1. Tab Navigation ---
+    // --- 1. Tab Navigation & Mobile Menu ---
     const tabSections = document.querySelectorAll('.tab-section');
+    const navLinksContainer = document.getElementById('nav-links');
+    
     function activateTab(targetId) {
         tabSections.forEach(section => section.classList.remove('active'));
         document.getElementById(targetId)?.classList.add('active');
+        navLinksContainer?.classList.remove('active'); // Close menu on click
     }
-    document.querySelectorAll('.nav-btn').forEach(btn => btn.addEventListener('click', (e) => { e.preventDefault(); activateTab(btn.getAttribute('data-target')); }));
+    
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.addEventListener('click', (e) => { 
+        e.preventDefault(); 
+        activateTab(btn.getAttribute('data-target')); 
+    }));
+
+    // Mobile Hamburger Logic
+    document.getElementById('hamburger')?.addEventListener('click', () => {
+        navLinksContainer.classList.toggle('active');
+    });
 
     // --- 2. GAME VARIABLES & SETUP LOGIC ---
     const arms = ['black-arm', 'yellow-arm', 'green-arm', 'red-arm'];
@@ -117,7 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('actual-game-screen').style.display = 'flex';
         updateTurnUI();
     });
-                        // --- 3. DICE LOGIC ---
+
+    // --- 3. DICE LOGIC ---
     const rollBtn = document.getElementById('roll-dice-btn');
     const resultText = document.getElementById('dice-result');
 
@@ -193,8 +206,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isComputerTurn) setTimeout(moveComputerToken, 600);
             else if(rollBtn) rollBtn.disabled = false;
         }, 900); 
-                                                                                  }
-           // --- 4. MOVEMENT LOGIC ---
+    }
+
+    // --- 4. MOVEMENT LOGIC ---
     function performMove(token) {
         if (token.classList.contains('finished')) return; 
 
@@ -278,4 +292,4 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTurnUI();
     }
 });
-                
+                 
