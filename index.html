@@ -31,7 +31,7 @@
             <li><a href="#" class="nav-btn" data-target="game-tab">Play</a></li>
             <li><a href="#" class="nav-btn" data-target="rules-tab">Rules</a></li>
             <li><a href="#" class="nav-btn" data-target="heritage-tab">Heritage</a></li>
-            <!-- 🌟 My Projects is now pointing to the new separated folder/file 🌟 -->
+            <!-- Link to separated projects folder -->
             <li><a href="projects/index.html" id="my-projects-btn">My Projects</a></li>
         </ul>
         
@@ -149,7 +149,8 @@
                             <!-- Video Dice Bowl -->
                             <div class="bowl video-bowl">
                                 <video id="pasha-video" muted playsinline preload="auto" poster="bg.jpg">
-                                    <source src="dice.mp4" type="video/mp4">
+                                    <!-- 🌟 Updated path to load from game folder 🌟 -->
+                                    <source src="game/dice.mp4" type="video/mp4">
                                 </video>
                                 <div id="dice-overlay" class="dice-overlay hidden">
                                     <span id="v1-text"></span> &amp; <span id="v2-text"></span>
@@ -202,5 +203,5 @@
     <script src="script.js"></script>
     <script src="game/game.js"></script>
 </body>
-                                                                                                                              </html>
-                                                                                                 
+</html>
+                                                                                                                   
