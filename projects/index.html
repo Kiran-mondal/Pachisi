@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kiran Mondal - My Projects</title>
     
-    <!-- Fonts and Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -29,109 +28,94 @@
             overflow-x: hidden;
         }
 
-        /* 🌟 ঘূর্ণায়মান ওয়াটারমার্ক অ্যানিমেশন 🌟 */
+        /* Watermark Animation */
         .watermark-bg {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 80vmin;
-            height: 80vmin;
-            opacity: 0.15; /* হালকা করে দেখার জন্য */
-            z-index: 0;
-            pointer-events: none;
-            animation: spinWatermark 25s linear infinite; /* ২৫ সেকেন্ডে একবার ঘুরবে */
+            position: fixed; top: 50%; left: 50%; width: 80vmin; height: 80vmin;
+            opacity: 0.15; z-index: 0; pointer-events: none;
+            animation: spinWatermark 25s linear infinite;
         }
-        .watermark-bg svg {
-            width: 100%;
-            height: 100%;
-            fill: var(--gold);
-            stroke: var(--gold);
-        }
+        .watermark-bg svg { width: 100%; height: 100%; fill: var(--gold); stroke: var(--gold); }
         @keyframes spinWatermark {
             0% { transform: translate(-50%, -50%) rotate(0deg); }
             100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
-        /* মূল কন্টেইনার */
+        /* Container & Mobile Fixes */
         .container {
             background: var(--bg-cream); 
             border: 4px solid var(--gold); 
             border-radius: 10px;
             width: 100%; 
             max-width: 650px; 
-            padding: 30px; 
+            padding: 40px 30px; 
+            box-sizing: border-box; /* এটি ডিজাইন ভাঙতে দেবে না */
             box-shadow: 0 10px 40px rgba(220, 179, 96, 0.2);
             position: relative;
             z-index: 10;
         }
         .close-btn { 
-            position: absolute; 
-            top: 10px; 
-            right: 20px; 
-            font-size: 35px; 
-            color: var(--royal-red); 
-            cursor: pointer; 
-            text-decoration: none; 
-            transition: 0.3s;
+            position: absolute; top: 10px; right: 20px; font-size: 35px; 
+            color: var(--royal-red); cursor: pointer; text-decoration: none; 
         }
-        .close-btn:hover { color: #ff0000; transform: scale(1.1); }
         
         /* Profile Section */
-        .profile-section { text-align: center; margin-bottom: 20px; }
+        .profile-section { text-align: center; margin-bottom: 25px; }
         .profile-img {
-            width: 130px; height: 130px; border-radius: 50%; 
+            width: 120px; height: 120px; border-radius: 50%; 
             border: 3px solid var(--gold); box-shadow: 0 4px 15px rgba(220,179,96,0.6); 
-            margin-bottom: 15px; object-fit: cover;
+            margin: 0 auto 15px auto; object-fit: cover; display: block;
         }
-        .profile-section h2 { color: var(--royal-red); font-family: 'Cinzel', serif; margin: 0; font-size: 2rem; }
-        .profile-section p { color: var(--dark-wood); font-weight: bold; margin: 10px 0 20px 0; }
+        .profile-section h2 { color: var(--royal-red); font-family: 'Cinzel', serif; margin: 0 0 10px 0; font-size: 2rem; line-height: 1.2;}
+        .profile-section p { color: var(--dark-wood); font-weight: bold; margin: 0 0 20px 0; font-size: 1rem; }
+        
         .btn-github-main { 
             display: inline-block; background: var(--royal-red); color: var(--gold); 
-            padding: 10px 25px; border-radius: 25px; text-decoration: none; font-weight: bold; 
-            border: 2px solid var(--gold); transition: 0.3s;
+            padding: 10px 20px; border-radius: 25px; text-decoration: none; font-weight: bold; 
+            border: 2px solid var(--gold); font-size: 0.95rem;
         }
-        .btn-github-main:hover { transform: scale(1.05); background: var(--dark-wood); }
         
-        /* Title Section */
-        .section-title { text-align: center; margin: 40px 0 20px 0; }
-        .section-title h3 { color: var(--royal-red); font-size: 1.6rem; margin: 0; font-family: 'Cinzel', serif; }
-        .divider { width: 200px; height: 2px; background: var(--gold); margin: 12px auto 30px auto; }
+        /* Title Section Fixes */
+        .section-title { text-align: center; margin: 35px 0 25px 0; }
+        .title-flex { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .title-flex h3 { color: var(--royal-red); font-size: 1.5rem; margin: 0; font-family: 'Cinzel', serif; }
+        .divider { width: 180px; height: 2px; background: var(--gold); margin: 15px auto 0 auto; }
         
         /* Project Cards */
         .repo-card { 
             background: white; border: 2px solid var(--gold); border-radius: 8px; 
             padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
-            transition: transform 0.3s ease;
         }
-        .repo-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
         
-        /* Card Header (Logo + Title) */
-        .card-header { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
-        .card-header svg { width: 40px; height: 40px; flex-shrink: 0; }
-        .card-header h3 { margin: 0; font-size: 1.4rem; color: var(--royal-red); font-family: 'Cinzel', serif; }
+        /* Header & SVG Fixes */
+        .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .card-header svg { width: 36px; height: 36px; flex-shrink: 0; }
+        .card-header h3 { margin: 0; font-size: 1.3rem; color: var(--royal-red); font-family: 'Cinzel', serif; }
         
-        .repo-card p { font-size: 0.95rem; color: var(--dark-wood); margin-bottom: 20px; line-height: 1.6; font-weight: 500;}
+        .repo-card p { font-size: 0.95rem; color: var(--dark-wood); margin-bottom: 20px; line-height: 1.5; }
         
-        /* Links */
+        /* Buttons */
         .card-buttons { display: flex; gap: 15px; }
-        .live-btn { 
-            flex: 1; text-align: center; padding: 12px; background: var(--gold); 
-            color: var(--dark-wood); text-decoration: none; font-weight: bold; 
-            border-radius: 5px; border: 1px solid var(--dark-wood); font-size: 14px; transition: 0.3s;
+        .live-btn, .code-btn { 
+            flex: 1; text-align: center; padding: 10px; border-radius: 5px; 
+            font-weight: bold; font-size: 0.9rem; text-decoration: none; 
         }
-        .live-btn:hover { background: var(--dark-wood); color: var(--gold); }
-        
-        .code-btn { 
-            flex: 1; text-align: center; padding: 12px; background: white; 
-            border: 1px solid var(--royal-red); color: var(--royal-red); 
-            text-decoration: none; font-weight: bold; border-radius: 5px; font-size: 14px; transition: 0.3s;
+        .live-btn { background: var(--gold); color: var(--dark-wood); border: 1px solid var(--dark-wood); }
+        .code-btn { background: white; color: var(--royal-red); border: 1px solid var(--royal-red); }
+
+        /* Responsive Settings for Mobile */
+        @media (max-width: 480px) {
+            .container { padding: 30px 15px; }
+            .profile-section h2 { font-size: 1.6rem; }
+            .profile-section p { font-size: 0.9rem; }
+            .title-flex h3 { font-size: 1.3rem; }
+            .card-header h3 { font-size: 1.15rem; }
+            .card-header svg { width: 32px; height: 32px; }
         }
-        .code-btn:hover { background: var(--royal-red); color: white; }
     </style>
 </head>
 <body>
 
-    <!-- 🌟 ব্যাকগ্রাউন্ডে ঘূর্ণায়মান ওয়াটারমার্ক 🌟 -->
+    <!-- Watermark -->
     <div class="watermark-bg">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
             <defs>
@@ -151,7 +135,6 @@
         </svg>
     </div>
 
-    <!-- মূল কন্টেন্ট -->
     <div class="container">
         <!-- Close Button -->
         <a href="../index.html" class="close-btn">&times;</a>
@@ -167,18 +150,21 @@
         </div>
 
         <div class="section-title">
-            <h3>🌐 My Other Live Projects</h3>
+            <div class="title-flex">
+                <i class="fa-solid fa-globe" style="color:#007bff; font-size: 1.4rem;"></i>
+                <h3>My Other Live Projects</h3>
+            </div>
             <div class="divider"></div>
         </div>
         
-        <!-- Project 1: Password Guard -->
+        <!-- Password Guard -->
         <div class="repo-card">
             <div class="card-header">
-                <!-- SVG Theme matched with Royal Red -->
-                <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="512" height="512" rx="120" fill="var(--royal-red)"/>
+                <!-- Original Colors Restored -->
+                <svg width="36" height="36" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="512" height="512" rx="120" fill="#0D4FF0"/>
                     <path d="M256 80L120 140V240C120 330 176 407 256 432C336 407 392 330 392 240V140L256 80Z" fill="white"/>
-                    <circle cx="256" cy="255" r="70" fill="var(--royal-red)"/>
+                    <circle cx="256" cy="255" r="70" fill="#0D4FF0"/>
                     <rect x="235" y="240" width="42" height="75" rx="8" fill="white"/>
                 </svg>
                 <h3>Password Guard</h3>
@@ -190,24 +176,24 @@
             </div>
         </div>
 
-        <!-- Project 2: Pachisi -->
+        <!-- Pachisi -->
         <div class="repo-card">
             <div class="card-header">
-                <!-- SVG Theme matched with Royal Red -->
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <!-- Original Colors Restored -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="36" height="36">
                     <defs>
                         <mask id="pasha-hole">
                             <rect width="512" height="512" fill="white" />
                             <circle cx="256" cy="256" r="32" fill="black" />
                         </mask>
                     </defs>
-                    <g mask="url(#pasha-hole)" fill="var(--royal-red)">
+                    <g mask="url(#pasha-hole)" fill="#dc2626">
                         <rect x="232" y="16" width="48" height="480" rx="12" />
                         <rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(45 256 256)" />
                         <rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(90 256 256)" />
                         <rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(135 256 256)" />
-                        <circle cx="256" cy="256" r="168" fill="none" stroke="var(--royal-red)" stroke-width="48" />
-                        <circle cx="256" cy="256" r="56" fill="none" stroke="var(--royal-red)" stroke-width="48" />
+                        <circle cx="256" cy="256" r="168" fill="none" stroke="#dc2626" stroke-width="48" />
+                        <circle cx="256" cy="256" r="56" fill="none" stroke="#dc2626" stroke-width="48" />
                     </g>
                 </svg>
                 <h3>Pachisi</h3>
@@ -219,13 +205,13 @@
             </div>
         </div>
         
-        <!-- Project 3: ZenDrift -->
+        <!-- ZenDrift -->
         <div class="repo-card">
             <div class="card-header">
-                <!-- SVG Theme matched with Royal Red & Gold -->
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                    <path d="M 120 390 C 120 270, 392 350, 392 210 C 392 130, 310 90, 256 90" fill="none" stroke="var(--royal-red)" stroke-width="45" stroke-linecap="round" />
-                    <circle cx="256" cy="90" r="45" fill="var(--gold)" />
+                <!-- Original Colors Restored -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="36" height="36">
+                    <path d="M 120 390 C 120 270, 392 350, 392 210 C 392 130, 310 90, 256 90" fill="none" stroke="#58a6ff" stroke-width="45" stroke-linecap="round" />
+                    <circle cx="256" cy="90" r="45" fill="#58a6ff" />
                 </svg>
                 <h3>ZenDrift</h3>
             </div>
@@ -236,13 +222,13 @@
             </div>
         </div>
         
-        <!-- Project 4: Omlang -->
+        <!-- Omlang -->
         <div class="repo-card">
             <div class="card-header">
-                <!-- SVG Theme matched -->
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
-                    <path d="M 280 250 C 420 250, 420 380, 350 400 C 450 420, 450 580, 280 580" stroke="var(--royal-red)" stroke-width="45" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                    <circle cx="450" cy="120" r="30" fill="var(--gold)" />
+                <!-- Original Colors Restored -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="36" height="36">
+                    <path d="M 280 250 C 420 250, 420 380, 350 400 C 450 420, 450 580, 280 580" stroke="#00f2fe" stroke-width="45" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="450" cy="120" r="30" fill="#00f2fe" />
                 </svg>
                 <h3>Omlang</h3>
             </div>
@@ -253,13 +239,13 @@
             </div>
         </div>
         
-        <!-- Project 5: Chaturanga -->
+        <!-- Chaturanga -->
         <div class="repo-card">
             <div class="card-header">
-                <!-- SVG Theme matched -->
-                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="50" cy="50" r="48" fill="var(--royal-red)" stroke="var(--gold)" stroke-width="2"/>
-                    <path d="M50 20 L75 55 L50 80 L25 55 Z" fill="var(--gold)" />
+                <!-- Original Colors Restored -->
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
+                    <circle cx="50" cy="50" r="48" fill="#d97706" stroke="#ffffff" stroke-width="2"/>
+                    <path d="M50 20 L75 55 L50 80 L25 55 Z" fill="#ffffff" />
                 </svg>
                 <h3>Chaturanga</h3>
             </div>
