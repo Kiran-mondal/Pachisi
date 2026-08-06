@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kiran Mondal - My Projects</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
@@ -15,133 +15,212 @@
             --royal-red: #7a1f1f;
             --dark-wood: #1e1008;
         }
+
+        /* ফুল স্ক্রিন পপআপ লেআউট (কোনো এক্সট্রা কালো বর্ডার বা ফাঁকা জায়গা থাকবে না) */
         body {
             font-family: Arial, sans-serif;
-            background-color: #000; 
-            margin: 0; 
-            padding: 20px;
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
+            background: url('../bg.jpg') center/cover fixed no-repeat;
+            background-color: #1e1008;
+            margin: 0;
+            padding: 0;
+            width: 100vw;
             min-height: 100vh;
-            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            box-sizing: border-box;
             overflow-x: hidden;
         }
 
-        /* Watermark Animation */
-        .watermark-bg {
-            position: fixed; top: 50%; left: 50%; width: 80vmin; height: 80vmin;
-            opacity: 0.15; z-index: 0; pointer-events: none;
-            animation: spinWatermark 25s linear infinite;
-        }
-        .watermark-bg svg { width: 100%; height: 100%; fill: var(--gold); stroke: var(--gold); }
-        @keyframes spinWatermark {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        /* ব্যাকগ্রাউন্ড ডার্ক ওভারলে */
+        .overlay-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 1;
         }
 
-        /* Container & Mobile Fixes */
+        /* মূল পপআপ কন্টেইনার (সম্পूर्ण স্ক্রিন জুড়ে রয়্যাল থিম) */
         .container {
-            background: var(--bg-cream); 
-            border: 4px solid var(--gold); 
-            border-radius: 10px;
-            width: 100%; 
-            max-width: 650px; 
-            padding: 40px 30px; 
-            box-sizing: border-box; /* এটি ডিজাইন ভাঙতে দেবে না */
-            box-shadow: 0 10px 40px rgba(220, 179, 96, 0.2);
+            background: var(--bg-cream);
+            border-left: 4px solid var(--gold);
+            border-right: 4px solid var(--gold);
+            width: 100%;
+            max-width: 700px;
+            min-height: 100vh;
+            padding: 30px 20px;
+            box-sizing: border-box;
             position: relative;
             z-index: 10;
+            box-shadow: 0 0 30px rgba(0,0,0,0.9);
         }
-        .close-btn { 
-            position: absolute; top: 10px; right: 20px; font-size: 35px; 
-            color: var(--royal-red); cursor: pointer; text-decoration: none; 
-        }
-        
-        /* Profile Section */
-        .profile-section { text-align: center; margin-bottom: 25px; }
-        .profile-img {
-            width: 120px; height: 120px; border-radius: 50%; 
-            border: 3px solid var(--gold); box-shadow: 0 4px 15px rgba(220,179,96,0.6); 
-            margin: 0 auto 15px auto; object-fit: cover; display: block;
-        }
-        .profile-section h2 { color: var(--royal-red); font-family: 'Cinzel', serif; margin: 0 0 10px 0; font-size: 2rem; line-height: 1.2;}
-        .profile-section p { color: var(--dark-wood); font-weight: bold; margin: 0 0 20px 0; font-size: 1rem; }
-        
-        .btn-github-main { 
-            display: inline-block; background: var(--royal-red); color: var(--gold); 
-            padding: 10px 20px; border-radius: 25px; text-decoration: none; font-weight: bold; 
-            border: 2px solid var(--gold); font-size: 0.95rem;
-        }
-        
-        /* Title Section Fixes */
-        .section-title { text-align: center; margin: 35px 0 25px 0; }
-        .title-flex { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
-        .title-flex h3 { color: var(--royal-red); font-size: 1.5rem; margin: 0; font-family: 'Cinzel', serif; }
-        .divider { width: 180px; height: 2px; background: var(--gold); margin: 15px auto 0 auto; }
-        
-        /* Project Cards */
-        .repo-card { 
-            background: white; border: 2px solid var(--gold); border-radius: 8px; 
-            padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
-        }
-        
-        /* Header & SVG Fixes */
-        .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-        .card-header svg { width: 36px; height: 36px; flex-shrink: 0; }
-        .card-header h3 { margin: 0; font-size: 1.3rem; color: var(--royal-red); font-family: 'Cinzel', serif; }
-        
-        .repo-card p { font-size: 0.95rem; color: var(--dark-wood); margin-bottom: 20px; line-height: 1.5; }
-        
-        /* Buttons */
-        .card-buttons { display: flex; gap: 15px; }
-        .live-btn, .code-btn { 
-            flex: 1; text-align: center; padding: 10px; border-radius: 5px; 
-            font-weight: bold; font-size: 0.9rem; text-decoration: none; 
-        }
-        .live-btn { background: var(--gold); color: var(--dark-wood); border: 1px solid var(--dark-wood); }
-        .code-btn { background: white; color: var(--royal-red); border: 1px solid var(--royal-red); }
 
-        /* Responsive Settings for Mobile */
+        /* ক্লোজ বাটন */
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 35px;
+            color: var(--royal-red);
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            z-index: 20;
+            line-height: 1;
+        }
+        .close-btn:hover { color: #ff0000; }
+
+        /* Profile Section */
+        .github-profile {
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 30px;
+        }
+        .github-profile img {
+            width: 110px; height: 110px;
+            border-radius: 50%;
+            border: 3px solid var(--gold);
+            box-shadow: 0 4px 15px rgba(220,179,96,0.5);
+            margin-bottom: 12px;
+            object-fit: cover;
+        }
+        .github-profile h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            color: var(--royal-red);
+            margin: 0 0 5px 0;
+        }
+        .github-profile p {
+            font-size: 0.9rem;
+            color: var(--dark-wood);
+            font-weight: bold;
+            margin: 0 0 15px 0;
+        }
+        .btn-github-main {
+            display: inline-block;
+            background: var(--royal-red);
+            color: var(--gold);
+            padding: 10px 22px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            border: 2px solid var(--gold);
+        }
+
+        /* Section Header */
+        .section-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .section-header h3 {
+            font-size: 1.4rem;
+            color: var(--royal-red);
+            font-family: 'Cinzel', serif;
+            margin: 0 0 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .bottom-line {
+            width: 180px;
+            height: 2px;
+            background: var(--gold);
+            margin: 0 auto;
+        }
+
+        /* Project Cards (আপনার দেওয়া এক্সাম্পল স্টাইল অনুযায়ী রয়্যাল ক্রিম থিমে সাজানো) */
+        .repo-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .repo-card {
+            background: #ffffff;
+            border: 2px solid var(--gold);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.2s ease;
+        }
+        .repo-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: var(--royal-red);
+            font-family: 'Cinzel', serif;
+        }
+        .card-header svg {
+            width: 34px;
+            height: 34px;
+            flex-shrink: 0;
+        }
+
+        .repo-card p {
+            font-size: 0.9rem;
+            color: var(--dark-wood);
+            margin: 0 0 18px 0;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        /* Buttons Style */
+        .card-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        .live-btn {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            background: var(--gold);
+            color: var(--dark-wood);
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            border: 1px solid var(--dark-wood);
+        }
+        .code-btn {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            background: #ffffff;
+            border: 1px solid var(--royal-red);
+            color: var(--royal-red);
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
         @media (max-width: 480px) {
-            .container { padding: 30px 15px; }
-            .profile-section h2 { font-size: 1.6rem; }
-            .profile-section p { font-size: 0.9rem; }
-            .title-flex h3 { font-size: 1.3rem; }
-            .card-header h3 { font-size: 1.15rem; }
-            .card-header svg { width: 32px; height: 32px; }
+            .container { padding: 25px 12px; border: none; }
+            .card-header h3 { font-size: 1.1rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Watermark -->
-    <div class="watermark-bg">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-            <defs>
-                <mask id="pasha-hole-bg">
-                    <rect width="512" height="512" fill="white" />
-                    <circle cx="256" cy="256" r="32" fill="black" />
-                </mask>
-            </defs>
-            <g mask="url(#pasha-hole-bg)" fill="currentColor">
-                <rect x="232" y="16" width="48" height="480" rx="12" />
-                <rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(45 256 256)" />
-                <rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(90 256 256)" />
-                <rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(135 256 256)" />
-                <circle cx="256" cy="256" r="168" fill="none" stroke="currentColor" stroke-width="48" />
-                <circle cx="256" cy="256" r="56" fill="none" stroke="currentColor" stroke-width="48" />
-            </g>
-        </svg>
-    </div>
+    <div class="overlay-bg"></div>
 
     <div class="container">
-        <!-- Close Button -->
+        <!-- Close Button (Back to Game) -->
         <a href="../index.html" class="close-btn">&times;</a>
         
         <!-- Profile Section -->
-        <div class="profile-section">
-            <img src="https://github.com/Kiran-mondal.png" alt="Profile" class="profile-img">
+        <div class="github-profile">
+            <img src="https://github.com/Kiran-mondal.png" alt="Kiran Mondal">
             <h2>Kiran Mondal</h2>
             <p>Full-Stack Developer & Cyber Security Enthusiast</p>
             <a href="https://github.com/Kiran-mondal" target="_blank" class="btn-github-main">
@@ -149,115 +228,108 @@
             </a>
         </div>
 
-        <div class="section-title">
-            <div class="title-flex">
-                <i class="fa-solid fa-globe" style="color:#007bff; font-size: 1.4rem;"></i>
-                <h3>My Other Live Projects</h3>
-            </div>
-            <div class="divider"></div>
+        <div class="section-header">
+            <h3><i class="fa-solid fa-globe" style="color: #007bff;"></i> My Other Live Projects</h3>
+            <div class="bottom-line"></div>
         </div>
         
-        <!-- Password Guard -->
-        <div class="repo-card">
-            <div class="card-header">
-                <!-- Original Colors Restored -->
-                <svg width="36" height="36" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="512" height="512" rx="120" fill="#0D4FF0"/>
-                    <path d="M256 80L120 140V240C120 330 176 407 256 432C336 407 392 330 392 240V140L256 80Z" fill="white"/>
-                    <circle cx="256" cy="255" r="70" fill="#0D4FF0"/>
-                    <rect x="235" y="240" width="42" height="75" rx="8" fill="white"/>
-                </svg>
-                <h3>Password Guard</h3>
+        <div class="repo-grid">
+            <!-- 1. Password Guard -->
+            <div class="repo-card">
+                <div class="card-header">
+                    <svg width="34" height="34" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="512" height="512" rx="120" fill="#0D4FF0"/>
+                        <path d="M256 80L120 140V240C120 330 176 407 256 432C336 407 392 330 392 240V140L256 80Z" fill="white"/>
+                        <circle cx="256" cy="255" r="70" fill="#0D4FF0"/>
+                        <rect x="235" y="240" width="42" height="75" rx="8" fill="white"/>
+                    </svg>
+                    <h3>Password Guard</h3>
+                </div>
+                <p>Advanced AI-powered password protection & vault management tool with 3D Cyber UI.</p>
+                <div class="card-buttons">
+                    <a href="https://passwordguard.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
+                    <a href="https://github.com/Kiran-mondal/Password-Guard" target="_blank" class="code-btn">Source Code</a>
+                </div>
             </div>
-            <p>Advanced AI-powered password protection & vault management tool with 3D Cyber UI.</p>
-            <div class="card-buttons">
-                <a href="https://passwordguard.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
-                <a href="https://github.com/Kiran-mondal/Password-Guard" target="_blank" class="code-btn">Source Code</a>
-            </div>
-        </div>
 
-        <!-- Pachisi -->
-        <div class="repo-card">
-            <div class="card-header">
-                <!-- Original Colors Restored -->
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="36" height="36">
-                    <defs>
-                        <mask id="pasha-hole">
-                            <rect width="512" height="512" fill="white" />
-                            <circle cx="256" cy="256" r="32" fill="black" />
-                        </mask>
-                    </defs>
-                    <g mask="url(#pasha-hole)" fill="#dc2626">
-                        <rect x="232" y="16" width="48" height="480" rx="12" />
-                        <rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(45 256 256)" />
-                        <rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(90 256 256)" />
-                        <rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(135 256 256)" />
-                        <circle cx="256" cy="256" r="168" fill="none" stroke="#dc2626" stroke-width="48" />
-                        <circle cx="256" cy="256" r="56" fill="none" stroke="#dc2626" stroke-width="48" />
-                    </g>
-                </svg>
-                <h3>Pachisi</h3>
+            <!-- 2. Pachisi -->
+            <div class="repo-card">
+                <div class="card-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="34" height="34">
+                        <defs>
+                            <mask id="pasha-hole">
+                                <rect width="512" height="512" fill="white" />
+                                <circle cx="256" cy="256" r="32" fill="black" />
+                            </mask>
+                        </defs>
+                        <g mask="url(#pasha-hole)" fill="#dc2626">
+                            <rect x="232" y="16" width="48" height="480" rx="12" />
+                            <rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(45 256 256)" />
+                            <rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(90 256 256)" />
+                            <rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(135 256 256)" />
+                            <circle cx="256" cy="256" r="168" fill="none" stroke="#dc2626" stroke-width="48" />
+                            <circle cx="256" cy="256" r="56" fill="none" stroke="#dc2626" stroke-width="48" />
+                        </g>
+                    </svg>
+                    <h3>Pachisi</h3>
+                </div>
+                <p>Play the ancient Indian epic board game of strategy, heritage, and royal culture.</p>
+                <div class="card-buttons">
+                    <a href="https://pachisi.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
+                    <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">Source Code</a>
+                </div>
             </div>
-            <p>Play the ancient Indian epic board game of strategy, heritage, and royal culture.</p>
-            <div class="card-buttons">
-                <a href="https://pachisi.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
-                <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">Source Code</a>
+            
+            <!-- 3. ZenDrift -->
+            <div class="repo-card">
+                <div class="card-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="34" height="34">
+                        <path d="M 120 390 C 120 270, 392 350, 392 210 C 392 130, 310 90, 256 90" fill="none" stroke="#58a6ff" stroke-width="45" stroke-linecap="round" />
+                        <circle cx="256" cy="90" r="45" fill="#58a6ff" />
+                    </svg>
+                    <h3>ZenDrift</h3>
+                </div>
+                <p>Dynamic performance tracking system built for an engaging and smooth web experience.</p>
+                <div class="card-buttons">
+                    <a href="https://zendrift.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
+                    <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">Source Code</a>
+                </div>
             </div>
-        </div>
-        
-        <!-- ZenDrift -->
-        <div class="repo-card">
-            <div class="card-header">
-                <!-- Original Colors Restored -->
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="36" height="36">
-                    <path d="M 120 390 C 120 270, 392 350, 392 210 C 392 130, 310 90, 256 90" fill="none" stroke="#58a6ff" stroke-width="45" stroke-linecap="round" />
-                    <circle cx="256" cy="90" r="45" fill="#58a6ff" />
-                </svg>
-                <h3>ZenDrift</h3>
+            
+            <!-- 4. Omlang -->
+            <div class="repo-card">
+                <div class="card-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="34" height="34">
+                        <path d="M 280 250 C 420 250, 420 380, 350 400 C 450 420, 450 580, 280 580" stroke="#00f2fe" stroke-width="45" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="450" cy="120" r="30" fill="#00f2fe" />
+                    </svg>
+                    <h3>Omlang</h3>
+                </div>
+                <p>A modern language and communication-focused platform with an intuitive user interface.</p>
+                <div class="card-buttons">
+                    <a href="https://omlang.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
+                    <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">Source Code</a>
+                </div>
             </div>
-            <p>Dynamic performance tracking system built for an engaging and smooth web experience.</p>
-            <div class="card-buttons">
-                <a href="https://zendrift.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
-                <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">Source Code</a>
-            </div>
-        </div>
-        
-        <!-- Omlang -->
-        <div class="repo-card">
-            <div class="card-header">
-                <!-- Original Colors Restored -->
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="36" height="36">
-                    <path d="M 280 250 C 420 250, 420 380, 350 400 C 450 420, 450 580, 280 580" stroke="#00f2fe" stroke-width="45" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                    <circle cx="450" cy="120" r="30" fill="#00f2fe" />
-                </svg>
-                <h3>Omlang</h3>
-            </div>
-            <p>A modern language and communication-focused platform with an intuitive user interface.</p>
-            <div class="card-buttons">
-                <a href="https://omlang.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
-                <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">Source Code</a>
-            </div>
-        </div>
-        
-        <!-- Chaturanga -->
-        <div class="repo-card">
-            <div class="card-header">
-                <!-- Original Colors Restored -->
-                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
-                    <circle cx="50" cy="50" r="48" fill="#d97706" stroke="#ffffff" stroke-width="2"/>
-                    <path d="M50 20 L75 55 L50 80 L25 55 Z" fill="#ffffff" />
-                </svg>
-                <h3>Chaturanga</h3>
-            </div>
-            <p>Interactive web-based application focused on deep logic, planning, and strategy.</p>
-            <div class="card-buttons">
-                <a href="https://chaturanga.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
-                <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">Source Code</a>
+            
+            <!-- 5. Chaturanga -->
+            <div class="repo-card">
+                <div class="card-header">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="34" height="34">
+                        <circle cx="50" cy="50" r="48" fill="#d97706" stroke="#ffffff" stroke-width="2"/>
+                        <path d="M50 20 L75 55 L50 80 L25 55 Z" fill="#ffffff" />
+                    </svg>
+                    <h3>Chaturanga</h3>
+                </div>
+                <p>Interactive web-based application focused on deep logic, planning, and strategy.</p>
+                <div class="card-buttons">
+                    <a href="https://chaturanga.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
+                    <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">Source Code</a>
+                </div>
             </div>
         </div>
-        
     </div>
 
 </body>
 </html>
-    
+                            
