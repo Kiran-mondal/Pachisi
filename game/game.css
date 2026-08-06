@@ -49,7 +49,7 @@
 /* =========================================
    3. TOKENS & SHRINKING LOGIC
    ========================================= */
-.corner-player { display: flex; flex-direction: column; align-items: center; justify-content: space-between; background: var(--panel-bg); border: 2px solid var(--gold); border-radius: 6px; margin: 3px; padding: 5px; color: var(--gold); transition: opacity 0.3s; }
+.corner-player { display: flex; flex-direction: column; align-items: center; justify-content: space-between; background: var(--panel-bg); border: 2px solid var(--gold); border-radius: 6px; margin: 3px; padding: 5px; color: var(--gold); transition: all 0.3s ease; }
 .corner-player.active-turn { border-color: var(--glow-gold); box-shadow: 0 0 10px var(--glow-gold); background: rgba(60, 40, 20, 0.9); }
 .corner-player h4 { font-size: clamp(9px, 2.5vw, 14px); font-weight: bold; margin: 0; } 
 .token-yard { width: 100%; flex-grow: 1; display: flex; flex-wrap: wrap; justify-content: space-evenly; align-items: center; padding: 2px; }
@@ -108,17 +108,22 @@
 }
 
 /* =========================================
-   6. PATH ARROWS (VISIBLE)
+   🌟 6. FOOLPROOF PATH ARROWS (Using Exact Data-IDs) 🌟
    ========================================= */
-#red-arm::before { content: "↑"; position: absolute; bottom: 5px; right: 10px; font-size: 28px; font-weight: bold; color: rgba(0, 0, 0, 0.5); pointer-events: none; z-index: 5; }
-#red-arm::after { content: "⤵"; position: absolute; top: 5px; right: 10px; font-size: 28px; font-weight: bold; color: rgba(0, 0, 0, 0.5); pointer-events: none; transform: rotate(90deg); z-index: 5; }
 
-#yellow-arm::before { content: "↓"; position: absolute; top: 5px; left: 10px; font-size: 28px; font-weight: bold; color: rgba(0, 0, 0, 0.5); pointer-events: none; z-index: 5; }
-#yellow-arm::after { content: "⤵"; position: absolute; bottom: 5px; left: 10px; font-size: 28px; font-weight: bold; color: rgba(0, 0, 0, 0.5); pointer-events: none; transform: rotate(-90deg); z-index: 5; }
+/* Red Arm (Bottom) - Right goes UP, Left goes DOWN, Home Path goes UP */
+[data-id="red-arm-sq-1"]::after, [data-id="red-arm-sq-2"]::after { content: "↑"; position: absolute; font-size: 22px; font-weight: bold; color: rgba(0, 0, 0, 0.25); pointer-events: none; z-index: 1; }
+[data-id="red-arm-sq-24"]::after { content: "↓"; position: absolute; font-size: 22px; font-weight: bold; color: rgba(0, 0, 0, 0.25); pointer-events: none; z-index: 1; }
 
-#green-arm::before { content: "→"; position: absolute; bottom: 25px; left: 5px; font-size: 28px; font-weight: bold; color: rgba(0, 0, 0, 0.5); pointer-events: none; z-index: 5; }
-#green-arm::after { content: "⤵"; position: absolute; bottom: 25px; right: 5px; font-size: 28px; font-weight: bold; color: rgba(0, 0, 0, 0.5); pointer-events: none; transform: rotate(180deg); z-index: 5; }
+/* Yellow Arm (Top) - Left goes DOWN, Right goes UP, Home Path goes DOWN */
+[data-id="yellow-arm-sq-8"]::after, [data-id="yellow-arm-sq-10"]::after { content: "↓"; position: absolute; font-size: 22px; font-weight: bold; color: rgba(0, 0, 0, 0.25); pointer-events: none; z-index: 1; }
+[data-id="yellow-arm-sq-17"]::after { content: "↑"; position: absolute; font-size: 22px; font-weight: bold; color: rgba(0, 0, 0, 0.25); pointer-events: none; z-index: 1; }
 
-#black-arm::before { content: "←"; position: absolute; top: 25px; right: 5px; font-size: 28px; font-weight: bold; color: rgba(0, 0, 0, 0.5); pointer-events: none; z-index: 5; }
-#black-arm::after { content: "⤵"; position: absolute; top: 25px; left: 5px; font-size: 28px; font-weight: bold; color: rgba(0, 0, 0, 0.5); pointer-events: none; transform: rotate(0deg); z-index: 5; }
-    
+/* Green Arm (Left) - Top goes RIGHT, Bottom goes LEFT, Home Path goes RIGHT */
+[data-id="green-arm-sq-17"]::after, [data-id="green-arm-sq-9"]::after { content: "→"; position: absolute; font-size: 22px; font-weight: bold; color: rgba(0, 0, 0, 0.25); pointer-events: none; z-index: 1; }
+[data-id="green-arm-sq-8"]::after { content: "←"; position: absolute; font-size: 22px; font-weight: bold; color: rgba(0, 0, 0, 0.25); pointer-events: none; z-index: 1; }
+
+/* Black Arm (Right) - Bottom goes LEFT, Top goes RIGHT, Home Path goes LEFT */
+[data-id="black-arm-sq-24"]::after, [data-id="black-arm-sq-23"]::after { content: "←"; position: absolute; font-size: 22px; font-weight: bold; color: rgba(0, 0, 0, 0.25); pointer-events: none; z-index: 1; }
+[data-id="black-arm-sq-1"]::after { content: "→"; position: absolute; font-size: 22px; font-weight: bold; color: rgba(0, 0, 0, 0.25); pointer-events: none; z-index: 1; }
+                
