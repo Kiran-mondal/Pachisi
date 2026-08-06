@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     document.querySelectorAll('.nav-btn').forEach(btn => btn.addEventListener('click', (e) => { 
+        // 🌟 শুধুমাত্র যেসব লিংকে nav-btn ক্লাস আছে, সেগুলোকেই আটকাবে 🌟
         e.preventDefault(); 
         activateTab(btn.getAttribute('data-target')); 
     }));
