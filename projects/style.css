@@ -5,7 +5,6 @@
     --dark-wood: #1e1008;
 }
 
-/* ফুল স্ক্রিন বা ব্যাকগ্রাউন্ড ফিক্স */
 body {
     font-family: Arial, sans-serif;
     background-color: #000000;
@@ -19,7 +18,6 @@ body {
     overflow-x: hidden;
 }
 
-/* ব্যাকগ্রাউন্ড ওভারলে এবং ফিক্সড ইমেজ */
 .overlay-bg {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -28,7 +26,6 @@ body {
     z-index: 1;
 }
 
-/* মূল পপআপ কন্টেইনার (ঠিক যেমনটা আপনি শেষ ছবিতে চেয়েছিলেন) */
 .container {
     background: var(--bg-cream);
     border: 4px solid var(--gold);
@@ -43,7 +40,6 @@ body {
     box-shadow: 0 10px 40px rgba(0,0,0,0.8);
 }
 
-/* ক্লোজ বাটন */
 .close-btn {
     position: absolute;
     top: 12px;
@@ -58,7 +54,6 @@ body {
 }
 .close-btn:hover { color: #ff0000; }
 
-/* Profile Section */
 .github-profile {
     text-align: center;
     margin-bottom: 25px;
@@ -95,7 +90,6 @@ body {
     border: 2px solid var(--gold);
 }
 
-/* Section Header */
 .section-header {
     text-align: center;
     margin: 30px 0 20px 0;
@@ -117,7 +111,6 @@ body {
     margin: 0 auto;
 }
 
-/* Project Cards */
 .repo-grid {
     display: flex;
     flex-direction: column;
@@ -157,7 +150,6 @@ body {
     font-weight: 500;
 }
 
-/* Buttons Style */
 .card-buttons {
     display: flex;
     gap: 12px;
