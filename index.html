@@ -147,7 +147,8 @@
                             
                             <!-- 🌟 Video Dice Bowl 🌟 -->
                             <div class="bowl video-bowl">
-                                <video id="pasha-video" muted playsinline preload="auto">
+                                <!-- 🌟 Added poster="bg.jpg" so it doesn't look black on mobile before playing 🌟 -->
+                                <video id="pasha-video" muted playsinline preload="auto" poster="bg.jpg">
                                     <source src="dice.mp4" type="video/mp4">
                                 </video>
                                 <div id="dice-overlay" class="dice-overlay hidden">
@@ -197,17 +198,68 @@
 
     </main>
 
-    <!-- MY PROJECTS MODAL -->
+    <!-- 🌟 MY PROJECTS MODAL (RESTORED ALL PROJECTS) 🌟 -->
     <div id="projects-modal" class="modal hidden">
         <div class="modal-content" style="max-width: 800px; padding: 30px; max-height: 90vh; overflow-y: auto; overflow-x: hidden; position: relative;">
             <span class="close-btn" id="close-modal" onclick="document.getElementById('projects-modal').classList.add('hidden')">&times;</span>
             <div class="container" style="display: block; position: relative; z-index: 10;">
+                
                 <div class="github-profile" style="text-align: center;">
                     <img src="https://github.com/Kiran-mondal.png" alt="Kiran Mondal" class="profile-float-img">
                     <h2 style="color: var(--royal-red); font-family: 'Cinzel', serif; margin-top: 15px;">Kiran Mondal</h2>
                     <p style="color: var(--dark-wood); font-weight: bold; font-family: Arial, sans-serif; margin-bottom: 20px;">Full-Stack Developer & Cyber Security Enthusiast</p>
                     <a href="https://github.com/Kiran-mondal" target="_blank" class="btn-github-main">View Full GitHub Profile</a>
                 </div>
+
+                <div style="text-align: center; margin-bottom: 30px; margin-top: 40px;">
+                    <h3 style="color: var(--royal-red); font-size: 1.5rem; margin: 0; font-family: 'Cinzel', serif;">🌐 My Other Live Projects</h3>
+                    <div style="width: 180px; height: 2px; background: var(--gold); margin: 12px auto 0 auto;"></div>
+                </div>
+                
+                <!-- 🌟 ALL 4 PROJECTS ARE BACK 🌟 -->
+                <div class="repo-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                    <div class="repo-card animated-card">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                            <h3 style="margin: 0; font-size: 1.2rem; color: var(--royal-red); font-family: 'Cinzel', serif;">Password Guard</h3>
+                        </div>
+                        <p style="font-family: Arial, sans-serif; font-size: 0.9rem; color: var(--dark-wood); margin-bottom: 15px; line-height: 1.5; flex-grow: 1;">Advanced AI-powered password protection & vault management tool.</p>
+                        <div style="display: flex; gap: 10px;">
+                            <a href="https://passwordguard.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
+                            <a href="https://github.com/Kiran-mondal/Password-Guard" target="_blank" class="code-btn">Source Code</a>
+                        </div>
+                    </div>
+                    <div class="repo-card animated-card">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                            <h3 style="margin: 0; font-size: 1.2rem; color: var(--royal-red); font-family: 'Cinzel', serif;">ZenDrift</h3>
+                        </div>
+                        <p style="font-family: Arial, sans-serif; font-size: 0.9rem; color: var(--dark-wood); margin-bottom: 15px; line-height: 1.5; flex-grow: 1;">Dynamic performance tracking system built for an engaging web experience.</p>
+                        <div style="display: flex; gap: 10px;">
+                            <a href="https://zendrift.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
+                            <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">Source Code</a>
+                        </div>
+                    </div>
+                    <div class="repo-card animated-card">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                            <h3 style="margin: 0; font-size: 1.2rem; color: var(--royal-red); font-family: 'Cinzel', serif;">Omlang</h3>
+                        </div>
+                        <p style="font-family: Arial, sans-serif; font-size: 0.9rem; color: var(--dark-wood); margin-bottom: 15px; line-height: 1.5; flex-grow: 1;">A modern language and communication-focused platform with an intuitive UI.</p>
+                        <div style="display: flex; gap: 10px;">
+                            <a href="https://omlang.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
+                            <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">Source Code</a>
+                        </div>
+                    </div>
+                    <div class="repo-card animated-card">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                            <h3 style="margin: 0; font-size: 1.2rem; color: var(--royal-red); font-family: 'Cinzel', serif;">Chaturanga</h3>
+                        </div>
+                        <p style="font-family: Arial, sans-serif; font-size: 0.9rem; color: var(--dark-wood); margin-bottom: 15px; line-height: 1.5; flex-grow: 1;">Interactive web-based application focused on deep logic, planning, and strategy.</p>
+                        <div style="display: flex; gap: 10px;">
+                            <a href="https://chaturanga.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
+                            <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">Source Code</a>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -216,4 +268,5 @@
     <script src="script.js"></script>
     <script src="game/game.js"></script>
 </body>
-</html>
+                                                                                                                              </html>
+    
