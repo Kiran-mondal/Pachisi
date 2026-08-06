@@ -87,15 +87,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 players[c].type = document.getElementById(`status-${c}`).value;
                 document.getElementById(`name-${c}`).innerText = players[c].type === 'human' ? `${c.toUpperCase()}` : `BOT-${c.toUpperCase()}`;
                 const card = document.getElementById(players[c].id);
-                if(card) { card.style.visibility = 'visible'; card.style.opacity = '1'; card.style.pointerEvents = 'auto'; }
+                if(card) { 
+                    card.style.opacity = '1'; 
+                    card.style.filter = 'none'; // অ্যাকটিভ প্লেয়ারদের কালার ঠিক থাকবে
+                    card.style.pointerEvents = 'auto'; 
+                }
             });
 
-            // 🌟 Inactive Players Fix: সাদা গর্ত না করে আবছা করে দেওয়া 🌟
+            // 🌟 Inactive Players Fix: সাদা গর্ত না করে ডার্ক এবং কালো-সাদা করে দেওয়া 🌟
             allColors.forEach(c => {
                 if(!turnOrder.includes(c)) {
                     const card = document.getElementById(players[c].id);
                     if(card) { 
-                        card.style.opacity = '0.15'; 
+                        card.style.opacity = '1'; 
+                        card.style.filter = 'grayscale(100%) brightness(0.4)'; // পুরো সাদা না করে ডার্ক দেখাবে
                         card.style.pointerEvents = 'none'; 
                     }
                 }
@@ -293,4 +298,4 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTurnUI();
     }
 });
-                          
+        
