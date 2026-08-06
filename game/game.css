@@ -60,7 +60,7 @@
     opacity: 1 !important;
     filter: grayscale(100%) brightness(0.4) !important;
     pointer-events: none !important;
-    background: #1a1a1a !important; /* পেছনের সাদা রঙ ঢেকে ডার্ক করে দেবে */
+    background: #1a1a1a !important; 
     border-color: #444 !important;
 }
 
@@ -118,31 +118,30 @@
 }
 
 /* =========================================
-   🌟 6. FOOLPROOF PATH ARROWS (Using Exact Data-IDs & Unicode Arrows) 🌟
+   🌟 6. PATH ARROWS (COLORED) 🌟
    ========================================= */
 
 .square::before {
     position: absolute;
-    font-size: 24px; /* সাইজ বড় করা হয়েছে যাতে পরিষ্কার দেখা যায় */
-    font-weight: bold;
-    color: rgba(0,0,0,0.3);
-    z-index: 1; /* গুটির নিচে থাকবে */
+    font-size: 26px; /* একটু বড় করা হয়েছে */
+    font-weight: 900;
+    z-index: 1; 
     pointer-events: none;
 }
 
-/* Red Arm (Bottom) - Right goes UP, Left goes DOWN */
-.square[data-id="red-arm-sq-1"]::before, .square[data-id="red-arm-sq-2"]::before { content: "↑"; }
-.square[data-id="red-arm-sq-24"]::before { content: "↓"; }
+/* Red Arm - গাঢ় লাল রঙের তীর */
+.square[data-id="red-arm-sq-1"]::before, .square[data-id="red-arm-sq-2"]::before { content: "↑"; color: #cc0000; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+.square[data-id="red-arm-sq-24"]::before { content: "↓"; color: #cc0000; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
 
-/* Green Arm (Left) - Top goes RIGHT, Bottom goes LEFT */
-.square[data-id="green-arm-sq-17"]::before, .square[data-id="green-arm-sq-9"]::before { content: "→"; }
-.square[data-id="green-arm-sq-8"]::before { content: "←"; }
+/* Green Arm - গাঢ় সবুজ রঙের তীর */
+.square[data-id="green-arm-sq-17"]::before, .square[data-id="green-arm-sq-9"]::before { content: "→"; color: #008000; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+.square[data-id="green-arm-sq-8"]::before { content: "←"; color: #008000; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
 
-/* Black Arm (Right) - Bottom goes LEFT, Top goes RIGHT */
-.square[data-id="black-arm-sq-24"]::before, .square[data-id="black-arm-sq-23"]::before { content: "←"; }
-.square[data-id="black-arm-sq-1"]::before { content: "→"; }
+/* Black Arm - সলিড কালো রঙের তীর */
+.square[data-id="black-arm-sq-24"]::before, .square[data-id="black-arm-sq-23"]::before { content: "←"; color: #000000; }
+.square[data-id="black-arm-sq-1"]::before { content: "→"; color: #000000; }
 
-/* Yellow Arm (Top) - Left goes DOWN, Right goes UP */
-.square[data-id="yellow-arm-sq-8"]::before, .square[data-id="yellow-arm-sq-16"]::before { content: "↓"; }
-.square[data-id="yellow-arm-sq-17"]::before { content: "↑"; }
-                            
+/* Yellow Arm - গাঢ় হলুদ/গোল্ডেন রঙের তীর */
+.square[data-id="yellow-arm-sq-8"]::before, .square[data-id="yellow-arm-sq-16"]::before { content: "↓"; color: #b38f00; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+.square[data-id="yellow-arm-sq-17"]::before { content: "↑"; color: #b38f00; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+                                                                                                                     
