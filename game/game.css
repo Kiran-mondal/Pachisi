@@ -1,4 +1,6 @@
-/* Setup UI */
+/* =========================================
+   1. SETUP UI & PANELS
+   ========================================= */
 .setup-container { width: 100%; display: flex; justify-content: center; align-items: center; z-index: 20; position: relative;}
 .setup-box { background: var(--panel-bg); color: var(--gold); border: 3px solid var(--gold); padding: 20px; border-radius: 10px; width: 100%; max-width: 500px;}
 .setup-box h2 { color: var(--gold); border-bottom: 1px solid var(--gold); padding-bottom: 10px; margin-bottom: 20px; font-family: 'Cinzel', serif; text-align: center;}
@@ -10,12 +12,13 @@
 .royal-btn { background: var(--royal-red); color: var(--gold); border: 1px solid var(--gold); padding: 12px; font-weight: bold; cursor: pointer; border-radius: 5px; width: 100%;}
 .royal-btn:disabled { background: #555; color: #999; cursor: not-allowed; }
 
-/* Game Board Wrapper */
 .game-ui-wrapper { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 600px; gap: 10px; margin: 0 auto; padding: 10px 5px;}
 .turn-status-box { text-align: center; width: 100%; margin-bottom: 5px;}
 .turn-text { color: red; font-size: 18px; text-shadow: 1px 1px 2px black; font-weight: bold; letter-spacing: 1px; margin: 0;}
 
-/* Game Board */
+/* =========================================
+   2. BOARD & SQUARES (FIXED CELLS)
+   ========================================= */
 .center-panel { width: 100%; display: flex; justify-content: center; }
 .board-ornate-border { width: 100%; max-width: 500px; padding: 5px; background: var(--royal-red); border: 2px solid var(--gold); border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.8); }
 .board { width: 100%; aspect-ratio: 1 / 1; display: grid; grid-template-columns: 8fr 3fr 8fr; grid-template-rows: 8fr 3fr 8fr; background: white;}
@@ -24,13 +27,12 @@
 .left-arm  { grid-area: 2 / 1 / 3 / 2; } .center-home{ grid-area: 2 / 2 / 3 / 3; } .right-arm { grid-area: 2 / 3 / 3 / 4; } 
 .corner-bl { grid-area: 3 / 1 / 4 / 2; } .bottom-arm{ grid-area: 3 / 2 / 4 / 3; } .corner-br { grid-area: 3 / 3 / 4 / 4; } 
 
-.arm { display: grid; border: 1px solid var(--dark-wood); min-width: 0; min-height: 0; position: relative;}
+.arm { display: grid; border: 1px solid var(--dark-wood); min-width: 0; min-height: 0; position: relative; }
 .vertical-arm { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(8, 1fr); }
 .horizontal-arm { grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(3, 1fr); }
 
 .center-home { background: #d4af37; display: flex; justify-content: center; align-items: center; font-weight: bold; color: var(--royal-red); font-size: 2vmin; border: 1px solid var(--dark-wood); }
 
-/* 🌟 FIXED SQUARE LOGIC (ঘর আর ভাঙবে না) 🌟 */
 .square { 
     border: 1px solid rgba(0,0,0,0.3); 
     display: flex; 
@@ -44,13 +46,14 @@
 }
 .safe-zone { background-color: rgba(212, 175, 55, 0.2) !important; }
 
-/* Player Corners & Tokens */
-.corner-player { display: flex; flex-direction: column; align-items: center; justify-content: space-between; background: var(--panel-bg); border: 2px solid var(--gold); border-radius: 6px; margin: 3px; padding: 5px; color: var(--gold); }
+/* =========================================
+   3. TOKENS & SHRINKING LOGIC
+   ========================================= */
+.corner-player { display: flex; flex-direction: column; align-items: center; justify-content: space-between; background: var(--panel-bg); border: 2px solid var(--gold); border-radius: 6px; margin: 3px; padding: 5px; color: var(--gold); transition: opacity 0.3s; }
 .corner-player.active-turn { border-color: var(--glow-gold); box-shadow: 0 0 10px var(--glow-gold); background: rgba(60, 40, 20, 0.9); }
 .corner-player h4 { font-size: clamp(9px, 2.5vw, 14px); font-weight: bold; margin: 0; } 
 .token-yard { width: 100%; flex-grow: 1; display: flex; flex-wrap: wrap; justify-content: space-evenly; align-items: center; padding: 2px; }
 
-/* 🌟 TOKEN LOGIC & SHRINKING (গুটি অটোমেটিক ছোট হবে) 🌟 */
 .token { 
     width: clamp(12px, 3.5vw, 20px); 
     height: clamp(12px, 3.5vw, 20px); 
@@ -71,7 +74,9 @@
 .square:has(.token:nth-child(3)) .token { width: clamp(8px, 2vw, 14px); height: clamp(8px, 2vw, 14px); }
 .square:has(.token:nth-child(4)) .token { width: clamp(6px, 1.5vw, 11px); height: clamp(6px, 1.5vw, 11px); }
 
-/* 🌟 TOKEN JUMPING ANIMATION 🌟 */
+/* =========================================
+   4. TOKEN JUMPING ANIMATION
+   ========================================= */
 @keyframes jump-token {
     0%, 100% { transform: translateY(0) scale(1); }
     50% { transform: translateY(-5px) scale(1.15); box-shadow: 0 5px 10px rgba(0,0,0,0.6); }
@@ -83,7 +88,9 @@
     z-index: 50;
 }
 
-/* Mobile Responsive Video Dice Panel */
+/* =========================================
+   5. VIDEO DICE PANEL
+   ========================================= */
 .bottom-panel { width: 100%; max-width: 500px; margin-top: 5px; }
 .dice-panel { background: var(--panel-bg); border: 2px solid var(--gold); border-radius: 8px; padding: 10px; display: flex; justify-content: space-between; align-items: center; width: 100%; box-sizing: border-box; gap: 10px;}
 .video-bowl { width: 75px !important; height: 75px !important; min-width: 75px; min-height: 75px; border-radius: 50%; border: 2px solid var(--gold); overflow: hidden; position: relative; background: #000; display: flex; justify-content: center; align-items: center; flex-shrink: 0; }
@@ -99,23 +106,19 @@
     .dice-action button { font-size: 12px; padding: 8px; }
     .dice-text { font-size: 11px; width: 65px;}
 }
-        
+
 /* =========================================
-   🌟 Board Directional Arrows (Path Guide) 🌟
+   6. PATH ARROWS (VISIBLE)
    ========================================= */
-/* নিচের আর্ম (Bottom Arm - Red) */
-.bottom-arm::before { content: "↑"; position: absolute; bottom: 5px; right: 10px; font-size: 26px; font-weight: bold; color: rgba(0, 0, 0, 0.3); pointer-events: none; }
-.bottom-arm::after { content: "⤵"; position: absolute; top: 5px; right: 10px; font-size: 26px; font-weight: bold; color: rgba(0, 0, 0, 0.3); pointer-events: none; transform: rotate(90deg); }
+#red-arm::before { content: "↑"; position: absolute; bottom: 5px; right: 10px; font-size: 28px; font-weight: bold; color: rgba(0, 0, 0, 0.5); pointer-events: none; z-index: 5; }
+#red-arm::after { content: "⤵"; position: absolute; top: 5px; right: 10px; font-size: 28px; font-weight: bold; color: rgba(0, 0, 0, 0.5); pointer-events: none; transform: rotate(90deg); z-index: 5; }
 
-/* ওপরের আর্ম (Top Arm - Yellow) */
-.top-arm::before { content: "↓"; position: absolute; top: 5px; left: 10px; font-size: 26px; font-weight: bold; color: rgba(0, 0, 0, 0.3); pointer-events: none; }
-.top-arm::after { content: "⤵"; position: absolute; bottom: 5px; left: 10px; font-size: 26px; font-weight: bold; color: rgba(0, 0, 0, 0.3); pointer-events: none; transform: rotate(-90deg); }
+#yellow-arm::before { content: "↓"; position: absolute; top: 5px; left: 10px; font-size: 28px; font-weight: bold; color: rgba(0, 0, 0, 0.5); pointer-events: none; z-index: 5; }
+#yellow-arm::after { content: "⤵"; position: absolute; bottom: 5px; left: 10px; font-size: 28px; font-weight: bold; color: rgba(0, 0, 0, 0.5); pointer-events: none; transform: rotate(-90deg); z-index: 5; }
 
-/* বাঁদিকের আর্ম (Left Arm - Black) */
-.left-arm::before { content: "→"; position: absolute; bottom: 25px; left: 5px; font-size: 26px; font-weight: bold; color: rgba(0, 0, 0, 0.3); pointer-events: none; }
-.left-arm::after { content: "⤵"; position: absolute; bottom: 25px; right: 5px; font-size: 26px; font-weight: bold; color: rgba(0, 0, 0, 0.3); pointer-events: none; transform: rotate(180deg); }
+#green-arm::before { content: "→"; position: absolute; bottom: 25px; left: 5px; font-size: 28px; font-weight: bold; color: rgba(0, 0, 0, 0.5); pointer-events: none; z-index: 5; }
+#green-arm::after { content: "⤵"; position: absolute; bottom: 25px; right: 5px; font-size: 28px; font-weight: bold; color: rgba(0, 0, 0, 0.5); pointer-events: none; transform: rotate(180deg); z-index: 5; }
 
-/* ডানদিকের আর্ম (Right Arm - Green) */
-.right-arm::before { content: "←"; position: absolute; top: 25px; right: 5px; font-size: 26px; font-weight: bold; color: rgba(0, 0, 0, 0.3); pointer-events: none; }
-.right-arm::after { content: "⤵"; position: absolute; top: 25px; left: 5px; font-size: 26px; font-weight: bold; color: rgba(0, 0, 0, 0.3); pointer-events: none; transform: rotate(0deg); }
-                   
+#black-arm::before { content: "←"; position: absolute; top: 25px; right: 5px; font-size: 28px; font-weight: bold; color: rgba(0, 0, 0, 0.5); pointer-events: none; z-index: 5; }
+#black-arm::after { content: "⤵"; position: absolute; top: 25px; left: 5px; font-size: 28px; font-weight: bold; color: rgba(0, 0, 0, 0.5); pointer-events: none; transform: rotate(0deg); z-index: 5; }
+    
