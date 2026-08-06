@@ -31,7 +31,8 @@
             <li><a href="#" class="nav-btn" data-target="game-tab">Play</a></li>
             <li><a href="#" class="nav-btn" data-target="rules-tab">Rules</a></li>
             <li><a href="#" class="nav-btn" data-target="heritage-tab">Heritage</a></li>
-            <li><a href="#" id="my-projects-btn" onclick="document.getElementById('projects-modal').classList.remove('hidden')">My Projects</a></li>
+            <!-- 🌟 My Projects is now pointing to the new separated folder/file 🌟 -->
+            <li><a href="projects/index.html" id="my-projects-btn">My Projects</a></li>
         </ul>
         
         <div class="hamburger" id="hamburger">
@@ -197,66 +198,9 @@
 
     </main>
 
-    <!-- 🌟 MY PROJECTS MODAL 🌟 -->
-    <div id="projects-modal" class="modal hidden">
-        <div class="modal-content">
-            <span class="close-btn" id="close-modal" onclick="document.getElementById('projects-modal').classList.add('hidden')">&times;</span>
-            <div class="container" style="display: block; position: relative; z-index: 10;">
-                
-                <div class="github-profile" style="text-align: center;">
-                    <img src="https://github.com/Kiran-mondal.png" alt="Kiran Mondal" class="profile-float-img">
-                    <h2 style="color: var(--royal-red); font-family: 'Cinzel', serif; margin-top: 15px;">Kiran Mondal</h2>
-                    <p style="color: var(--dark-wood); font-weight: bold; font-family: Arial, sans-serif; margin-bottom: 20px;">Full-Stack Developer & Cyber Security Enthusiast</p>
-                    <a href="https://github.com/Kiran-mondal" target="_blank" class="btn-github-main">View Full GitHub Profile</a>
-                </div>
-
-                <div style="text-align: center; margin-bottom: 20px; margin-top: 40px;">
-                    <h3 style="color: var(--royal-red); font-size: 1.5rem; margin: 0; font-family: 'Cinzel', serif;">🌐 My Other Live Projects</h3>
-                    <div style="width: 180px; height: 2px; background: var(--gold); margin: 12px auto 0 auto;"></div>
-                </div>
-                
-                <div class="repo-grid">
-                    <div class="repo-card">
-                        <h3 style="margin: 0 0 10px 0; font-size: 1.2rem; color: var(--royal-red); font-family: 'Cinzel', serif;">Password Guard</h3>
-                        <p style="font-family: Arial, sans-serif; font-size: 0.9rem; color: var(--dark-wood); margin-bottom: 15px; line-height: 1.5; flex-grow: 1;">Advanced AI-powered password protection & vault management tool.</p>
-                        <div class="card-buttons">
-                            <a href="https://passwordguard.quarry.dpdns.org" target="_blank" class="live-btn">LIVE APP</a>
-                            <a href="https://github.com/Kiran-mondal/Password-Guard" target="_blank" class="code-btn">SOURCE CODE</a>
-                        </div>
-                    </div>
-                    <div class="repo-card">
-                        <h3 style="margin: 0 0 10px 0; font-size: 1.2rem; color: var(--royal-red); font-family: 'Cinzel', serif;">ZenDrift</h3>
-                        <p style="font-family: Arial, sans-serif; font-size: 0.9rem; color: var(--dark-wood); margin-bottom: 15px; line-height: 1.5; flex-grow: 1;">Dynamic performance tracking system built for an engaging web experience.</p>
-                        <div class="card-buttons">
-                            <a href="https://zendrift.quarry.dpdns.org" target="_blank" class="live-btn">LIVE APP</a>
-                            <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">SOURCE CODE</a>
-                        </div>
-                    </div>
-                    <div class="repo-card">
-                        <h3 style="margin: 0 0 10px 0; font-size: 1.2rem; color: var(--royal-red); font-family: 'Cinzel', serif;">Omlang</h3>
-                        <p style="font-family: Arial, sans-serif; font-size: 0.9rem; color: var(--dark-wood); margin-bottom: 15px; line-height: 1.5; flex-grow: 1;">A modern language and communication-focused platform with an intuitive UI.</p>
-                        <div class="card-buttons">
-                            <a href="https://omlang.quarry.dpdns.org" target="_blank" class="live-btn">LIVE APP</a>
-                            <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">SOURCE CODE</a>
-                        </div>
-                    </div>
-                    <div class="repo-card">
-                        <h3 style="margin: 0 0 10px 0; font-size: 1.2rem; color: var(--royal-red); font-family: 'Cinzel', serif;">Chaturanga</h3>
-                        <p style="font-family: Arial, sans-serif; font-size: 0.9rem; color: var(--dark-wood); margin-bottom: 15px; line-height: 1.5; flex-grow: 1;">Interactive web-based application focused on deep logic, planning, and strategy.</p>
-                        <div class="card-buttons">
-                            <a href="https://chaturanga.quarry.dpdns.org" target="_blank" class="live-btn">LIVE APP</a>
-                            <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">SOURCE CODE</a>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
     <!-- JS Files Linked -->
     <script src="script.js"></script>
     <script src="game/game.js"></script>
 </body>
-    </html>
-                                    
+                                                                                                                              </html>
+                                                                                                 
