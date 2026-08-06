@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let turnOrder = [];
     let activeSafeZones = [];
     
+    // Players Configuration
     const players = {
         red: { type: 'human', displayColor: '#d32f2f', displayName: 'RED', id: 'player-card-red' },
         green: { type: 'human', displayColor: '#388e3c', displayName: 'GREEN', id: 'player-card-green' }, 
@@ -15,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         yellow: { type: 'human', displayColor: '#fbc02d', displayName: 'YELLOW', id: 'player-card-yellow' }
     };
 
+    // Board Paths
     const perimeter = [
         'red-arm-sq-1', 'red-arm-sq-4', 'red-arm-sq-7', 'red-arm-sq-10', 'red-arm-sq-13', 'red-arm-sq-16', 'red-arm-sq-19', 'red-arm-sq-22',
         'red-arm-sq-24', 'red-arm-sq-21', 'red-arm-sq-18', 'red-arm-sq-15', 'red-arm-sq-12', 'red-arm-sq-9', 'red-arm-sq-6', 'red-arm-sq-3',
@@ -36,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const startIndexes = { red: 0, green: 16, black: 32, yellow: 48 };
     const defaultSafeZones = ['red-arm-sq-1', 'red-arm-sq-24', 'green-arm-sq-17', 'green-arm-sq-8', 'black-arm-sq-24', 'black-arm-sq-1', 'yellow-arm-sq-8', 'yellow-arm-sq-17'];
 
+    // Helper: Get Square ID based on current step
     function getSquareId(color, step) {
         if (step === 0) return `yard-${color}`;
         if (step >= 1 && step <= 64) return perimeter[(startIndexes[color] + step - 1) % 64];
@@ -43,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return 'home';
     }
 
+    // Initialize Board Grid
     function createBoard() {
         arms.forEach(armId => {
             const container = document.getElementById(armId);
@@ -62,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Create Player Tokens
     function createTokenElem(color) {
         const t = document.createElement('div');
         t.classList.add('token', `token-${color}`);
@@ -70,6 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return t;
     }
 
+    // Setup & Start Game
     const startBtn = document.getElementById('start-game-btn');
     if (startBtn) {
         startBtn.addEventListener('click', () => {
@@ -81,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            // Setup Players
             turnOrder.forEach(c => {
                 players[c].type = document.getElementById(`status-${c}`).value;
                 document.getElementById(`name-${c}`).innerText = players[c].type === 'human' ? `${c.toUpperCase()}` : `BOT-${c.toUpperCase()}`;
@@ -100,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             createBoard();
 
+            // Add tokens to yards
             turnOrder.forEach((color) => {
                 const yard = document.getElementById(`yard-${color}`);
                 if(yard) { yard.innerHTML = ''; for (let i = 0; i < 4; i++) yard.appendChild(createTokenElem(color)); }
@@ -114,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- NEW VIDEO DICE LOGIC ---
+    // --- VIDEO DICE & TURN LOGIC ---
     const rollBtn = document.getElementById('roll-dice-btn');
     const resultText = document.getElementById('dice-result');
 
@@ -146,6 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return validTokens.length > 0;
     }
 
+    // Mobile Bug Fixed Video Roll
     function rollTheDice() {
         if(rollBtn) rollBtn.disabled = true; 
         resultText.innerText = "Rolling...";
@@ -154,14 +163,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const overlay = document.getElementById('dice-overlay');
         
         if (overlay) overlay.classList.add('hidden');
+        
+        // Mobile Black Screen Fix
         if (video) {
-            video.currentTime = 0; 
-            video.play().catch(e => console.log("Video play blocked:", e));
+            video.play().catch(e => console.log("Play issue on mobile:", e));
+            setTimeout(() => { video.currentTime = 0; }, 50); 
         }
 
         setTimeout(() => {
             if (video) video.pause(); 
 
+            // Roll values
             const faces = [1, 3, 4, 6];
             const v1 = faces[Math.floor(Math.random() * 4)]; 
             const v2 = faces[Math.floor(Math.random() * 4)];
@@ -207,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
             token.style.zIndex = "50";
             
             setTimeout(() => {
+                // Capturing Logic
                 if (targetId !== 'home' && !activeSafeZones.includes(targetId)) {
                     let enemyTokens = Array.from(targetSquare.querySelectorAll('.token')).filter(t => t.dataset.color !== currentPlayer);
                     if (enemyTokens.length > 0) {
@@ -252,6 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Player Interaction
     document.addEventListener('click', (e) => {
         if (e.target.classList.contains('token')) {
             const token = e.target;
@@ -269,4 +283,4 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTurnUI();
     }
 });
-    
+            
