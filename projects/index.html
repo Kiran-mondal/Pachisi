@@ -7,17 +7,202 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        :root {
+            --bg-cream: #f4ead5; 
+            --gold: #dcb360; 
+            --royal-red: #7a1f1f;
+            --dark-wood: #1e1008;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000000;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        .overlay-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('../bg.jpg') center/cover no-repeat fixed;
+            filter: brightness(0.4);
+            z-index: 1;
+        }
+
+        .container {
+            background: var(--bg-cream);
+            border: 4px solid var(--gold);
+            border-radius: 12px;
+            width: 92%;
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 35px 25px;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 20px;
+            font-size: 32px;
+            color: var(--royal-red);
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            z-index: 20;
+            line-height: 1;
+        }
+        .close-btn:hover { color: #ff0000; }
+
+        .github-profile {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .github-profile img {
+            width: 110px; height: 110px;
+            border-radius: 50%;
+            border: 3px solid var(--gold);
+            box-shadow: 0 4px 15px rgba(220,179,96,0.5);
+            margin-bottom: 12px;
+            object-fit: cover;
+        }
+        .github-profile h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            color: var(--royal-red);
+            margin: 0 0 5px 0;
+        }
+        .github-profile p {
+            font-size: 0.9rem;
+            color: var(--dark-wood);
+            font-weight: bold;
+            margin: 0 0 15px 0;
+        }
+        .btn-github-main {
+            display: inline-block;
+            background: var(--royal-red);
+            color: var(--gold);
+            padding: 10px 22px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            border: 2px solid var(--gold);
+        }
+
+        .section-header {
+            text-align: center;
+            margin: 30px 0 20px 0;
+        }
+        .section-header h3 {
+            font-size: 1.35rem;
+            color: var(--royal-red);
+            font-family: 'Cinzel', serif;
+            margin: 0 0 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .bottom-line {
+            width: 180px;
+            height: 2px;
+            background: var(--gold);
+            margin: 0 auto;
+        }
+
+        .repo-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .repo-card {
+            background: #ffffff;
+            border: 2px solid var(--gold);
+            border-radius: 10px;
+            padding: 18px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: var(--royal-red);
+            font-family: 'Cinzel', serif;
+        }
+        .card-header svg {
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+        }
+
+        .repo-card p {
+            font-size: 0.9rem;
+            color: var(--dark-wood);
+            margin: 0 0 15px 0;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .card-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        .live-btn {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            background: var(--gold);
+            color: var(--dark-wood);
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            border: 1px solid var(--dark-wood);
+        }
+        .code-btn {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            background: #ffffff;
+            border: 1px solid var(--royal-red);
+            color: var(--royal-red);
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 25px 12px; width: 95%; margin: 15px auto; }
+            .card-header h3 { font-size: 1.1rem; }
+        }
+    </style>
 </head>
 <body>
 
     <div class="overlay-bg"></div>
 
     <div class="container">
-        <!-- Close Button (Back to Game) -->
         <a href="../index.html" class="close-btn">&times;</a>
         
-        <!-- Profile Section -->
         <div class="github-profile">
             <img src="https://github.com/Kiran-mondal.png" alt="Kiran Mondal">
             <h2>Kiran Mondal</h2>
@@ -33,7 +218,6 @@
         </div>
         
         <div class="repo-grid">
-            <!-- 1. Password Guard -->
             <div class="repo-card">
                 <div class="card-header">
                     <svg width="34" height="34" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -51,16 +235,10 @@
                 </div>
             </div>
 
-            <!-- 2. Pachisi -->
             <div class="repo-card">
                 <div class="card-header">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="34" height="34">
-                        <defs>
-                            <mask id="pasha-hole">
-                                <rect width="512" height="512" fill="white" />
-                                <circle cx="256" cy="256" r="32" fill="black" />
-                            </mask>
-                        </defs>
+                        <defs><mask id="pasha-hole"><rect width="512" height="512" fill="white" /><circle cx="256" cy="256" r="32" fill="black" /></mask></defs>
                         <g mask="url(#pasha-hole)" fill="#dc2626">
                             <rect x="232" y="16" width="48" height="480" rx="12" />
                             <rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(45 256 256)" />
@@ -79,7 +257,6 @@
                 </div>
             </div>
             
-            <!-- 3. ZenDrift -->
             <div class="repo-card">
                 <div class="card-header">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="34" height="34">
@@ -95,7 +272,6 @@
                 </div>
             </div>
             
-            <!-- 4. Omlang -->
             <div class="repo-card">
                 <div class="card-header">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="34" height="34">
@@ -111,7 +287,6 @@
                 </div>
             </div>
             
-            <!-- 5. Chaturanga -->
             <div class="repo-card">
                 <div class="card-header">
                     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="34" height="34">
@@ -131,4 +306,4 @@
 
 </body>
 </html>
-                
+    
