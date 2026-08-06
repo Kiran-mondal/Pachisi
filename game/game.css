@@ -54,6 +54,16 @@
 .corner-player h4 { font-size: clamp(9px, 2.5vw, 14px); font-weight: bold; margin: 0; } 
 .token-yard { width: 100%; flex-grow: 1; display: flex; flex-wrap: wrap; justify-content: space-evenly; align-items: center; padding: 2px; }
 
+/* 🌟 INACTIVE PLAYER FIX (সাদা গর্ত বন্ধ করা) 🌟 */
+.corner-player.inactive {
+    visibility: visible !important;
+    opacity: 1 !important;
+    filter: grayscale(100%) brightness(0.4) !important;
+    pointer-events: none !important;
+    background: #1a1a1a !important; /* পেছনের সাদা রঙ ঢেকে ডার্ক করে দেবে */
+    border-color: #444 !important;
+}
+
 .token { 
     width: clamp(12px, 3.5vw, 20px); 
     height: clamp(12px, 3.5vw, 20px); 
@@ -108,22 +118,31 @@
 }
 
 /* =========================================
-   🌟 6. FOOLPROOF PATH ARROWS (Using Exact Data-IDs) 🌟
+   🌟 6. FOOLPROOF PATH ARROWS (Using Exact Data-IDs & Unicode Arrows) 🌟
    ========================================= */
 
-/* Red Arm (Bottom) - Right goes UP, Left goes DOWN, Home Path goes UP */
-[data-id="red-arm-sq-1"]::after, [data-id="red-arm-sq-2"]::after { content: "↑"; position: absolute; font-size: 22px; font-weight: bold; color: rgba(0, 0, 0, 0.25); pointer-events: none; z-index: 1; }
-[data-id="red-arm-sq-24"]::after { content: "↓"; position: absolute; font-size: 22px; font-weight: bold; color: rgba(0, 0, 0, 0.25); pointer-events: none; z-index: 1; }
+.square::before {
+    position: absolute;
+    font-size: 24px; /* সাইজ বড় করা হয়েছে যাতে পরিষ্কার দেখা যায় */
+    font-weight: bold;
+    color: rgba(0,0,0,0.3);
+    z-index: 1; /* গুটির নিচে থাকবে */
+    pointer-events: none;
+}
 
-/* Yellow Arm (Top) - Left goes DOWN, Right goes UP, Home Path goes DOWN */
-[data-id="yellow-arm-sq-8"]::after, [data-id="yellow-arm-sq-10"]::after { content: "↓"; position: absolute; font-size: 22px; font-weight: bold; color: rgba(0, 0, 0, 0.25); pointer-events: none; z-index: 1; }
-[data-id="yellow-arm-sq-17"]::after { content: "↑"; position: absolute; font-size: 22px; font-weight: bold; color: rgba(0, 0, 0, 0.25); pointer-events: none; z-index: 1; }
+/* Red Arm (Bottom) - Right goes UP, Left goes DOWN */
+.square[data-id="red-arm-sq-1"]::before, .square[data-id="red-arm-sq-2"]::before { content: "↑"; }
+.square[data-id="red-arm-sq-24"]::before { content: "↓"; }
 
-/* Green Arm (Left) - Top goes RIGHT, Bottom goes LEFT, Home Path goes RIGHT */
-[data-id="green-arm-sq-17"]::after, [data-id="green-arm-sq-9"]::after { content: "→"; position: absolute; font-size: 22px; font-weight: bold; color: rgba(0, 0, 0, 0.25); pointer-events: none; z-index: 1; }
-[data-id="green-arm-sq-8"]::after { content: "←"; position: absolute; font-size: 22px; font-weight: bold; color: rgba(0, 0, 0, 0.25); pointer-events: none; z-index: 1; }
+/* Green Arm (Left) - Top goes RIGHT, Bottom goes LEFT */
+.square[data-id="green-arm-sq-17"]::before, .square[data-id="green-arm-sq-9"]::before { content: "→"; }
+.square[data-id="green-arm-sq-8"]::before { content: "←"; }
 
-/* Black Arm (Right) - Bottom goes LEFT, Top goes RIGHT, Home Path goes LEFT */
-[data-id="black-arm-sq-24"]::after, [data-id="black-arm-sq-23"]::after { content: "←"; position: absolute; font-size: 22px; font-weight: bold; color: rgba(0, 0, 0, 0.25); pointer-events: none; z-index: 1; }
-[data-id="black-arm-sq-1"]::after { content: "→"; position: absolute; font-size: 22px; font-weight: bold; color: rgba(0, 0, 0, 0.25); pointer-events: none; z-index: 1; }
-                
+/* Black Arm (Right) - Bottom goes LEFT, Top goes RIGHT */
+.square[data-id="black-arm-sq-24"]::before, .square[data-id="black-arm-sq-23"]::before { content: "←"; }
+.square[data-id="black-arm-sq-1"]::before { content: "→"; }
+
+/* Yellow Arm (Top) - Left goes DOWN, Right goes UP */
+.square[data-id="yellow-arm-sq-8"]::before, .square[data-id="yellow-arm-sq-16"]::before { content: "↓"; }
+.square[data-id="yellow-arm-sq-17"]::before { content: "↑"; }
+                            
