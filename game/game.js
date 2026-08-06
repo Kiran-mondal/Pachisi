@@ -83,25 +83,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            turnOrder.forEach(c => {
-                players[c].type = document.getElementById(`status-${c}`).value;
-                document.getElementById(`name-${c}`).innerText = players[c].type === 'human' ? `${c.toUpperCase()}` : `BOT-${c.toUpperCase()}`;
+            // 🌟 Active & Inactive Players Setup 🌟
+            allColors.forEach(c => {
                 const card = document.getElementById(players[c].id);
                 if(card) { 
-                    card.style.opacity = '1'; 
-                    card.style.filter = 'none'; // অ্যাকটিভ প্লেয়ারদের কালার ঠিক থাকবে
-                    card.style.pointerEvents = 'auto'; 
-                }
-            });
-
-            // 🌟 Inactive Players Fix: সাদা গর্ত না করে ডার্ক এবং কালো-সাদা করে দেওয়া 🌟
-            allColors.forEach(c => {
-                if(!turnOrder.includes(c)) {
-                    const card = document.getElementById(players[c].id);
-                    if(card) { 
+                    if(turnOrder.includes(c)) {
+                        // যারা খেলছে
+                        card.classList.remove('inactive');
+                        card.style.visibility = 'visible';
                         card.style.opacity = '1'; 
-                        card.style.filter = 'grayscale(100%) brightness(0.4)'; // পুরো সাদা না করে ডার্ক দেখাবে
-                        card.style.pointerEvents = 'none'; 
+                        card.style.pointerEvents = 'auto';
+                        card.style.filter = 'none';
+                        
+                        players[c].type = document.getElementById(`status-${c}`).value;
+                        document.getElementById(`name-${c}`).innerText = players[c].type === 'human' ? `${c.toUpperCase()}` : `BOT-${c.toUpperCase()}`;
+                    } else {
+                        // যারা খেলছে না (সাদা গর্ত ফিক্সড)
+                        card.classList.add('inactive'); 
+                        card.style.visibility = 'visible';
+                        card.style.opacity = '1';
                     }
                 }
             });
@@ -298,4 +298,4 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTurnUI();
     }
 });
-        
+                        
