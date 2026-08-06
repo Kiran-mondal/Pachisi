@@ -146,18 +146,27 @@
                         </div>
                     </div>
 
-                    <!-- BOTTOM PANEL (3D DICE) -->
+                <!-- BOTTOM PANEL (VIDEO DICE) -->
                     <div class="bottom-panel">
                         <div class="dice-panel">
-                            <div class="bowl oval-bowl">
-                                <div class="pasha-wrapper"><div class="pasha-3d" id="pasha-1"><div class="face front" id="dot-container-1"></div><div class="face back"></div><div class="face right"></div><div class="face left"></div><div class="face top"></div><div class="face bottom"></div></div></div>
-                                <div class="pasha-wrapper"><div class="pasha-3d" id="pasha-2"><div class="face front" id="dot-container-2"></div><div class="face back"></div><div class="face right"></div><div class="face left"></div><div class="face top"></div><div class="face bottom"></div></div></div>
+                            
+                            <!-- 🌟 New Video Dice Bowl 🌟 -->
+                            <div class="bowl video-bowl">
+                                <video id="pasha-video" muted playsinline preload="auto">
+                                    <!-- 🌟 এখানে dice.mp4 নামটি বসানো হলো 🌟 -->
+                                    <source src="dice.mp4" type="video/mp4">
+                                </video>
+                                <!-- Overlay to show random numbers -->
+                                <div id="dice-overlay" class="dice-overlay hidden">
+                                    <span id="v1-text"></span> &amp; <span id="v2-text"></span>
+                                </div>
                             </div>
+
                             <div class="dice-action"><button id="roll-dice-btn" class="royal-btn">ROLL PASHA</button></div>
                             <div class="dice-text"><p id="dice-result">Roll Pasha<br>to move.</p></div>
                         </div>
                     </div>
-
+                    
                 </div>
             </div>
         </section>
