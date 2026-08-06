@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 if (activeSafeZones.includes(sqId)) {
                     sq.classList.add('safe-zone');
-                    sq.innerHTML = '<i class="fa-solid fa-star" style="color: rgba(212, 175, 55, 0.5); font-size: 14px; position: absolute;"></i>';
+                    sq.innerHTML = '<i class="fa-solid fa-star" style="color: rgba(212, 175, 55, 0.5); font-size: 10px; position: absolute;"></i>';
                 }
                 container.appendChild(sq);
             }
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- DICE LOGIC ---
+    // --- NEW VIDEO DICE LOGIC ---
     const rollBtn = document.getElementById('roll-dice-btn');
     const resultText = document.getElementById('dice-result');
 
@@ -138,14 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function drawDots(containerId, number) {
-        const container = document.getElementById(containerId);
-        if(!container) return; container.innerHTML = ''; 
-        for (let i = 0; i < number; i++) {
-            const dot = document.createElement('div'); dot.classList.add('dot'); container.appendChild(dot);
-        }
-    }
-
     rollBtn?.addEventListener('click', () => { if (!isComputerTurn && currentDiceRoll === 0) rollTheDice(); });
 
     function hasValidMoves(playerColor, rollValue) {
@@ -158,38 +150,44 @@ document.addEventListener('DOMContentLoaded', () => {
         if(rollBtn) rollBtn.disabled = true; 
         resultText.innerText = "Rolling...";
         
-        const p1 = document.getElementById('pasha-1'); const p2 = document.getElementById('pasha-2');
-        p1?.classList.add('rolling-1'); p2?.classList.add('rolling-2');
-
-        const faces = [1, 3, 4, 6];
-        let shuffle = setInterval(() => {
-            drawDots('dot-container-1', faces[Math.floor(Math.random() * 4)]);
-            drawDots('dot-container-2', faces[Math.floor(Math.random() * 4)]);
-        }, 100);
+        const video = document.getElementById('pasha-video');
+        const overlay = document.getElementById('dice-overlay');
+        
+        if (overlay) overlay.classList.add('hidden');
+        if (video) {
+            video.currentTime = 0; 
+            video.play().catch(e => console.log("Video play blocked:", e));
+        }
 
         setTimeout(() => {
-            clearInterval(shuffle); 
-            p1?.classList.remove('rolling-1'); p2?.classList.remove('rolling-2');
-            if(p1) p1.style.transform = `rotateZ(${Math.floor(Math.random() * 30 - 15)}deg) rotateX(0deg) rotateY(0deg)`;
-            if(p2) p2.style.transform = `rotateZ(${Math.floor(Math.random() * 30 - 15)}deg) rotateX(0deg) rotateY(0deg)`;
+            if (video) video.pause(); 
 
-            const v1 = faces[Math.floor(Math.random() * 4)]; const v2 = faces[Math.floor(Math.random() * 4)];
-            drawDots('dot-container-1', v1); drawDots('dot-container-2', v2);
+            const faces = [1, 3, 4, 6];
+            const v1 = faces[Math.floor(Math.random() * 4)]; 
+            const v2 = faces[Math.floor(Math.random() * 4)];
             
             currentDiceRoll = v1 + v2; 
             hasExtraTurn = (v1 === v2); 
             
-            resultText.innerHTML = (v1===v2) ? `Doublet: ${v1} & ${v2}<br>Move: ${currentDiceRoll}` : `Result: ${v1} & ${v2}<br>Move: ${currentDiceRoll}`;
+            if (overlay) {
+                document.getElementById('v1-text').innerText = v1;
+                document.getElementById('v2-text').innerText = v2;
+                overlay.classList.remove('hidden');
+            }
+            
+            resultText.innerHTML = (v1===v2) ? 
+                `<span style="color:var(--glow-gold)">Doublet!</span><br>${v1} & ${v2}<br>Move: <b>${currentDiceRoll}</b>` : 
+                `${v1} & ${v2}<br>Move: <b>${currentDiceRoll}</b>`;
             
             if (!hasValidMoves(currentPlayer, currentDiceRoll)) {
-                resultText.innerHTML += "<br><span style='color:red;'>No Valid Moves!</span>";
+                resultText.innerHTML += "<br><span style='color:red;'>No Moves!</span>";
                 setTimeout(switchTurn, 1500);
                 return;
             }
 
             if (isComputerTurn) setTimeout(moveComputerToken, 600);
             else if(rollBtn) rollBtn.disabled = false;
-        }, 900); 
+        }, 1200); 
     }
 
     // --- MOVEMENT LOGIC ---
@@ -199,16 +197,13 @@ document.addEventListener('DOMContentLoaded', () => {
         let currentStep = parseInt(token.dataset.step);
         let targetStep = currentStep + currentDiceRoll;
         
-        if (targetStep > 73) {
-            if(!isComputerTurn) alert("You need exact number to reach home!");
-            return; 
-        }
+        if (targetStep > 73) return; 
         
         let targetId = getSquareId(currentPlayer, targetStep);
         let targetSquare = targetId === 'home' ? document.querySelector('.center-home') : document.querySelector(`[data-id="${targetId}"]`);
         
         if(targetSquare) {
-            token.style.transform = "scale(1.5) translateY(-15px)";
+            token.style.transform = "scale(1.5) translateY(-5px)";
             token.style.zIndex = "50";
             
             setTimeout(() => {
@@ -221,7 +216,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             if(startNode) startNode.appendChild(enemy);
                         });
                         hasExtraTurn = true; 
-                        resultText.innerHTML = "CAPTURE!<br>Extra Turn!";
                     }
                 }
 
@@ -232,7 +226,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     token.classList.add('finished'); 
                     token.style.transform = "scale(0.8)";
                     hasExtraTurn = true; 
-                    resultText.innerHTML = "Reached HOME!<br>Extra Turn!";
                 } else {
                     token.style.transform = "scale(1)";
                 }
@@ -276,4 +269,4 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTurnUI();
     }
 });
-                                             
+    
