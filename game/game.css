@@ -96,3 +96,62 @@
     .dice-text { font-size: 11px; width: 65px;}
                                          }
         
+/* =========================================
+   Board Directional Arrows (Like Ludo)
+   ========================================= */
+
+.arm {
+    position: relative;
+}
+
+/* নিচের আর্ম (Bottom Arm) - গুটি ওপরে ওঠে */
+.bottom-arm::after {
+    content: "\f062"; /* FontAwesome Arrow Up */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    bottom: 20px;
+    right: 15px; /* ডানদিকের লাইনে বসানোর জন্য */
+    font-size: 24px;
+    color: rgba(0, 0, 0, 0.2); /* হালকা জলছাপের মতো রং */
+    pointer-events: none; /* যাতে ক্লিকে সমস্যা না হয় */
+}
+
+/* বাঁদিকের আর্ম (Left Arm) - গুটি ডানদিকে যায় */
+.left-arm::after {
+    content: "\f061"; /* FontAwesome Arrow Right */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    left: 20px;
+    top: 15px; 
+    font-size: 24px;
+    color: rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+}
+
+/* ওপরের আর্ম (Top Arm) - গুটি নিচে নামে */
+.top-arm::after {
+    content: "\f063"; /* FontAwesome Arrow Down */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    top: 20px;
+    left: 15px;
+    font-size: 24px;
+    color: rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+}
+
+/* ডানদিকের আর্ম (Right Arm) - গুটি বাঁদিকে যায় */
+.right-arm::after {
+    content: "\f060"; /* FontAwesome Arrow Left */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    right: 20px;
+    bottom: 15px;
+    font-size: 24px;
+    color: rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+}
