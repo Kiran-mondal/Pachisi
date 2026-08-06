@@ -87,13 +87,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 players[c].type = document.getElementById(`status-${c}`).value;
                 document.getElementById(`name-${c}`).innerText = players[c].type === 'human' ? `${c.toUpperCase()}` : `BOT-${c.toUpperCase()}`;
                 const card = document.getElementById(players[c].id);
-                if(card) { card.style.visibility = 'visible'; card.style.opacity = '1'; }
+                if(card) { card.style.visibility = 'visible'; card.style.opacity = '1'; card.style.pointerEvents = 'auto'; }
             });
 
+            // 🌟 Inactive Players Fix: সাদা গর্ত না করে আবছা করে দেওয়া 🌟
             allColors.forEach(c => {
                 if(!turnOrder.includes(c)) {
                     const card = document.getElementById(players[c].id);
-                    if(card) { card.style.visibility = 'hidden'; card.style.opacity = '0.3'; }
+                    if(card) { 
+                        card.style.opacity = '0.15'; 
+                        card.style.pointerEvents = 'none'; 
+                    }
                 }
             });
 
@@ -129,7 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.corner-player').forEach(card => card.classList.remove('active-turn'));
         document.getElementById(players[currentPlayer].id)?.classList.add('active-turn');
         
-        // সব গুটি থেকে লাফানো বন্ধ করা
         document.querySelectorAll('.token').forEach(t => t.classList.remove('playable'));
 
         if (players[currentPlayer].type === 'computer') {
@@ -150,7 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return validTokens.length > 0;
     }
 
-    // 🌟 গুটি লাফানোর জন্য ফাংশন 🌟
     function highlightPlayableTokens(playerColor, rollValue) {
         document.querySelectorAll('.token').forEach(t => t.classList.remove('playable'));
         
@@ -158,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tokens.forEach(token => {
             let currentStep = parseInt(token.dataset.step);
             if ((currentStep + rollValue) <= 73) {
-                token.classList.add('playable'); // যে গুটিগুলো চালা যাবে তারা লাফাবে
+                token.classList.add('playable');
             }
         });
     }
@@ -207,13 +209,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(moveComputerToken, 600);
             } else {
                 if(rollBtn) rollBtn.disabled = false;
-                highlightPlayableTokens(currentPlayer, currentDiceRoll); // 🌟 গুটি লাফানো শুরু 🌟
+                highlightPlayableTokens(currentPlayer, currentDiceRoll);
             }
         }, 1200); 
     }
 
     function performMove(token) {
-        document.querySelectorAll('.token').forEach(t => t.classList.remove('playable')); // ক্লিক করার পর লাফানো বন্ধ
+        document.querySelectorAll('.token').forEach(t => t.classList.remove('playable')); 
         if (token.classList.contains('finished')) return; 
 
         let currentStep = parseInt(token.dataset.step);
@@ -291,4 +293,4 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTurnUI();
     }
 });
-                                         
+                          
