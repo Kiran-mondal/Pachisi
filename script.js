@@ -10,15 +10,29 @@ document.addEventListener('DOMContentLoaded', () => {
             target.classList.add('active');
         }
         
-        document.getElementById('nav-links')?.classList.remove('active');
+        // ক্লিক করার পর মোবাইলের মেনু বন্ধ করা
+        const navLinks = document.getElementById('nav-links');
+        if(navLinks) navLinks.classList.remove('active');
     }
     
-    document.querySelectorAll('.nav-btn').forEach(btn => btn.addEventListener('click', (e) => { 
-        // 🌟 শুধুমাত্র যেসব লিংকে nav-btn ক্লাস আছে, সেগুলোকেই আটকাবে 🌟
-        e.preventDefault(); 
-        activateTab(btn.getAttribute('data-target')); 
-    }));
+    // ১. গেমের ভেতরের ট্যাবগুলো কাজ করার জন্য
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => { 
+            e.preventDefault(); 
+            activateTab(btn.getAttribute('data-target')); 
+        });
+    });
 
+    // ২. 🌟 My Projects ট্যাবটিকে জবরদস্তি খোলার কোড 🌟
+    const myProjectsBtn = document.getElementById('my-projects-btn');
+    if (myProjectsBtn) {
+        myProjectsBtn.addEventListener('click', (e) => {
+            e.preventDefault(); // ব্রাউজারের ক্যাশ বা আগের কোনো বাধা থাকলে সেটা ভাঙবে
+            window.location.href = 'projects/index.html'; // সরাসরি আপনার ফোল্ডারে পাঠিয়ে দেবে
+        });
+    }
+
+    // ৩. মোবাইল মেনু (হ্যামবার্গার)
     document.getElementById('hamburger')?.addEventListener('click', () => {
         document.getElementById('nav-links')?.classList.toggle('active');
     });
