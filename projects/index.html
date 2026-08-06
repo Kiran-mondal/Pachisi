@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Projects</title>
+    <title>Kiran Mondal - My Projects</title>
     
     <!-- Fonts and Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <!-- 🌟 সম্পূর্ণ CSS ডিজাইন এখানেই দেওয়া হলো যাতে ফোল্ডারের ঝামেলায় না ভাঙে 🌟 -->
     <style>
         :root {
             --bg-cream: #f4ead5; 
@@ -19,23 +18,51 @@
         }
         body {
             font-family: Arial, sans-serif;
-            background-color: #000; /* পেজের পেছনের কালো অংশ */
+            background-color: #000; 
             margin: 0; 
             padding: 20px;
             display: flex; 
             justify-content: center; 
             align-items: center; 
             min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
+
+        /* 🌟 ঘূর্ণায়মান ওয়াটারমার্ক অ্যানিমেশন 🌟 */
+        .watermark-bg {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 80vmin;
+            height: 80vmin;
+            opacity: 0.15; /* হালকা করে দেখার জন্য */
+            z-index: 0;
+            pointer-events: none;
+            animation: spinWatermark 25s linear infinite; /* ২৫ সেকেন্ডে একবার ঘুরবে */
+        }
+        .watermark-bg svg {
+            width: 100%;
+            height: 100%;
+            fill: var(--gold);
+            stroke: var(--gold);
+        }
+        @keyframes spinWatermark {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* মূল কন্টেইনার */
         .container {
             background: var(--bg-cream); 
             border: 4px solid var(--gold); 
             border-radius: 10px;
             width: 100%; 
-            max-width: 600px; 
+            max-width: 650px; 
             padding: 30px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            box-shadow: 0 10px 40px rgba(220, 179, 96, 0.2);
             position: relative;
+            z-index: 10;
         }
         .close-btn { 
             position: absolute; 
@@ -45,146 +72,201 @@
             color: var(--royal-red); 
             cursor: pointer; 
             text-decoration: none; 
+            transition: 0.3s;
         }
-        .close-btn:hover { color: #ff0000; }
+        .close-btn:hover { color: #ff0000; transform: scale(1.1); }
         
         /* Profile Section */
-        .profile-section {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+        .profile-section { text-align: center; margin-bottom: 20px; }
         .profile-img {
-            width: 130px; 
-            height: 130px; 
-            border-radius: 50%; 
-            border: 3px solid var(--gold); 
-            box-shadow: 0 4px 15px rgba(220,179,96,0.5); 
-            margin-bottom: 15px;
-            object-fit: cover;
+            width: 130px; height: 130px; border-radius: 50%; 
+            border: 3px solid var(--gold); box-shadow: 0 4px 15px rgba(220,179,96,0.6); 
+            margin-bottom: 15px; object-fit: cover;
         }
+        .profile-section h2 { color: var(--royal-red); font-family: 'Cinzel', serif; margin: 0; font-size: 2rem; }
+        .profile-section p { color: var(--dark-wood); font-weight: bold; margin: 10px 0 20px 0; }
         .btn-github-main { 
-            display: inline-block; 
-            background: var(--royal-red); 
-            color: var(--gold); 
-            padding: 10px 20px; 
-            border-radius: 25px; 
-            text-decoration: none; 
-            font-weight: bold; 
-            border: 2px solid var(--gold);
-            font-family: Arial, sans-serif;
+            display: inline-block; background: var(--royal-red); color: var(--gold); 
+            padding: 10px 25px; border-radius: 25px; text-decoration: none; font-weight: bold; 
+            border: 2px solid var(--gold); transition: 0.3s;
         }
+        .btn-github-main:hover { transform: scale(1.05); background: var(--dark-wood); }
         
         /* Title Section */
-        .section-title { 
-            text-align: center; 
-            margin: 40px 0 20px 0; 
-        }
-        .section-title h3 { 
-            color: var(--royal-red); 
-            font-size: 1.6rem; 
-            margin: 0; 
-            font-family: 'Cinzel', serif;
-            text-transform: uppercase;
-        }
-        .divider { 
-            width: 250px; 
-            height: 2px; 
-            background: var(--gold); 
-            margin: 15px auto 30px auto; 
-        }
+        .section-title { text-align: center; margin: 40px 0 20px 0; }
+        .section-title h3 { color: var(--royal-red); font-size: 1.6rem; margin: 0; font-family: 'Cinzel', serif; }
+        .divider { width: 200px; height: 2px; background: var(--gold); margin: 12px auto 30px auto; }
         
-        /* Projects List */
+        /* Project Cards */
         .repo-card { 
-            margin-bottom: 30px; 
+            background: white; border: 2px solid var(--gold); border-radius: 8px; 
+            padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+            transition: transform 0.3s ease;
         }
-        .repo-card h3 { 
-            margin: 0 0 10px 0; 
-            font-size: 1.3rem; 
-            color: var(--royal-red); 
-            font-family: 'Cinzel', serif;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .repo-card p { 
-            font-size: 1rem; 
-            color: var(--dark-wood); 
-            margin-bottom: 15px; 
-            line-height: 1.5; 
-        }
-        .card-buttons { 
-            display: flex; 
-            gap: 15px; 
-        }
+        .repo-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
         
-        /* Classic Blue Links exactly like your old screenshot */
-        .live-btn, .code-btn {
-            color: mediumblue;
-            text-decoration: underline;
-            font-family: 'Cinzel', serif;
-            font-weight: bold;
-            font-size: 1.1rem;
-            text-transform: uppercase;
+        /* Card Header (Logo + Title) */
+        .card-header { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
+        .card-header svg { width: 40px; height: 40px; flex-shrink: 0; }
+        .card-header h3 { margin: 0; font-size: 1.4rem; color: var(--royal-red); font-family: 'Cinzel', serif; }
+        
+        .repo-card p { font-size: 0.95rem; color: var(--dark-wood); margin-bottom: 20px; line-height: 1.6; font-weight: 500;}
+        
+        /* Links */
+        .card-buttons { display: flex; gap: 15px; }
+        .live-btn { 
+            flex: 1; text-align: center; padding: 12px; background: var(--gold); 
+            color: var(--dark-wood); text-decoration: none; font-weight: bold; 
+            border-radius: 5px; border: 1px solid var(--dark-wood); font-size: 14px; transition: 0.3s;
         }
+        .live-btn:hover { background: var(--dark-wood); color: var(--gold); }
+        
+        .code-btn { 
+            flex: 1; text-align: center; padding: 12px; background: white; 
+            border: 1px solid var(--royal-red); color: var(--royal-red); 
+            text-decoration: none; font-weight: bold; border-radius: 5px; font-size: 14px; transition: 0.3s;
+        }
+        .code-btn:hover { background: var(--royal-red); color: white; }
     </style>
 </head>
 <body>
 
+    <!-- 🌟 ব্যাকগ্রাউন্ডে ঘূর্ণায়মান ওয়াটারমার্ক 🌟 -->
+    <div class="watermark-bg">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <defs>
+                <mask id="pasha-hole-bg">
+                    <rect width="512" height="512" fill="white" />
+                    <circle cx="256" cy="256" r="32" fill="black" />
+                </mask>
+            </defs>
+            <g mask="url(#pasha-hole-bg)" fill="currentColor">
+                <rect x="232" y="16" width="48" height="480" rx="12" />
+                <rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(45 256 256)" />
+                <rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(90 256 256)" />
+                <rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(135 256 256)" />
+                <circle cx="256" cy="256" r="168" fill="none" stroke="currentColor" stroke-width="48" />
+                <circle cx="256" cy="256" r="56" fill="none" stroke="currentColor" stroke-width="48" />
+            </g>
+        </svg>
+    </div>
+
+    <!-- মূল কন্টেন্ট -->
     <div class="container">
-        <!-- Close Button (Redirects back to game) -->
+        <!-- Close Button -->
         <a href="../index.html" class="close-btn">&times;</a>
         
-        <!-- Profile Picture and GitHub Link -->
+        <!-- Profile Section -->
         <div class="profile-section">
-            <!-- ⚠️ আপনার শিবাজী মহারাজের ছবি বা নিজের ছবির লিংক নিচের src="" এর ভেতরে দিন ⚠️ -->
             <img src="https://github.com/Kiran-mondal.png" alt="Profile" class="profile-img">
-            <br>
+            <h2>Kiran Mondal</h2>
+            <p>Full-Stack Developer & Cyber Security Enthusiast</p>
             <a href="https://github.com/Kiran-mondal" target="_blank" class="btn-github-main">
                 <i class="fa-brands fa-github"></i> View Full GitHub Profile
             </a>
         </div>
 
         <div class="section-title">
-            <h3><i class="fa-solid fa-globe" style="color:#007bff; font-size: 1.4rem;"></i> My Other Live Projects</h3>
+            <h3>🌐 My Other Live Projects</h3>
             <div class="divider"></div>
         </div>
         
-        <!-- Project 1 -->
+        <!-- Project 1: Password Guard -->
         <div class="repo-card">
-            <h3>Password Guard</h3>
-            <p>Advanced AI-powered password protection & vault management tool.</p>
+            <div class="card-header">
+                <!-- SVG Theme matched with Royal Red -->
+                <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="512" height="512" rx="120" fill="var(--royal-red)"/>
+                    <path d="M256 80L120 140V240C120 330 176 407 256 432C336 407 392 330 392 240V140L256 80Z" fill="white"/>
+                    <circle cx="256" cy="255" r="70" fill="var(--royal-red)"/>
+                    <rect x="235" y="240" width="42" height="75" rx="8" fill="white"/>
+                </svg>
+                <h3>Password Guard</h3>
+            </div>
+            <p>Advanced AI-powered password protection & vault management tool with 3D Cyber UI.</p>
             <div class="card-buttons">
-                <a href="https://passwordguard.quarry.dpdns.org" target="_blank" class="live-btn">LIVE APP</a>
-                <a href="https://github.com/Kiran-mondal/Password-Guard" target="_blank" class="code-btn">SOURCE CODE</a>
+                <a href="https://passwordguard.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
+                <a href="https://github.com/Kiran-mondal/Password-Guard" target="_blank" class="code-btn">Source Code</a>
+            </div>
+        </div>
+
+        <!-- Project 2: Pachisi -->
+        <div class="repo-card">
+            <div class="card-header">
+                <!-- SVG Theme matched with Royal Red -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <defs>
+                        <mask id="pasha-hole">
+                            <rect width="512" height="512" fill="white" />
+                            <circle cx="256" cy="256" r="32" fill="black" />
+                        </mask>
+                    </defs>
+                    <g mask="url(#pasha-hole)" fill="var(--royal-red)">
+                        <rect x="232" y="16" width="48" height="480" rx="12" />
+                        <rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(45 256 256)" />
+                        <rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(90 256 256)" />
+                        <rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(135 256 256)" />
+                        <circle cx="256" cy="256" r="168" fill="none" stroke="var(--royal-red)" stroke-width="48" />
+                        <circle cx="256" cy="256" r="56" fill="none" stroke="var(--royal-red)" stroke-width="48" />
+                    </g>
+                </svg>
+                <h3>Pachisi</h3>
+            </div>
+            <p>Play the ancient Indian epic board game of strategy, heritage, and royal culture.</p>
+            <div class="card-buttons">
+                <a href="https://pachisi.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
+                <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">Source Code</a>
             </div>
         </div>
         
-        <!-- Project 2 -->
+        <!-- Project 3: ZenDrift -->
         <div class="repo-card">
-            <h3>ZenDrift</h3>
-            <p>Dynamic performance tracking system built for an engaging web experience.</p>
+            <div class="card-header">
+                <!-- SVG Theme matched with Royal Red & Gold -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <path d="M 120 390 C 120 270, 392 350, 392 210 C 392 130, 310 90, 256 90" fill="none" stroke="var(--royal-red)" stroke-width="45" stroke-linecap="round" />
+                    <circle cx="256" cy="90" r="45" fill="var(--gold)" />
+                </svg>
+                <h3>ZenDrift</h3>
+            </div>
+            <p>Dynamic performance tracking system built for an engaging and smooth web experience.</p>
             <div class="card-buttons">
-                <a href="https://zendrift.quarry.dpdns.org" target="_blank" class="live-btn">LIVE APP</a>
-                <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">SOURCE CODE</a>
+                <a href="https://zendrift.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
+                <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">Source Code</a>
             </div>
         </div>
         
-        <!-- Project 3 -->
+        <!-- Project 4: Omlang -->
         <div class="repo-card">
-            <h3>Omlang</h3>
-            <p>A modern language and communication-focused platform with an intuitive UI.</p>
+            <div class="card-header">
+                <!-- SVG Theme matched -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+                    <path d="M 280 250 C 420 250, 420 380, 350 400 C 450 420, 450 580, 280 580" stroke="var(--royal-red)" stroke-width="45" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="450" cy="120" r="30" fill="var(--gold)" />
+                </svg>
+                <h3>Omlang</h3>
+            </div>
+            <p>A modern language and communication-focused platform with an intuitive user interface.</p>
             <div class="card-buttons">
-                <a href="https://omlang.quarry.dpdns.org" target="_blank" class="live-btn">LIVE APP</a>
-                <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">SOURCE CODE</a>
+                <a href="https://omlang.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
+                <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">Source Code</a>
             </div>
         </div>
         
-        <!-- Project 4 -->
+        <!-- Project 5: Chaturanga -->
         <div class="repo-card">
-            <h3>Chaturanga</h3>
+            <div class="card-header">
+                <!-- SVG Theme matched -->
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="48" fill="var(--royal-red)" stroke="var(--gold)" stroke-width="2"/>
+                    <path d="M50 20 L75 55 L50 80 L25 55 Z" fill="var(--gold)" />
+                </svg>
+                <h3>Chaturanga</h3>
+            </div>
             <p>Interactive web-based application focused on deep logic, planning, and strategy.</p>
             <div class="card-buttons">
-                <a href="https://chaturanga.quarry.dpdns.org" target="_blank" class="live-btn">LIVE APP</a>
-                <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">SOURCE CODE</a>
+                <a href="https://chaturanga.quarry.dpdns.org" target="_blank" class="live-btn">Live App</a>
+                <a href="https://github.com/Kiran-mondal" target="_blank" class="code-btn">Source Code</a>
             </div>
         </div>
         
@@ -192,3 +274,4 @@
 
 </body>
 </html>
+    
