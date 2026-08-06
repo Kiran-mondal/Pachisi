@@ -38,7 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const startIndexes = { red: 0, green: 16, black: 32, yellow: 48 };
     const defaultSafeZones = ['red-arm-sq-1', 'red-arm-sq-24', 'green-arm-sq-17', 'green-arm-sq-8', 'black-arm-sq-24', 'black-arm-sq-1', 'yellow-arm-sq-8', 'yellow-arm-sq-17'];
 
-    // Helper: Get Square ID based on current step
     function getSquareId(color, step) {
         if (step === 0) return `yard-${color}`;
         if (step >= 1 && step <= 64) return perimeter[(startIndexes[color] + step - 1) % 64];
@@ -46,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return 'home';
     }
 
-    // Initialize Board Grid
     function createBoard() {
         arms.forEach(armId => {
             const container = document.getElementById(armId);
@@ -66,7 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Create Player Tokens
     function createTokenElem(color) {
         const t = document.createElement('div');
         t.classList.add('token', `token-${color}`);
@@ -75,7 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return t;
     }
 
-    // Setup & Start Game
     const startBtn = document.getElementById('start-game-btn');
     if (startBtn) {
         startBtn.addEventListener('click', () => {
@@ -87,7 +83,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Setup Players
             turnOrder.forEach(c => {
                 players[c].type = document.getElementById(`status-${c}`).value;
                 document.getElementById(`name-${c}`).innerText = players[c].type === 'human' ? `${c.toUpperCase()}` : `BOT-${c.toUpperCase()}`;
@@ -107,7 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             createBoard();
 
-            // Add tokens to yards
             turnOrder.forEach((color) => {
                 const yard = document.getElementById(`yard-${color}`);
                 if(yard) { yard.innerHTML = ''; for (let i = 0; i < 4; i++) yard.appendChild(createTokenElem(color)); }
@@ -122,7 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- VIDEO DICE & TURN LOGIC ---
     const rollBtn = document.getElementById('roll-dice-btn');
     const resultText = document.getElementById('dice-result');
 
@@ -135,6 +128,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.querySelectorAll('.corner-player').forEach(card => card.classList.remove('active-turn'));
         document.getElementById(players[currentPlayer].id)?.classList.add('active-turn');
+        
+        // সব গুটি থেকে লাফানো বন্ধ করা
+        document.querySelectorAll('.token').forEach(t => t.classList.remove('playable'));
 
         if (players[currentPlayer].type === 'computer') {
             isComputerTurn = true;
@@ -154,7 +150,19 @@ document.addEventListener('DOMContentLoaded', () => {
         return validTokens.length > 0;
     }
 
-    // Mobile Bug Fixed Video Roll
+    // 🌟 গুটি লাফানোর জন্য ফাংশন 🌟
+    function highlightPlayableTokens(playerColor, rollValue) {
+        document.querySelectorAll('.token').forEach(t => t.classList.remove('playable'));
+        
+        let tokens = Array.from(document.querySelectorAll(`.token-${playerColor}:not(.finished)`));
+        tokens.forEach(token => {
+            let currentStep = parseInt(token.dataset.step);
+            if ((currentStep + rollValue) <= 73) {
+                token.classList.add('playable'); // যে গুটিগুলো চালা যাবে তারা লাফাবে
+            }
+        });
+    }
+
     function rollTheDice() {
         if(rollBtn) rollBtn.disabled = true; 
         resultText.innerText = "Rolling...";
@@ -164,7 +172,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (overlay) overlay.classList.add('hidden');
         
-        // Mobile Black Screen Fix
         if (video) {
             video.play().catch(e => console.log("Play issue on mobile:", e));
             setTimeout(() => { video.currentTime = 0; }, 50); 
@@ -173,7 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             if (video) video.pause(); 
 
-            // Roll values
             const faces = [1, 3, 4, 6];
             const v1 = faces[Math.floor(Math.random() * 4)]; 
             const v2 = faces[Math.floor(Math.random() * 4)];
@@ -197,13 +203,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            if (isComputerTurn) setTimeout(moveComputerToken, 600);
-            else if(rollBtn) rollBtn.disabled = false;
+            if (isComputerTurn) {
+                setTimeout(moveComputerToken, 600);
+            } else {
+                if(rollBtn) rollBtn.disabled = false;
+                highlightPlayableTokens(currentPlayer, currentDiceRoll); // 🌟 গুটি লাফানো শুরু 🌟
+            }
         }, 1200); 
     }
 
-    // --- MOVEMENT LOGIC ---
     function performMove(token) {
+        document.querySelectorAll('.token').forEach(t => t.classList.remove('playable')); // ক্লিক করার পর লাফানো বন্ধ
         if (token.classList.contains('finished')) return; 
 
         let currentStep = parseInt(token.dataset.step);
@@ -219,7 +229,6 @@ document.addEventListener('DOMContentLoaded', () => {
             token.style.zIndex = "50";
             
             setTimeout(() => {
-                // Capturing Logic
                 if (targetId !== 'home' && !activeSafeZones.includes(targetId)) {
                     let enemyTokens = Array.from(targetSquare.querySelectorAll('.token')).filter(t => t.dataset.color !== currentPlayer);
                     if (enemyTokens.length > 0) {
@@ -265,7 +274,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Player Interaction
     document.addEventListener('click', (e) => {
         if (e.target.classList.contains('token')) {
             const token = e.target;
@@ -283,4 +291,4 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTurnUI();
     }
 });
-            
+                                         
