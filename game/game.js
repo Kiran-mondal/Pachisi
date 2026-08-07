@@ -88,7 +88,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const card = document.getElementById(players[c].id);
                 if(card) { 
                     if(turnOrder.includes(c)) {
-                        // যারা খেলছে
                         card.classList.remove('inactive');
                         card.style.visibility = 'visible';
                         card.style.opacity = '1'; 
@@ -98,7 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         players[c].type = document.getElementById(`status-${c}`).value;
                         document.getElementById(`name-${c}`).innerText = players[c].type === 'human' ? `${c.toUpperCase()}` : `BOT-${c.toUpperCase()}`;
                     } else {
-                        // যারা খেলছে না (সাদা গর্ত ফিক্সড)
                         card.classList.add('inactive'); 
                         card.style.visibility = 'visible';
                         card.style.opacity = '1';
@@ -297,5 +295,34 @@ document.addEventListener('DOMContentLoaded', () => {
         hasExtraTurn = false;
         updateTurnUI();
     }
+
+    // ==========================================
+    // 🌟 PENPOT API INTEGRATION 🌟
+    // ==========================================
+    async function fetchPenpotDesign() {
+        try {
+            // Vercel API (api/penpot.js) থেকে ডেটা কল করা হচ্ছে
+            const response = await fetch('/api/penpot');
+            
+            if (!response.ok) {
+                throw new Error("API থেকে সঠিক রেসপন্স পাওয়া যায়নি।");
+            }
+            
+            const designData = await response.json();
+            
+            // Console-এ ডেটা প্রিন্ট করা হচ্ছে যাতে আপনি দেখতে পারেন কী কী ডেটা আসছে
+            console.log("Penpot থেকে পাওয়া ডেটা সফলভাবে লোড হয়েছে:", designData);
+            
+            // পরবর্তীতে আপনি Penpot-এর ডেটা ব্যবহার করে এখানে সরাসরি গেমের ডিজাইন বা কালার পরিবর্তন করতে পারবেন।
+            // উদাহরণস্বরূপ: document.body.style.backgroundColor = designData.colors.main;
+
+        } catch (error) {
+            console.error("Penpot কানেকশনে সমস্যা হয়েছে:", error);
+        }
+    }
+
+    // গেম লোড হওয়ার সাথেই Penpot থেকে ডেটা নিয়ে আসার জন্য ফাংশনটি কল করা হলো
+    fetchPenpotDesign();
+
 });
-                        
+        
