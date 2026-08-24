@@ -4,7 +4,11 @@ export default async function handler(req, res) {
     const token = process.env.PENPOT_ACCESS_TOKEN; 
 
     // Penpot এর কোন ফাইলটি আনতে চান, তার ID (এটি পরে আমরা পরিবর্তন করব)
-    const fileId = req.query.fileId || "আপনার_পেনপট_ফাইলের_আইডি"; 
+    const fileId = process.env.PENPOT_FILE_ID;
+
+    if (!fileId) {
+        return res.status(500).json({ error: 'Penpot file ID not configured.' });
+    }
 
     try {
         const response = await fetch(`https://design.penpot.app/api/rpc/command/get-file`, {
