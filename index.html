@@ -19,7 +19,7 @@
     <!-- Premium Navigation Bar -->
     <header class="navbar">
         <div class="brand">
-            <i class="fa-solid fa-dharmachakra logo-icon"></i>
+            <i class="fa-solid fa-dharmachakra logo-icon" aria-hidden="true"></i>
             <div class="logo-text">
                 <h1>Pachisi</h1>
                 <p>The Ancient Epic</p>
@@ -74,7 +74,7 @@
                         </div>
 
                         <div class="setup-row">
-                            <label>Game Variant:</label>
+                            <label for="variant-select">Game Variant:</label>
                             <select id="variant-select" class="royal-select">
                                 <option value="pachisi">Pachisi</option>
                                 <option value="chaupar">Chaupar</option>
@@ -83,7 +83,7 @@
 
                         <div class="players-config">
                             <div class="config-row" id="config-red">
-                                <div class="config-label"><div class="token token-red" style="position:static; margin-right:5px;"></div> Red Player:</div>
+                                <label class="config-label" for="status-red"><div class="token token-red" style="position:static; margin-right:5px;" aria-hidden="true"></div> Red Player:</label>
                                 <select id="status-red" class="royal-select">
                                     <option value="human">Human Player</option>
                                     <option value="computer">Computer Bot</option>
@@ -91,7 +91,7 @@
                                 </select>
                             </div>
                             <div class="config-row" id="config-green">
-                                <div class="config-label"><div class="token token-green" style="position:static; margin-right:5px;"></div> Green Player:</div>
+                                <label class="config-label" for="status-green"><div class="token token-green" style="position:static; margin-right:5px;" aria-hidden="true"></div> Green Player:</label>
                                 <select id="status-green" class="royal-select">
                                     <option value="none">Disabled</option>
                                     <option value="computer">Computer Bot</option>
@@ -99,7 +99,7 @@
                                 </select>
                             </div>
                             <div class="config-row" id="config-black">
-                                <div class="config-label"><div class="token token-black" style="position:static; margin-right:5px;"></div> Black Player:</div>
+                                <label class="config-label" for="status-black"><div class="token token-black" style="position:static; margin-right:5px;" aria-hidden="true"></div> Black Player:</label>
                                 <select id="status-black" class="royal-select">
                                     <option value="computer">Computer Bot</option>
                                     <option value="human">Human Player</option>
@@ -107,7 +107,7 @@
                                 </select>
                             </div>
                             <div class="config-row" id="config-yellow">
-                                <div class="config-label"><div class="token token-yellow" style="position:static; margin-right:5px;"></div> Yellow Player:</div>
+                                <label class="config-label" for="status-yellow"><div class="token token-yellow" style="position:static; margin-right:5px;" aria-hidden="true"></div> Yellow Player:</label>
                                 <select id="status-yellow" class="royal-select">
                                     <option value="none">Disabled</option>
                                     <option value="computer">Computer Bot</option>
