@@ -26,7 +26,8 @@ button, a, select { touch-action: manipulation; -webkit-tap-highlight-color: tra
 .nav-links li a { color: var(--royal-red); text-decoration: none; font-size: 16px; font-weight: bold; transition: color 0.3s; }
 .nav-links li a:hover, .nav-links li a.active { color: var(--dark-wood); }
 
-.hamburger { display: none; cursor: pointer; }
+.hamburger { display: none; cursor: pointer; background: transparent; border: none; padding: 5px; }
+.hamburger:focus-visible { outline: 2px solid var(--royal-red); outline-offset: 2px; border-radius: 4px; }
 .hamburger .bar { display: block; width: 25px; height: 3px; background-color: var(--royal-red); margin: 5px auto; transition: 0.3s; }
 
 /* Tab Sections & Background */

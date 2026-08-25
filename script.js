@@ -33,8 +33,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ৩. মোবাইল মেনু (হ্যামবার্গার)
-    document.getElementById('hamburger')?.addEventListener('click', () => {
-        document.getElementById('nav-links')?.classList.toggle('active');
+    document.getElementById('hamburger')?.addEventListener('click', (e) => {
+        const navLinks = document.getElementById('nav-links');
+        if (navLinks) {
+            navLinks.classList.toggle('active');
+            const isActive = navLinks.classList.contains('active');
+            e.currentTarget.setAttribute('aria-expanded', isActive);
+        }
     });
 
 });
