@@ -48,19 +48,23 @@ document.addEventListener('DOMContentLoaded', () => {
     function createBoard() {
         arms.forEach(armId => {
             const container = document.getElementById(armId);
-            if (!container) return; container.innerHTML = ''; 
+            if (!container) return; container.innerHTML = '';
+
+            const fragment = document.createDocumentFragment();
             for (let i = 1; i <= 24; i++) {
                 const sq = document.createElement('div');
                 sq.classList.add('square');
                 const sqId = `${armId}-sq-${i}`;
                 sq.dataset.id = sqId;
+                sq.id = sqId; // Added for O(1) lookups
                 
                 if (activeSafeZones.includes(sqId)) {
                     sq.classList.add('safe-zone');
                     sq.innerHTML = '<i class="fa-solid fa-star" style="color: rgba(212, 175, 55, 0.5); font-size: 10px; position: absolute;"></i>';
                 }
-                container.appendChild(sq);
+                fragment.appendChild(sq);
             }
+            container.appendChild(fragment);
         });
     }
 
@@ -136,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.corner-player').forEach(card => card.classList.remove('active-turn'));
         document.getElementById(players[currentPlayer].id)?.classList.add('active-turn');
         
-        document.querySelectorAll('.token').forEach(t => t.classList.remove('playable'));
+        document.querySelectorAll('.token.playable').forEach(t => t.classList.remove('playable'));
 
         if (players[currentPlayer].type === 'computer') {
             isComputerTurn = true;
@@ -157,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function highlightPlayableTokens(playerColor, rollValue) {
-        document.querySelectorAll('.token').forEach(t => t.classList.remove('playable'));
+        document.querySelectorAll('.token.playable').forEach(t => t.classList.remove('playable'));
         
         let tokens = Array.from(document.querySelectorAll(`.token-${playerColor}:not(.finished)`));
         tokens.forEach(token => {
@@ -218,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function performMove(token) {
-        document.querySelectorAll('.token').forEach(t => t.classList.remove('playable')); 
+        document.querySelectorAll('.token.playable').forEach(t => t.classList.remove('playable'));
         if (token.classList.contains('finished')) return; 
 
         let currentStep = parseInt(token.dataset.step);
@@ -227,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (targetStep > 73) return; 
         
         let targetId = getSquareId(currentPlayer, targetStep);
-        let targetSquare = targetId === 'home' ? document.querySelector('.center-home') : document.querySelector(`[data-id="${targetId}"]`);
+        let targetSquare = targetId === 'home' ? document.querySelector('.center-home') : document.getElementById(targetId);
         
         if(targetSquare) {
             token.style.transform = "scale(1.5) translateY(-5px)";
