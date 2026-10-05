@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ১. ট্যাব কন্ট্রোল (Home, Play, Rules)
+    // 1. Tab Switching Logic
     function activateTab(targetId) {
         document.querySelectorAll('.tab-section').forEach(section => {
             section.classList.remove('active');
@@ -11,21 +11,23 @@ document.addEventListener('DOMContentLoaded', () => {
             target.classList.add('active');
         }
         
-        // মোবাইল মেনু বন্ধ করা
+        // Close mobile menu if open
         const navLinks = document.getElementById('nav-links');
         if(navLinks) navLinks.classList.remove('active');
     }
     
+    // Attach click events to all nav buttons
     document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.addEventListener('click', (e) => { 
-            if (!btn.hasAttribute('href') || btn.getAttribute('href') === '#') {
+            const target = btn.getAttribute('data-target');
+            if (target) {
                 e.preventDefault(); 
+                activateTab(target); 
             }
-            activateTab(btn.getAttribute('data-target')); 
         });
     });
 
-    // ২. My Projects ট্যাবের লজিক (অপরিবর্তিত)
+    // 2. My Projects Tab (Direct Link)
     const myProjectsBtn = document.getElementById('my-projects-btn');
     if (myProjectsBtn) {
         myProjectsBtn.addEventListener('click', (e) => {
@@ -34,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ৩. মোবাইল মেনু (হ্যামবার্গার)
+    // 3. Mobile Hamburger Menu
     document.getElementById('hamburger')?.addEventListener('click', (e) => {
         const navLinks = document.getElementById('nav-links');
         if (navLinks) {
@@ -43,22 +45,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // ৪. গেম স্টার্ট লজিক (3D ইঞ্জিনের সাথে কানেক্ট করা)
+    // 4. Start Game Button Logic
     const startBtn = document.getElementById('start-game-btn');
     if (startBtn) {
         startBtn.addEventListener('click', () => {
-            // সেটআপ স্ক্রিন লুকিয়ে আসল গেম স্ক্রিন আনবে
+            // Hide Setup, Show Game UI
             document.getElementById('game-setup-screen').style.display = 'none';
             document.getElementById('actual-game-screen').style.display = 'flex';
             
-            // একটু সময় নিয়ে Three.js ইঞ্জিন চালু করবে
+            // Wait 300ms for browser to render layout, then start 3D
             setTimeout(() => {
                 if (typeof window.init3DGame === 'function') {
                     window.init3DGame();
                 } else {
-                    console.error("3D Engine is not loaded properly. Check game/game.js file.");
+                    alert("3D Engine failed to load. Please refresh.");
                 }
-            }, 150);
+            }, 300);
         });
     }
 });
