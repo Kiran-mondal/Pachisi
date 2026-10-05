@@ -1,33 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("Script.js loaded successfully!");
 
-    // 1. Tab Switching Logic
-    function activateTab(targetId) {
-        document.querySelectorAll('.tab-section').forEach(section => {
-            section.classList.remove('active');
-        });
-        
-        const target = document.getElementById(targetId);
-        if (target) {
-            target.classList.add('active');
-        }
-        
-        // Close mobile menu if open
-        const navLinks = document.getElementById('nav-links');
-        if(navLinks) navLinks.classList.remove('active');
-    }
-    
-    // Attach click events to all nav buttons
+    // ১. ট্যাব পরিবর্তন করার লজিক
     document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.addEventListener('click', (e) => { 
             const target = btn.getAttribute('data-target');
             if (target) {
                 e.preventDefault(); 
-                activateTab(target); 
+                document.querySelectorAll('.tab-section').forEach(sec => sec.classList.remove('active'));
+                const targetEl = document.getElementById(target);
+                if (targetEl) targetEl.classList.add('active');
             }
         });
     });
 
-    // 2. My Projects Tab (Direct Link)
+    // ২. পোর্টফোলিও লিংক
     const myProjectsBtn = document.getElementById('my-projects-btn');
     if (myProjectsBtn) {
         myProjectsBtn.addEventListener('click', (e) => {
@@ -36,31 +23,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. Mobile Hamburger Menu
-    document.getElementById('hamburger')?.addEventListener('click', (e) => {
-        const navLinks = document.getElementById('nav-links');
-        if (navLinks) {
-            navLinks.classList.toggle('active');
-            e.currentTarget.setAttribute('aria-expanded', navLinks.classList.contains('active'));
-        }
+    // ৩. মোবাইল মেনু
+    document.getElementById('hamburger')?.addEventListener('click', () => {
+        document.getElementById('nav-links')?.classList.toggle('active');
     });
 
-    // 4. Start Game Button Logic
+    // 🌟 ৪. গেম স্টার্ট বাটন লজিক (Error Checker সহ) 🌟
     const startBtn = document.getElementById('start-game-btn');
     if (startBtn) {
         startBtn.addEventListener('click', () => {
-            // Hide Setup, Show Game UI
+            console.log("Start button clicked!");
+            
             document.getElementById('game-setup-screen').style.display = 'none';
             document.getElementById('actual-game-screen').style.display = 'flex';
             
-            // Wait 300ms for browser to render layout, then start 3D
             setTimeout(() => {
                 if (typeof window.init3DGame === 'function') {
                     window.init3DGame();
                 } else {
-                    alert("3D Engine failed to load. Please refresh.");
+                    alert("Error: 3D Engine (game.js) লোড হয়নি! index.html এ স্ক্রিপ্টের সিরিয়াল চেক করো।");
                 }
             }, 300);
         });
+    } else {
+        console.error("Start Game Button not found in HTML!");
     }
 });
