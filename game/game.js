@@ -3,22 +3,41 @@ const RUBY_BACKEND_URL = "https://pachisi-rpfj.onrender.com";
 let scene, camera, renderer, controls;
 const SQUARE_SIZE = 2; 
 let squareCoordinates = {}; 
-let tokensArray = []; // 🌟 ঘুঁটিগুলোকে স্টোর করার জন্য অ্যারে
+let tokensArray = []; 
 
-// API থেকে ছক্কা রোল
-async function rollDiceFromServer(playerName = 'Player 1') {
+// 🌟 অরিজিনাল 2D গেম লজিক ভেরিয়েবল 🌟
+let currentPlayer = 'red'; 
+let currentDiceRoll = 0;
+let hasExtraTurn = false;
+
+// অরিজিনাল পেরিমিটার পাথ (যে পথে ঘুঁটি ঘুরবে)
+const perimeter = [
+    'red-arm-sq-1', 'red-arm-sq-4', 'red-arm-sq-7', 'red-arm-sq-10', 'red-arm-sq-13', 'red-arm-sq-16', 'red-arm-sq-19', 'red-arm-sq-22',
+    'red-arm-sq-24', 'red-arm-sq-21', 'red-arm-sq-18', 'red-arm-sq-15', 'red-arm-sq-12', 'red-arm-sq-9', 'red-arm-sq-6', 'red-arm-sq-3',
+    'green-arm-sq-17', 'green-arm-sq-18', 'green-arm-sq-19', 'green-arm-sq-20', 'green-arm-sq-21', 'green-arm-sq-22', 'green-arm-sq-23', 'green-arm-sq-24',
+    'green-arm-sq-8', 'green-arm-sq-7', 'green-arm-sq-6', 'green-arm-sq-5', 'green-arm-sq-4', 'green-arm-sq-3', 'green-arm-sq-2', 'green-arm-sq-1',
+    'black-arm-sq-24', 'black-arm-sq-21', 'black-arm-sq-18', 'black-arm-sq-15', 'black-arm-sq-12', 'black-arm-sq-9', 'black-arm-sq-6', 'black-arm-sq-3',
+    'black-arm-sq-1', 'black-arm-sq-4', 'black-arm-sq-7', 'black-arm-sq-10', 'black-arm-sq-13', 'black-arm-sq-16', 'black-arm-sq-19', 'black-arm-sq-22',
+    'yellow-arm-sq-8', 'yellow-arm-sq-7', 'yellow-arm-sq-6', 'yellow-arm-sq-5', 'yellow-arm-sq-4', 'yellow-arm-sq-3', 'yellow-arm-sq-2', 'yellow-arm-sq-1',
+    'yellow-arm-sq-17', 'yellow-arm-sq-18', 'yellow-arm-sq-19', 'yellow-arm-sq-20', 'yellow-arm-sq-21', 'yellow-arm-sq-22', 'yellow-arm-sq-23', 'yellow-arm-sq-24'
+];
+
+async function rollDiceFromServer(playerName = 'red') {
     const rollBtn = document.getElementById('roll-dice-btn');
     const resultText = document.getElementById('dice-result');
     if (rollBtn) rollBtn.disabled = true;
-    resultText.innerText = "Rolling from Server...";
+    resultText.innerText = "Rolling...";
 
     try {
         const response = await fetch(`${RUBY_BACKEND_URL}/api/roll?player=${playerName}`);
         const data = await response.json();
         
-        resultText.innerHTML = data.extraTurn ? 
-            `<span style="color:#ffdf70">Doublet!</span><br>${data.dice[0]} & ${data.dice[1]}<br>Move: <b>${data.totalMove}</b>` : 
-            `${data.dice[0]} & ${data.dice[1]}<br>Move: <b>${data.totalMove}</b>`;
+        currentDiceRoll = data.totalMove;
+        hasExtraTurn = data.extraTurn;
+
+        resultText.innerHTML = hasExtraTurn ? 
+            `<span style="color:#ffdf70">Doublet!</span><br>${data.dice[0]} & ${data.dice[1]}<br>Move: <b>${currentDiceRoll}</b>` : 
+            `${data.dice[0]} & ${data.dice[1]}<br>Move: <b>${currentDiceRoll}</b>`;
 
         setTimeout(() => { if (rollBtn) rollBtn.disabled = false; }, 1000);
     } catch (error) {
@@ -28,15 +47,16 @@ async function rollDiceFromServer(playerName = 'Player 1') {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('roll-dice-btn')?.addEventListener('click', () => rollDiceFromServer());
+    document.getElementById('roll-dice-btn')?.addEventListener('click', () => {
+        if(currentDiceRoll === 0) rollDiceFromServer(currentPlayer);
+    });
 });
 
-// 3D ইঞ্জিন চালু
 window.init3DGame = function() {
     const container = document.getElementById('three-canvas-container');
     if (!container) return;
     container.innerHTML = ''; 
-    tokensArray = []; // অ্যারে রিসেট
+    tokensArray = []; 
 
     let width = container.clientWidth || window.innerWidth * 0.9;
     let height = container.clientHeight || 400;
@@ -66,28 +86,41 @@ window.init3DGame = function() {
     buildPachisiBoard3D();
     setupTokens3D();
 
-    // 🌟 ঘুঁটিতে ক্লিক করার লজিক (Raycaster) 🌟
+    // 🌟 ঘুঁটি মুভমেন্ট লজিক (Raycaster) 🌟
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
     container.addEventListener('pointerdown', (event) => {
+        if(currentDiceRoll === 0) return; // ছক্কা না চাললে ক্লিক কাজ করবে না
+
         const rect = renderer.domElement.getBoundingClientRect();
         mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
         mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
         raycaster.setFromCamera(mouse, camera);
-        
-        // ঘুঁটিগুলোর ওপর মাউস বা টাচ পড়েছে কি না চেক করা
         const intersects = raycaster.intersectObjects(tokensArray);
         
         if (intersects.length > 0) {
             let clickedToken = intersects[0].object;
             
-            // ক্লিক করলে ঘুঁটিটি লাফিয়ে উঠবে (Test Jump Animation)
-            clickedToken.position.y += 2;
-            setTimeout(() => {
-                clickedToken.position.y -= 2;
-            }, 300);
+            // লজিক: ঘুঁটি এক ঘর থেকে অন্য ঘরে যাবে
+            let currentStep = clickedToken.userData.step;
+            let targetStep = currentStep + currentDiceRoll;
+            
+            if(targetStep <= 64) {
+                let targetSquareId = perimeter[targetStep - 1]; // পাথ থেকে আইডি বের করা
+                let targetCoords = squareCoordinates[targetSquareId];
+                
+                if(targetCoords) {
+                    // ঘুঁটিকে নতুন কোঅর্ডিনেটে পাঠানো
+                    clickedToken.position.set(targetCoords.x, targetCoords.y + 0.7, targetCoords.z);
+                    clickedToken.userData.step = targetStep;
+                    
+                    // মুভ শেষ হলে ছক্কার মান রিসেট করা
+                    currentDiceRoll = 0;
+                    document.getElementById('dice-result').innerText = "Move Complete.";
+                }
+            }
         }
     });
 
@@ -123,9 +156,7 @@ function buildPachisiBoard3D() {
     const yardGeo = new THREE.BoxGeometry(SQUARE_SIZE * 6, 0.4, SQUARE_SIZE * 6); 
 
     const centerHome = new THREE.Mesh(new THREE.BoxGeometry(SQUARE_SIZE * 3, 0.6, SQUARE_SIZE * 3), homeMat);
-    centerHome.receiveShadow = true;
     scene.add(centerHome);
-    squareCoordinates['home'] = { x: 0, y: 0.3, z: 0 };
 
     const createYard = (x, z, mat, name) => {
         let yard = new THREE.Mesh(yardGeo, mat);
@@ -139,6 +170,7 @@ function buildPachisiBoard3D() {
     createYard(-SQUARE_SIZE * 4.5, SQUARE_SIZE * 4.5, yardMats.red, 'red');       
     createYard(SQUARE_SIZE * 4.5, SQUARE_SIZE * 4.5, yardMats.green, 'green');    
 
+    // আর্মগুলোর নাম অরিজিনাল লজিকের সাথে মেলানো হলো
     function createArm(armName, startX, startZ, isVertical, dirSign) {
         let count = 1;
         for (let row = 0; row < 8; row++) {
@@ -155,10 +187,10 @@ function buildPachisiBoard3D() {
         }
     }
 
-    createArm('bottom', 0, SQUARE_SIZE * 2, true, 1);      
-    createArm('top', 0, -SQUARE_SIZE * 2, true, -1);        
-    createArm('right', SQUARE_SIZE * 2, 0, false, 1);      
-    createArm('left', -SQUARE_SIZE * 2, 0, false, -1);      
+    createArm('red', 0, SQUARE_SIZE * 2, true, 1);      
+    createArm('black', 0, -SQUARE_SIZE * 2, true, -1);        
+    createArm('green', SQUARE_SIZE * 2, 0, false, 1);      
+    createArm('yellow', -SQUARE_SIZE * 2, 0, false, -1);      
 }
 
 function setupTokens3D() {
@@ -167,12 +199,13 @@ function setupTokens3D() {
     
     for(let i=0; i<4; i++) {
         let redToken = new THREE.Mesh(tokenGeo, redMat);
+        // ঘুঁটির বর্তমান স্টেপ ট্র্যাকিংয়ের জন্য userData ব্যবহার করা হলো
+        redToken.userData = { color: 'red', step: 0 }; 
+        
         let yard = squareCoordinates['yard-red'];
         if(yard) redToken.position.set(yard.x - 1.5 + (i * 1.5), yard.y + 0.7, yard.z);
         scene.add(redToken);
-        
-        // 🌟 অ্যারেতে ঘুঁটি যুক্ত করা হলো যাতে ক্লিক ডিটেক্ট করা যায়
         tokensArray.push(redToken);
     }
-    }
+        }
     
