@@ -3,20 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pachisi - The Ancient Epic</title>
-    <meta name="description" content="Play Pachisi online. Experience the ancient Indian epic board game.">
+    <title>Pachisi - The Ancient Epic (3D)</title>
     
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="game/game.css">
-    <script defer src="https://analytics.digitalplat.org/static/analytics.js" data-property="dpa_JjDy5__gX7_W0qWwel1vOj_m3BELUa4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Yatra+One&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-
-    <!-- Premium Navigation Bar -->
     <header class="navbar">
         <div class="brand">
             <i class="fa-solid fa-dharmachakra logo-icon" aria-hidden="true"></i>
@@ -25,184 +23,60 @@
                 <p>The Ancient Epic</p>
             </div>
         </div>
-        
         <ul class="nav-links" id="nav-links">
             <li><a href="#" class="nav-btn active" data-target="home-tab">Home</a></li>
             <li><a href="#" class="nav-btn" data-target="game-tab">Play</a></li>
-            <li><a href="#" class="nav-btn" data-target="rules-tab">Rules</a></li>
-            <li><a href="#" class="nav-btn" data-target="heritage-tab">Heritage</a></li>
-            <!-- 🌟 Bulletproof My Projects Link 🌟 -->
-            <li><a href="projects/index.html" onclick="window.location.href='projects/index.html'; return false;">My Projects</a></li>
-            
         </ul>
-        
-        <button class="hamburger" id="hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </button>
     </header>
 
     <main class="main-content">
-        
-        <!-- 1. HOME TAB -->
         <section id="home-tab" class="tab-section active">
             <div class="hero">
                 <div class="hero-content">
                     <h2>The World of Traditional<br>Indian Pachisi</h2>
-                    <p>Play online and experience the<br>glorious culture and heritage of India.</p>
-                    <button class="play-now-btn nav-btn" data-target="game-tab">Play Game</button>
+                    <button class="play-now-btn nav-btn" data-target="game-tab">Play Game 3D</button>
                 </div>
             </div>
         </section>
 
-        <!-- 2. GAME TAB -->
         <section id="game-tab" class="tab-section">
             <div class="hero game-bg">
-                
                 <!-- GAME SETUP SCREEN -->
                 <div id="game-setup-screen" class="setup-container">
                     <div class="content-box setup-box">
                         <h2>Game Settings</h2>
-                        
-                        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: left; font-family: Arial, sans-serif; font-size: 14px; border: 1px solid rgba(220,179,96,0.3);">
-                            <h4 style="color: var(--gold); margin-bottom: 8px;"><i class="fa-solid fa-circle-info"></i> How to Setup:</h4>
-                            <ul style="margin-left: 20px; line-height: 1.6; color: #f4ead5;">
-                                <li>Select exactly <b>2, 3, or 4 players</b>.</li>
-                                <li>Set a color as <b>'Human'</b>, <b>'Bot'</b>, or <b>'Disabled'</b>.</li>
-                            </ul>
-                        </div>
-
-                        <div class="setup-row">
-                            <label for="variant-select">Game Variant:</label>
-                            <select id="variant-select" class="royal-select">
-                                <option value="pachisi">Pachisi</option>
-                                <option value="chaupar">Chaupar</option>
-                            </select>
-                        </div>
-
-                        <div class="players-config">
-                            <div class="config-row" id="config-red">
-                                <label class="config-label" for="status-red"><div class="token token-red" style="position:static; margin-right:5px;" aria-hidden="true"></div> Red Player:</label>
-                                <select id="status-red" class="royal-select">
-                                    <option value="human">Human Player</option>
-                                    <option value="computer">Computer Bot</option>
-                                    <option value="none">Disabled</option>
-                                </select>
-                            </div>
-                            <div class="config-row" id="config-green">
-                                <label class="config-label" for="status-green"><div class="token token-green" style="position:static; margin-right:5px;" aria-hidden="true"></div> Green Player:</label>
-                                <select id="status-green" class="royal-select">
-                                    <option value="none">Disabled</option>
-                                    <option value="computer">Computer Bot</option>
-                                    <option value="human">Human Player</option>
-                                </select>
-                            </div>
-                            <div class="config-row" id="config-black">
-                                <label class="config-label" for="status-black"><div class="token token-black" style="position:static; margin-right:5px;" aria-hidden="true"></div> Black Player:</label>
-                                <select id="status-black" class="royal-select">
-                                    <option value="computer">Computer Bot</option>
-                                    <option value="human">Human Player</option>
-                                    <option value="none">Disabled</option>
-                                </select>
-                            </div>
-                            <div class="config-row" id="config-yellow">
-                                <label class="config-label" for="status-yellow"><div class="token token-yellow" style="position:static; margin-right:5px;" aria-hidden="true"></div> Yellow Player:</label>
-                                <select id="status-yellow" class="royal-select">
-                                    <option value="none">Disabled</option>
-                                    <option value="computer">Computer Bot</option>
-                                    <option value="human">Human Player</option>
-                                </select>
-                            </div>
-                        </div>
-
                         <button id="start-game-btn" class="royal-btn start-btn">START EPIC BATTLE</button>
                     </div>
                 </div>
 
-                <!-- ACTUAL GAME UI -->
+                <!-- ACTUAL GAME UI (3D) -->
                 <div id="actual-game-screen" class="game-ui-wrapper" style="display: none;">
                     <div class="turn-status-box">
                         <h3 id="turn-indicator" class="turn-text">YOUR TURN'S MOVE</h3>
                     </div>
 
-                    <div class="center-panel">
-                        <div class="board-ornate-border">
-                            <div class="board">
-                                <div class="corner-player corner-tl" id="player-card-yellow"><h4 id="name-yellow">YELLOW</h4><div class="token-yard" id="yard-yellow"></div></div>
-                                <div class="corner-player corner-tr" id="player-card-black"><h4 id="name-black">BLACK</h4><div class="token-yard" id="yard-black"></div></div>
-                                <div class="corner-player corner-bl" id="player-card-red"><h4 id="name-red">RED</h4><div class="token-yard" id="yard-red"></div></div>
-                                <div class="corner-player corner-br" id="player-card-green"><h4 id="name-green">GREEN</h4><div class="token-yard" id="yard-green"></div></div>
-
-                                <div class="arm vertical-arm top-arm" id="black-arm"></div>
-                                <div class="arm horizontal-arm left-arm" id="yellow-arm"></div>
-                                <div class="center-home"><span>HOME</span></div>
-                                <div class="arm horizontal-arm right-arm" id="green-arm"></div>
-                                <div class="arm vertical-arm bottom-arm" id="red-arm"></div>
-                            </div>
-                        </div>
+                    <!-- 3D Canvas Container -->
+                    <div class="center-panel" style="width: 100vw; height: 60vh; max-width: 800px; position: relative;">
+                        <div id="three-canvas-container" style="width: 100%; height: 100%; border: 2px solid #dcb360; border-radius: 8px;"></div>
                     </div>
 
-                    <!-- BOTTOM PANEL (VIDEO DICE) -->
+                    <!-- BOTTOM PANEL -->
                     <div class="bottom-panel">
                         <div class="dice-panel">
-                            
-                            <!-- Video Dice Bowl -->
-                            <div class="bowl video-bowl">
-                                <video id="pasha-video" muted playsinline preload="auto" poster="bg.jpg">
-                                    <!-- 🌟 Updated path to load from game folder 🌟 -->
-                                    <source src="game/dice.mp4" type="video/mp4">
-                                </video>
-                                <div id="dice-overlay" class="dice-overlay hidden">
-                                    <span id="v1-text"></span> &amp; <span id="v2-text"></span>
-                                </div>
-                            </div>
-
                             <div class="dice-action">
                                 <button id="roll-dice-btn" class="royal-btn">ROLL PASHA</button>
                             </div>
                             <div class="dice-text">
                                 <p id="dice-result">Roll Pasha<br>to move.</p>
                             </div>
-                            
                         </div>
                     </div>
-
                 </div>
             </div>
         </section>
-
-        <!-- 3. RULES TAB -->
-        <section id="rules-tab" class="tab-section">
-            <div class="page-content">
-                <div class="content-box">
-                    <h2>Rules of Pachisi & Chaupar</h2>
-                    <ul>
-                        <li><strong>Players:</strong> Played between 2 to 4 players. Movement progresses anti-clockwise around the board arms.</li>
-                        <li><strong>Token Base (Yard):</strong> Tokens start in each player's respective Token Yard in the board corner.</li>
-                        <li><strong>Pasha (Stick Dice):</strong> Played with solid wooden stick dice. Doublets allow moving tokens and grant an extra turn!</li>
-                        <li><strong>Safe Zones (Pachisi):</strong> Marked squares with a golden star protect tokens from being captured.</li>
-                        <li><strong>Capturing:</strong> Landing directly on an opponent's token sends their token back to their Yard and grants you an Extra Turn.</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- 4. HERITAGE TAB -->
-        <section id="heritage-tab" class="tab-section">
-            <div class="page-content">
-                <div class="content-box">
-                    <h2>The Royal Heritage of Chaupar & Pachisi</h2>
-                    <p>Pachisi and Chaupar are ancient Indian board games that were famously played by Maharajas, Emperors, and Royals. Dating back to as early as the 4th to 6th century, these games hold a significant place in Indian mythology and history.</p>
-                </div>
-            </div>
-        </section>
-
     </main>
 
-    <!-- JS Files Linked -->
     <script src="script.js"></script>
     <script src="game/game.js"></script>
 </body>
 </html>
-                                                                                                                   
