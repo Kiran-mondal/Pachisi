@@ -1,304 +1,153 @@
-document.addEventListener('DOMContentLoaded', () => {
+// ১. তোমার রেন্ডারের লাইভ লিংক
+const RUBY_BACKEND_URL = "https://pachisi-rpfj.onrender.com"; 
 
-    const arms = ['black-arm', 'yellow-arm', 'green-arm', 'red-arm'];
-    let currentPlayer = ''; 
-    let currentDiceRoll = 0;
-    let isComputerTurn = false;
-    let hasExtraTurn = false; 
-    let turnOrder = [];
-    let activeSafeZones = [];
-    
-    // Players Configuration
-    const players = {
-        red: { type: 'human', displayColor: '#d32f2f', displayName: 'RED', id: 'player-card-red' },
-        green: { type: 'human', displayColor: '#388e3c', displayName: 'GREEN', id: 'player-card-green' }, 
-        black: { type: 'human', displayColor: '#666666', displayName: 'BLACK', id: 'player-card-black' },
-        yellow: { type: 'human', displayColor: '#fbc02d', displayName: 'YELLOW', id: 'player-card-yellow' }
-    };
+let scene, camera, renderer, controls;
+const SQUARE_SIZE = 2; // প্রতিটি ঘরের সাইজ
+let squareCoordinates = {}; // প্রতিটি ঘরের 3D পজিশন সেভ রাখার জন্য
 
-    // Board Paths
-    const perimeter = [
-        'red-arm-sq-1', 'red-arm-sq-4', 'red-arm-sq-7', 'red-arm-sq-10', 'red-arm-sq-13', 'red-arm-sq-16', 'red-arm-sq-19', 'red-arm-sq-22',
-        'red-arm-sq-24', 'red-arm-sq-21', 'red-arm-sq-18', 'red-arm-sq-15', 'red-arm-sq-12', 'red-arm-sq-9', 'red-arm-sq-6', 'red-arm-sq-3',
-        'green-arm-sq-17', 'green-arm-sq-18', 'green-arm-sq-19', 'green-arm-sq-20', 'green-arm-sq-21', 'green-arm-sq-22', 'green-arm-sq-23', 'green-arm-sq-24',
-        'green-arm-sq-8', 'green-arm-sq-7', 'green-arm-sq-6', 'green-arm-sq-5', 'green-arm-sq-4', 'green-arm-sq-3', 'green-arm-sq-2', 'green-arm-sq-1',
-        'black-arm-sq-24', 'black-arm-sq-21', 'black-arm-sq-18', 'black-arm-sq-15', 'black-arm-sq-12', 'black-arm-sq-9', 'black-arm-sq-6', 'black-arm-sq-3',
-        'black-arm-sq-1', 'black-arm-sq-4', 'black-arm-sq-7', 'black-arm-sq-10', 'black-arm-sq-13', 'black-arm-sq-16', 'black-arm-sq-19', 'black-arm-sq-22',
-        'yellow-arm-sq-8', 'yellow-arm-sq-7', 'yellow-arm-sq-6', 'yellow-arm-sq-5', 'yellow-arm-sq-4', 'yellow-arm-sq-3', 'yellow-arm-sq-2', 'yellow-arm-sq-1',
-        'yellow-arm-sq-17', 'yellow-arm-sq-18', 'yellow-arm-sq-19', 'yellow-arm-sq-20', 'yellow-arm-sq-21', 'yellow-arm-sq-22', 'yellow-arm-sq-23', 'yellow-arm-sq-24'
-    ];
-
-    const homeStretches = {
-        red: ['red-arm-sq-2', 'red-arm-sq-5', 'red-arm-sq-8', 'red-arm-sq-11', 'red-arm-sq-14', 'red-arm-sq-17', 'red-arm-sq-20', 'red-arm-sq-23'],
-        green: ['green-arm-sq-9', 'green-arm-sq-10', 'green-arm-sq-11', 'green-arm-sq-12', 'green-arm-sq-13', 'green-arm-sq-14', 'green-arm-sq-15', 'green-arm-sq-16'],
-        black: ['black-arm-sq-23', 'black-arm-sq-20', 'black-arm-sq-17', 'black-arm-sq-14', 'black-arm-sq-11', 'black-arm-sq-8', 'black-arm-sq-5', 'black-arm-sq-2'],
-        yellow: ['yellow-arm-sq-16', 'yellow-arm-sq-15', 'yellow-arm-sq-14', 'yellow-arm-sq-13', 'yellow-arm-sq-12', 'yellow-arm-sq-11', 'yellow-arm-sq-10', 'yellow-arm-sq-9']
-    };
-
-    const startIndexes = { red: 0, green: 16, black: 32, yellow: 48 };
-    const defaultSafeZones = ['red-arm-sq-1', 'red-arm-sq-24', 'green-arm-sq-17', 'green-arm-sq-8', 'black-arm-sq-24', 'black-arm-sq-1', 'yellow-arm-sq-8', 'yellow-arm-sq-17'];
-
-    function getSquareId(color, step) {
-        if (step === 0) return `yard-${color}`;
-        if (step >= 1 && step <= 64) return perimeter[(startIndexes[color] + step - 1) % 64];
-        if (step >= 65 && step <= 72) return homeStretches[color][step - 65];
-        return 'home';
-    }
-
-    function createBoard() {
-        arms.forEach(armId => {
-            const container = document.getElementById(armId);
-            if (!container) return; container.innerHTML = '';
-
-            const fragment = document.createDocumentFragment();
-            for (let i = 1; i <= 24; i++) {
-                const sq = document.createElement('div');
-                sq.classList.add('square');
-                const sqId = `${armId}-sq-${i}`;
-                sq.dataset.id = sqId;
-                sq.id = sqId; // Added for O(1) lookups
-                
-                if (activeSafeZones.includes(sqId)) {
-                    sq.classList.add('safe-zone');
-                    sq.innerHTML = '<i class="fa-solid fa-star" style="color: rgba(212, 175, 55, 0.5); font-size: 10px; position: absolute;"></i>';
-                }
-                fragment.appendChild(sq);
-            }
-            container.appendChild(fragment);
-        });
-    }
-
-    function createTokenElem(color) {
-        const t = document.createElement('div');
-        t.classList.add('token', `token-${color}`);
-        t.dataset.color = color;
-        t.dataset.step = 0; 
-        return t;
-    }
-
-    const startBtn = document.getElementById('start-game-btn');
-    if (startBtn) {
-        startBtn.addEventListener('click', () => {
-            const allColors = ['red', 'green', 'black', 'yellow'];
-            turnOrder = allColors.filter(c => document.getElementById(`status-${c}`).value !== 'none');
-            
-            if(turnOrder.length < 2) {
-                alert("Please enable at least 2 players to start!");
-                return;
-            }
-
-            // 🌟 Active & Inactive Players Setup 🌟
-            allColors.forEach(c => {
-                const card = document.getElementById(players[c].id);
-                if(card) { 
-                    if(turnOrder.includes(c)) {
-                        card.classList.remove('inactive');
-                        card.style.visibility = 'visible';
-                        card.style.opacity = '1'; 
-                        card.style.pointerEvents = 'auto';
-                        card.style.filter = 'none';
-                        
-                        players[c].type = document.getElementById(`status-${c}`).value;
-                        document.getElementById(`name-${c}`).innerText = players[c].type === 'human' ? `${c.toUpperCase()}` : `BOT-${c.toUpperCase()}`;
-                    } else {
-                        card.classList.add('inactive'); 
-                        card.style.visibility = 'visible';
-                        card.style.opacity = '1';
-                    }
-                }
-            });
-
-            const variant = document.getElementById('variant-select').value;
-            activeSafeZones = (variant === 'chaupar') ? [] : defaultSafeZones;
-
-            createBoard();
-
-            turnOrder.forEach((color) => {
-                const yard = document.getElementById(`yard-${color}`);
-                if(yard) { yard.innerHTML = ''; for (let i = 0; i < 4; i++) yard.appendChild(createTokenElem(color)); }
-            });
-
-            currentPlayer = turnOrder[0];
-            
-            document.getElementById('game-setup-screen').style.display = 'none';
-            document.getElementById('actual-game-screen').style.display = 'flex';
-            
-            updateTurnUI();
-        });
-    }
-
+// ==========================================
+// API CALL: সার্ভার থেকে ছক্কা রোল করা
+// ==========================================
+async function rollDiceFromServer(playerName = 'Player 1') {
     const rollBtn = document.getElementById('roll-dice-btn');
     const resultText = document.getElementById('dice-result');
+    
+    if (rollBtn) rollBtn.disabled = true;
+    resultText.innerText = "Rolling from Server...";
 
-    function updateTurnUI() {
-        document.getElementById('turn-indicator').innerText = `${players[currentPlayer].displayName}'S TURN`;
-        document.getElementById('turn-indicator').style.color = players[currentPlayer].displayColor;
+    try {
+        const response = await fetch(`${RUBY_BACKEND_URL}/api/roll?player=${playerName}`);
+        const data = await response.json();
         
-        currentDiceRoll = 0; 
-        resultText.innerHTML = hasExtraTurn ? "EXTRA TURN!<br>Roll again." : "Roll Pasha<br>to move.";
+        resultText.innerHTML = data.extraTurn ? 
+            `<span style="color:#ffdf70">Doublet!</span><br>${data.dice[0]} & ${data.dice[1]}<br>Move: <b>${data.totalMove}</b>` : 
+            `${data.dice[0]} & ${data.dice[1]}<br>Move: <b>${data.totalMove}</b>`;
 
-        document.querySelectorAll('.corner-player').forEach(card => card.classList.remove('active-turn'));
-        document.getElementById(players[currentPlayer].id)?.classList.add('active-turn');
-        
-        document.querySelectorAll('.token.playable').forEach(t => t.classList.remove('playable'));
+        console.log("Ruby Backend Result:", data);
 
-        if (players[currentPlayer].type === 'computer') {
-            isComputerTurn = true;
-            if(rollBtn) { rollBtn.disabled = true; rollBtn.innerText = "THINKING..."; }
-            setTimeout(rollTheDice, 800); 
-        } else {
-            isComputerTurn = false;
-            if(rollBtn) { rollBtn.disabled = false; rollBtn.innerText = "ROLL PASHA"; }
-        }
+        setTimeout(() => { if (rollBtn) rollBtn.disabled = false; }, 1000);
+    } catch (error) {
+        console.error("API Error:", error);
+        resultText.innerText = "Server Error!";
+        if (rollBtn) rollBtn.disabled = false;
     }
+}
 
-    rollBtn?.addEventListener('click', () => { if (!isComputerTurn && currentDiceRoll === 0) rollTheDice(); });
-
-    function hasValidMoves(playerColor, rollValue) {
-        let tokens = Array.from(document.querySelectorAll(`.token-${playerColor}:not(.finished)`));
-        let validTokens = tokens.filter(t => (parseInt(t.dataset.step) + rollValue) <= 73);
-        return validTokens.length > 0;
-    }
-
-    function highlightPlayableTokens(playerColor, rollValue) {
-        document.querySelectorAll('.token.playable').forEach(t => t.classList.remove('playable'));
-        
-        let tokens = Array.from(document.querySelectorAll(`.token-${playerColor}:not(.finished)`));
-        tokens.forEach(token => {
-            let currentStep = parseInt(token.dataset.step);
-            if ((currentStep + rollValue) <= 73) {
-                token.classList.add('playable');
-            }
-        });
-    }
-
-    function rollTheDice() {
-        if(rollBtn) rollBtn.disabled = true; 
-        resultText.innerText = "Rolling...";
-        
-        const video = document.getElementById('pasha-video');
-        const overlay = document.getElementById('dice-overlay');
-        
-        if (overlay) overlay.classList.add('hidden');
-        
-        if (video) {
-            video.play().catch(e => console.log("Play issue on mobile:", e));
-            setTimeout(() => { video.currentTime = 0; }, 50); 
-        }
-
-        setTimeout(() => {
-            if (video) video.pause(); 
-
-            const faces = [1, 3, 4, 6];
-            const v1 = faces[Math.floor(Math.random() * 4)]; 
-            const v2 = faces[Math.floor(Math.random() * 4)];
-            
-            currentDiceRoll = v1 + v2; 
-            hasExtraTurn = (v1 === v2); 
-            
-            if (overlay) {
-                document.getElementById('v1-text').innerText = v1;
-                document.getElementById('v2-text').innerText = v2;
-                overlay.classList.remove('hidden');
-            }
-            
-            resultText.innerHTML = (v1===v2) ? 
-                `<span style="color:var(--glow-gold)">Doublet!</span><br>${v1} & ${v2}<br>Move: <b>${currentDiceRoll}</b>` : 
-                `${v1} & ${v2}<br>Move: <b>${currentDiceRoll}</b>`;
-            
-            if (!hasValidMoves(currentPlayer, currentDiceRoll)) {
-                resultText.innerHTML += "<br><span style='color:red;'>No Moves!</span>";
-                setTimeout(switchTurn, 1500);
-                return;
-            }
-
-            if (isComputerTurn) {
-                setTimeout(moveComputerToken, 600);
-            } else {
-                if(rollBtn) rollBtn.disabled = false;
-                highlightPlayableTokens(currentPlayer, currentDiceRoll);
-            }
-        }, 1200); 
-    }
-
-    function performMove(token) {
-        document.querySelectorAll('.token.playable').forEach(t => t.classList.remove('playable'));
-        if (token.classList.contains('finished')) return; 
-
-        let currentStep = parseInt(token.dataset.step);
-        let targetStep = currentStep + currentDiceRoll;
-        
-        if (targetStep > 73) return; 
-        
-        let targetId = getSquareId(currentPlayer, targetStep);
-        let targetSquare = targetId === 'home' ? document.querySelector('.center-home') : document.getElementById(targetId);
-        
-        if(targetSquare) {
-            token.style.transform = "scale(1.5) translateY(-5px)";
-            token.style.zIndex = "50";
-            
-            setTimeout(() => {
-                if (targetId !== 'home' && !activeSafeZones.includes(targetId)) {
-                    let enemyTokens = Array.from(targetSquare.querySelectorAll('.token')).filter(t => t.dataset.color !== currentPlayer);
-                    if (enemyTokens.length > 0) {
-                        enemyTokens.forEach(enemy => {
-                            enemy.dataset.step = 0; 
-                            let startNode = document.getElementById(`yard-${enemy.dataset.color}`);
-                            if(startNode) startNode.appendChild(enemy);
-                        });
-                        hasExtraTurn = true; 
-                    }
-                }
-
-                targetSquare.appendChild(token); 
-                token.dataset.step = targetStep;   
-                
-                if (targetId === 'home') {
-                    token.classList.add('finished'); 
-                    token.style.transform = "scale(0.8)";
-                    hasExtraTurn = true; 
-                } else {
-                    token.style.transform = "scale(1)";
-                }
-                token.style.zIndex = "10";
-                
-                setTimeout(switchTurn, 400);
-            }, 300); 
-        } else {
-            setTimeout(switchTurn, 300);
-        }
-    }
-
-    function moveComputerToken() {
-        let tokens = Array.from(document.querySelectorAll(`.token-${currentPlayer}:not(.finished)`));
-        let validTokens = tokens.filter(t => (parseInt(t.dataset.step) + currentDiceRoll) <= 73);
-        
-        if (validTokens.length > 0) {
-            validTokens.sort((a,b) => parseInt(b.dataset.step) - parseInt(a.dataset.step));
-            let tokenToMove = validTokens[0];
-            tokenToMove.style.transform = "scale(1.3)"; 
-            setTimeout(() => performMove(tokenToMove), 300);
-        } else {
-            switchTurn();
-        }
-    }
-
-    document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('token')) {
-            const token = e.target;
-            if (token.classList.contains('finished') || isComputerTurn || token.dataset.color !== currentPlayer || currentDiceRoll === 0) return;
-            performMove(token); 
-        }
-    });
-
-    function switchTurn() {
-        if (!hasExtraTurn) {
-            const currentIndex = turnOrder.indexOf(currentPlayer);
-            currentPlayer = turnOrder[(currentIndex + 1) % turnOrder.length]; 
-        }
-        hasExtraTurn = false;
-        updateTurnUI();
-    }
-
+document.getElementById('roll-dice-btn')?.addEventListener('click', () => {
+    rollDiceFromServer();
 });
-        
+
+// ==========================================
+// THREE.JS: 3D ইঞ্জিন এবং বোর্ড জেনারেটর
+// ==========================================
+function init3DGame() {
+    const container = document.getElementById('three-canvas-container');
+    if (!container) return;
+    container.innerHTML = ''; 
+
+    // সিন এবং ব্যাকগ্রাউন্ড
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x1a0f08); 
+
+    // ক্যামেরা সেটআপ (আইসোমেট্রিক ভিউ)
+    camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+    camera.position.set(0, 45, 45); 
+    camera.lookAt(0, 0, 0);
+
+    // রেন্ডারার
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.shadowMap.enabled = true;
+    container.appendChild(renderer.domElement);
+
+    // লাইটিং (আলো)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambientLight);
+
+    const dirLight = new THREE.DirectionalLight(0xffdf70, 1);
+    dirLight.position.set(20, 50, 20);
+    dirLight.castShadow = true;
+    scene.add(dirLight);
+
+    // মাউস দিয়ে ঘোরানোর কন্ট্রোল
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.maxPolarAngle = Math.PI / 2.2; // মাটির নিচে যাবে না
+    controls.enableDamping = true;
+
+    // থ্রিডি বোর্ড তৈরি করা
+    buildPachisiBoard3D();
+    
+    // টেস্টিংয়ের জন্য একটি ঘুঁটি তৈরি
+    setupTokens3D();
+
+    // অ্যানিমেশন লুপ
+    function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+    }
+    animate();
+}
+
+// 🌟 পঁচিশির প্লাস (+) আকৃতির বোর্ড তৈরি 🌟
+function buildPachisiBoard3D() {
+    const boardMat = new THREE.MeshStandardMaterial({ color: 0xecd6b0, roughness: 0.9 }); // সাধারণ ঘর
+    const safeMat = new THREE.MeshStandardMaterial({ color: 0xdcb360, roughness: 0.6 }); // সেফ জোন (গোল্ডেন)
+    const homeMat = new THREE.MeshStandardMaterial({ color: 0x7a1f1f, roughness: 0.7 }); // সেন্টার হোম (লাল)
+
+    const squareGeo = new THREE.BoxGeometry(SQUARE_SIZE * 0.95, 0.5, SQUARE_SIZE * 0.95);
+
+    // সেন্টার হোম (৩x৩ সাইজ)
+    const centerHome = new THREE.Mesh(new THREE.BoxGeometry(SQUARE_SIZE * 3, 0.6, SQUARE_SIZE * 3), homeMat);
+    centerHome.receiveShadow = true;
+    scene.add(centerHome);
+    squareCoordinates['home'] = { x: 0, y: 0.3, z: 0 };
+
+    // ৪টি দিকের আর্ম জেনারেট করার ফাংশন
+    function createArm(armName, startX, startZ, isVertical) {
+        let count = 1;
+        // প্রতিটি আর্ম ৮টি সারি এবং ৩টি কলামের হয়
+        for (let row = 0; row < 8; row++) {
+            for (let col = -1; col <= 1; col++) {
+                
+                let posX = isVertical ? (col * SQUARE_SIZE) : startX + (row * Math.sign(startX) * SQUARE_SIZE);
+                let posZ = isVertical ? startZ + (row * Math.sign(startZ) * SQUARE_SIZE) : (col * SQUARE_SIZE);
+                
+                // সেফ জোন (Cross) নির্ধারণ
+                let isSafeZone = (row === 3 && col === 0) || (row === 0 && (col === -1 || col === 1));
+                
+                let mesh = new THREE.Mesh(squareGeo, isSafeZone ? safeMat : boardMat);
+                mesh.position.set(posX, 0, posZ);
+                mesh.receiveShadow = true;
+                scene.add(mesh);
+
+                // কোঅর্ডিনেট সেভ করে রাখা
+                let sqId = `${armName}-arm-sq-${count++}`;
+                squareCoordinates[sqId] = { x: posX, y: 0.25, z: posZ };
+            }
+        }
+    }
+
+    // ৪টি দিকের আর্ম কল করা
+    createArm('bottom', 0, SQUARE_SIZE * 2, true);      // নিচের আর্ম
+    createArm('top', 0, -SQUARE_SIZE * 2, true);        // ওপরের আর্ম
+    createArm('right', SQUARE_SIZE * 2, 0, false);      // ডানদিকের আর্ম
+    createArm('left', -SQUARE_SIZE * 2, 0, false);      // বাঁদিকের আর্ম
+}
+
+// 🌟 থ্রিডি ঘুঁটি (Token) সেটআপ 🌟
+function setupTokens3D() {
+    const tokenGeo = new THREE.CylinderGeometry(0.5, 0.8, 1.5, 32);
+    const redMat = new THREE.MeshStandardMaterial({ color: 0xcc0000 });
+    
+    // টেস্টিংয়ের জন্য একটি ঘুঁটি সেফ জোনে বসানো হলো
+    let testToken = new THREE.Mesh(tokenGeo, redMat);
+    let targetSq = squareCoordinates['bottom-arm-sq-11']; // সেফ জোন
+    testToken.position.set(targetSq.x, targetSq.y + 0.75, targetSq.z);
+    testToken.castShadow = true;
+    scene.add(testToken);
+}
+
+// গ্লোবাল ফাংশন হিসেবে অ্যাক্সেস দেওয়ার জন্য (যাতে script.js কল করতে পারে)
+window.init3DGame = init3DGame;
+             
