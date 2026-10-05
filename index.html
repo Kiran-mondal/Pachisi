@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pachisi - The Ancient Epic (3D)</title>
+    <meta name="description" content="Play Pachisi online. Experience the ancient Indian epic board game.">
     
-    <!-- 🌟 Reliable Three.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     
@@ -38,34 +38,36 @@
     </header>
 
     <main class="main-content">
-        <!-- HOME TAB -->
+        <!-- 1. HOME TAB -->
         <section id="home-tab" class="tab-section active">
             <div class="hero">
                 <div class="hero-content">
                     <h2>The World of Traditional<br>Indian Pachisi</h2>
+                    <p>Play online and experience the<br>glorious culture and heritage of India.</p>
                     <button class="play-now-btn nav-btn" data-target="game-tab">Play Game 3D</button>
                 </div>
             </div>
         </section>
 
-        <!-- GAME TAB -->
+        <!-- 2. GAME TAB -->
         <section id="game-tab" class="tab-section">
             <div class="hero game-bg">
-                <!-- SETUP SCREEN -->
                 <div id="game-setup-screen" class="setup-container">
                     <div class="content-box setup-box">
                         <h2>Game Settings</h2>
+                        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: left; font-family: Arial, sans-serif; font-size: 14px; border: 1px solid rgba(220,179,96,0.3);">
+                            <h4 style="color: #dcb360; margin-bottom: 8px;"><i class="fa-solid fa-circle-info"></i> Welcome to 3D Pachisi</h4>
+                            <p style="color: #f4ead5; margin: 0;">Click the button below to load the 3D board environment.</p>
+                        </div>
                         <button id="start-game-btn" class="royal-btn start-btn">START EPIC BATTLE</button>
                     </div>
                 </div>
 
-                <!-- ACTUAL GAME UI -->
                 <div id="actual-game-screen" class="game-ui-wrapper" style="display: none; flex-direction: column; width: 100%;">
                     <div class="turn-status-box">
                         <h3 id="turn-indicator" class="turn-text">YOUR TURN'S MOVE</h3>
                     </div>
 
-                    <!-- 🌟 3D Canvas -->
                     <div class="center-panel" style="width: 100%; height: 50vh; min-height: 350px; position: relative;">
                         <div id="three-canvas-container" style="width: 100%; height: 100%; border: 2px solid #dcb360; border-radius: 8px; background: #000; overflow: hidden;"></div>
                     </div>
@@ -84,14 +86,30 @@
             </div>
         </section>
 
-        <!-- RULES TAB -->
+        <!-- 3. RULES TAB (অরিজিনাল টেক্সট) -->
         <section id="rules-tab" class="tab-section">
-            <div class="page-content"><div class="content-box"><h2>Rules of Pachisi</h2><p>Coming Soon...</p></div></div>
+            <div class="page-content">
+                <div class="content-box">
+                    <h2>Rules of Pachisi & Chaupar</h2>
+                    <ul>
+                        <li><strong>Players:</strong> Played between 2 to 4 players. Movement progresses anti-clockwise around the board arms.</li>
+                        <li><strong>Token Base (Yard):</strong> Tokens start in each player's respective Token Yard in the board corner.</li>
+                        <li><strong>Pasha (Stick Dice):</strong> Played with solid wooden stick dice. Doublets allow moving tokens and grant an extra turn!</li>
+                        <li><strong>Safe Zones (Pachisi):</strong> Marked squares with a golden star protect tokens from being captured.</li>
+                        <li><strong>Capturing:</strong> Landing directly on an opponent's token sends their token back to their Yard and grants you an Extra Turn.</li>
+                    </ul>
+                </div>
+            </div>
         </section>
 
-        <!-- HERITAGE TAB -->
+        <!-- 4. HERITAGE TAB (অরিজিনাল টেক্সট) -->
         <section id="heritage-tab" class="tab-section">
-            <div class="page-content"><div class="content-box"><h2>The Royal Heritage</h2><p>Coming Soon...</p></div></div>
+            <div class="page-content">
+                <div class="content-box">
+                    <h2>The Royal Heritage of Chaupar & Pachisi</h2>
+                    <p>Pachisi and Chaupar are ancient Indian board games that were famously played by Maharajas, Emperors, and Royals. Dating back to as early as the 4th to 6th century, these games hold a significant place in Indian mythology and history.</p>
+                </div>
+            </div>
         </section>
     </main>
 
