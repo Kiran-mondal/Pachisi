@@ -3,11 +3,12 @@ const RUBY_BACKEND_URL = "https://pachisi-rpfj.onrender.com";
 let scene, camera, renderer, controls;
 const SQUARE_SIZE = 2; 
 let squareCoordinates = {}; 
+let tokensArray = []; // 🌟 ঘুঁটিগুলোকে স্টোর করার জন্য অ্যারে
 
+// API থেকে ছক্কা রোল
 async function rollDiceFromServer(playerName = 'Player 1') {
     const rollBtn = document.getElementById('roll-dice-btn');
     const resultText = document.getElementById('dice-result');
-    
     if (rollBtn) rollBtn.disabled = true;
     resultText.innerText = "Rolling from Server...";
 
@@ -30,12 +31,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('roll-dice-btn')?.addEventListener('click', () => rollDiceFromServer());
 });
 
+// 3D ইঞ্জিন চালু
 window.init3DGame = function() {
     const container = document.getElementById('three-canvas-container');
     if (!container) return;
     container.innerHTML = ''; 
+    tokensArray = []; // অ্যারে রিসেট
 
-    // Container fallback dimensions
     let width = container.clientWidth || window.innerWidth * 0.9;
     let height = container.clientHeight || 400;
 
@@ -64,6 +66,31 @@ window.init3DGame = function() {
     buildPachisiBoard3D();
     setupTokens3D();
 
+    // 🌟 ঘুঁটিতে ক্লিক করার লজিক (Raycaster) 🌟
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    container.addEventListener('pointerdown', (event) => {
+        const rect = renderer.domElement.getBoundingClientRect();
+        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        
+        // ঘুঁটিগুলোর ওপর মাউস বা টাচ পড়েছে কি না চেক করা
+        const intersects = raycaster.intersectObjects(tokensArray);
+        
+        if (intersects.length > 0) {
+            let clickedToken = intersects[0].object;
+            
+            // ক্লিক করলে ঘুঁটিটি লাফিয়ে উঠবে (Test Jump Animation)
+            clickedToken.position.y += 2;
+            setTimeout(() => {
+                clickedToken.position.y -= 2;
+            }, 300);
+        }
+    });
+
     window.addEventListener('resize', () => {
         if(container.clientWidth > 0) {
             camera.aspect = container.clientWidth / container.clientHeight;
@@ -80,7 +107,6 @@ window.init3DGame = function() {
     animate();
 }
 
-// 🌟 Board Logic Fixed (Math.sign bug resolved) 🌟
 function buildPachisiBoard3D() {
     const boardMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9 }); 
     const safeMat = new THREE.MeshStandardMaterial({ color: 0xdcb360, roughness: 0.6 }); 
@@ -113,7 +139,6 @@ function buildPachisiBoard3D() {
     createYard(-SQUARE_SIZE * 4.5, SQUARE_SIZE * 4.5, yardMats.red, 'red');       
     createYard(SQUARE_SIZE * 4.5, SQUARE_SIZE * 4.5, yardMats.green, 'green');    
 
-    // Bug Fixed: Passing explicit direction multiplier (dirSign) instead of Math.sign()
     function createArm(armName, startX, startZ, isVertical, dirSign) {
         let count = 1;
         for (let row = 0; row < 8; row++) {
@@ -145,6 +170,9 @@ function setupTokens3D() {
         let yard = squareCoordinates['yard-red'];
         if(yard) redToken.position.set(yard.x - 1.5 + (i * 1.5), yard.y + 0.7, yard.z);
         scene.add(redToken);
-    }
-                                      }
         
+        // 🌟 অ্যারেতে ঘুঁটি যুক্ত করা হলো যাতে ক্লিক ডিটেক্ট করা যায়
+        tokensArray.push(redToken);
+    }
+    }
+    
