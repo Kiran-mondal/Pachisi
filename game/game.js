@@ -4,7 +4,6 @@ let scene, camera, renderer, controls;
 const SQUARE_SIZE = 2; 
 let squareCoordinates = {}; 
 
-// API CALL: Server Dice Roll
 async function rollDiceFromServer(playerName = 'Player 1') {
     const rollBtn = document.getElementById('roll-dice-btn');
     const resultText = document.getElementById('dice-result');
@@ -22,19 +21,21 @@ async function rollDiceFromServer(playerName = 'Player 1') {
 
         setTimeout(() => { if (rollBtn) rollBtn.disabled = false; }, 1000);
     } catch (error) {
-        console.error("API Error:", error);
         resultText.innerText = "Server Error!";
         if (rollBtn) rollBtn.disabled = false;
     }
 }
 
-// 3D Game Initialization
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('roll-dice-btn')?.addEventListener('click', () => rollDiceFromServer());
+});
+
 window.init3DGame = function() {
     const container = document.getElementById('three-canvas-container');
     if (!container) return;
     container.innerHTML = ''; 
 
-    // Force exact dimensions to prevent 0x0 canvas bug
+    // Container fallback dimensions
     let width = container.clientWidth || window.innerWidth * 0.9;
     let height = container.clientHeight || 400;
 
@@ -50,9 +51,7 @@ window.init3DGame = function() {
     renderer.shadowMap.enabled = true;
     container.appendChild(renderer.domElement);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-    scene.add(ambientLight);
-
+    scene.add(new THREE.AmbientLight(0xffffff, 0.6));
     const dirLight = new THREE.DirectionalLight(0xffdf70, 1);
     dirLight.position.set(20, 50, 20);
     dirLight.castShadow = true;
@@ -65,7 +64,6 @@ window.init3DGame = function() {
     buildPachisiBoard3D();
     setupTokens3D();
 
-    // Auto-resize if screen changes
     window.addEventListener('resize', () => {
         if(container.clientWidth > 0) {
             camera.aspect = container.clientWidth / container.clientHeight;
@@ -82,6 +80,7 @@ window.init3DGame = function() {
     animate();
 }
 
+// 🌟 Board Logic Fixed (Math.sign bug resolved) 🌟
 function buildPachisiBoard3D() {
     const boardMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9 }); 
     const safeMat = new THREE.MeshStandardMaterial({ color: 0xdcb360, roughness: 0.6 }); 
@@ -100,11 +99,11 @@ function buildPachisiBoard3D() {
     const centerHome = new THREE.Mesh(new THREE.BoxGeometry(SQUARE_SIZE * 3, 0.6, SQUARE_SIZE * 3), homeMat);
     centerHome.receiveShadow = true;
     scene.add(centerHome);
+    squareCoordinates['home'] = { x: 0, y: 0.3, z: 0 };
 
     const createYard = (x, z, mat, name) => {
         let yard = new THREE.Mesh(yardGeo, mat);
         yard.position.set(x, -0.05, z);
-        yard.receiveShadow = true;
         scene.add(yard);
         squareCoordinates[`yard-${name}`] = { x: x, y: 0.3, z: z };
     };
@@ -114,26 +113,27 @@ function buildPachisiBoard3D() {
     createYard(-SQUARE_SIZE * 4.5, SQUARE_SIZE * 4.5, yardMats.red, 'red');       
     createYard(SQUARE_SIZE * 4.5, SQUARE_SIZE * 4.5, yardMats.green, 'green');    
 
-    function createArm(armName, startX, startZ, isVertical) {
+    // Bug Fixed: Passing explicit direction multiplier (dirSign) instead of Math.sign()
+    function createArm(armName, startX, startZ, isVertical, dirSign) {
         let count = 1;
         for (let row = 0; row < 8; row++) {
             for (let col = -1; col <= 1; col++) {
-                let posX = isVertical ? (col * SQUARE_SIZE) : startX + (row * Math.sign(startX) * SQUARE_SIZE);
-                let posZ = isVertical ? startZ + (row * Math.sign(startZ) * SQUARE_SIZE) : (col * SQUARE_SIZE);
+                let posX = isVertical ? (col * SQUARE_SIZE) : startX + (row * dirSign * SQUARE_SIZE);
+                let posZ = isVertical ? startZ + (row * dirSign * SQUARE_SIZE) : (col * SQUARE_SIZE);
                 
                 let isSafeZone = (row === 3 && col === 0) || (row === 0 && (col === -1 || col === 1));
                 let mesh = new THREE.Mesh(squareGeo, isSafeZone ? safeMat : boardMat);
                 mesh.position.set(posX, 0, posZ);
-                mesh.receiveShadow = true;
                 scene.add(mesh);
+                squareCoordinates[`${armName}-arm-sq-${count++}`] = { x: posX, y: 0.25, z: posZ };
             }
         }
     }
 
-    createArm('bottom', 0, SQUARE_SIZE * 2, true);      
-    createArm('top', 0, -SQUARE_SIZE * 2, true);        
-    createArm('right', SQUARE_SIZE * 2, 0, false);      
-    createArm('left', -SQUARE_SIZE * 2, 0, false);      
+    createArm('bottom', 0, SQUARE_SIZE * 2, true, 1);      
+    createArm('top', 0, -SQUARE_SIZE * 2, true, -1);        
+    createArm('right', SQUARE_SIZE * 2, 0, false, 1);      
+    createArm('left', -SQUARE_SIZE * 2, 0, false, -1);      
 }
 
 function setupTokens3D() {
@@ -143,16 +143,8 @@ function setupTokens3D() {
     for(let i=0; i<4; i++) {
         let redToken = new THREE.Mesh(tokenGeo, redMat);
         let yard = squareCoordinates['yard-red'];
-        redToken.position.set(yard.x - 1.5 + (i * 1.5), yard.y + 0.7, yard.z);
-        redToken.castShadow = true;
+        if(yard) redToken.position.set(yard.x - 1.5 + (i * 1.5), yard.y + 0.7, yard.z);
         scene.add(redToken);
     }
-}
-
-// Attach event listener to Dice Button
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('roll-dice-btn')?.addEventListener('click', () => {
-        rollDiceFromServer();
-    });
-});
+                                      }
         
