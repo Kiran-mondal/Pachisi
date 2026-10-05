@@ -1,9 +1,9 @@
-// ১. তোমার রেন্ডারের লাইভ লিংক
+// রেন্ডারের রুবি ব্যাকএন্ড লিংক
 const RUBY_BACKEND_URL = "https://pachisi-rpfj.onrender.com"; 
 
 let scene, camera, renderer, controls;
-const SQUARE_SIZE = 2; // প্রতিটি ঘরের সাইজ
-let squareCoordinates = {}; // প্রতিটি ঘরের 3D পজিশন সেভ রাখার জন্য
+const SQUARE_SIZE = 2; 
+let squareCoordinates = {}; 
 
 // ==========================================
 // API CALL: সার্ভার থেকে ছক্কা রোল করা
@@ -24,7 +24,6 @@ async function rollDiceFromServer(playerName = 'Player 1') {
             `${data.dice[0]} & ${data.dice[1]}<br>Move: <b>${data.totalMove}</b>`;
 
         console.log("Ruby Backend Result:", data);
-
         setTimeout(() => { if (rollBtn) rollBtn.disabled = false; }, 1000);
     } catch (error) {
         console.error("API Error:", error);
@@ -45,22 +44,19 @@ function init3DGame() {
     if (!container) return;
     container.innerHTML = ''; 
 
-    // সিন এবং ব্যাকগ্রাউন্ড
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x1a0f08); 
 
-    // ক্যামেরা সেটআপ (আইসোমেট্রিক ভিউ)
+    // ক্যামেরা সেটআপ
     camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
     camera.position.set(0, 45, 45); 
     camera.lookAt(0, 0, 0);
 
-    // রেন্ডারার
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.shadowMap.enabled = true;
     container.appendChild(renderer.domElement);
 
-    // লাইটিং (আলো)
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
     scene.add(ambientLight);
 
@@ -69,18 +65,13 @@ function init3DGame() {
     dirLight.castShadow = true;
     scene.add(dirLight);
 
-    // মাউস দিয়ে ঘোরানোর কন্ট্রোল
     controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.maxPolarAngle = Math.PI / 2.2; // মাটির নিচে যাবে না
+    controls.maxPolarAngle = Math.PI / 2.2; 
     controls.enableDamping = true;
 
-    // থ্রিডি বোর্ড তৈরি করা
     buildPachisiBoard3D();
-    
-    // টেস্টিংয়ের জন্য একটি ঘুঁটি তৈরি
     setupTokens3D();
 
-    // অ্যানিমেশন লুপ
     function animate() {
         requestAnimationFrame(animate);
         controls.update();
@@ -89,65 +80,109 @@ function init3DGame() {
     animate();
 }
 
-// 🌟 পঁচিশির প্লাস (+) আকৃতির বোর্ড তৈরি 🌟
+// 🌟 পঁচিশির বোর্ড এবং ইয়ার্ড জেনারেট করা 🌟
 function buildPachisiBoard3D() {
-    const boardMat = new THREE.MeshStandardMaterial({ color: 0xecd6b0, roughness: 0.9 }); // সাধারণ ঘর
-    const safeMat = new THREE.MeshStandardMaterial({ color: 0xdcb360, roughness: 0.6 }); // সেফ জোন (গোল্ডেন)
-    const homeMat = new THREE.MeshStandardMaterial({ color: 0x7a1f1f, roughness: 0.7 }); // সেন্টার হোম (লাল)
+    const boardMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9 }); 
+    const safeMat = new THREE.MeshStandardMaterial({ color: 0xdcb360, roughness: 0.6 }); 
+    const homeMat = new THREE.MeshStandardMaterial({ color: 0xdcb360, roughness: 0.7 }); 
+
+    const yardMats = {
+        yellow: new THREE.MeshStandardMaterial({ color: 0x111111 }),
+        black: new THREE.MeshStandardMaterial({ color: 0x2a2118 }),
+        red: new THREE.MeshStandardMaterial({ color: 0x4a3224 }),
+        green: new THREE.MeshStandardMaterial({ color: 0x0a0a0a })
+    };
 
     const squareGeo = new THREE.BoxGeometry(SQUARE_SIZE * 0.95, 0.5, SQUARE_SIZE * 0.95);
+    const yardGeo = new THREE.BoxGeometry(SQUARE_SIZE * 6, 0.4, SQUARE_SIZE * 6); 
 
-    // সেন্টার হোম (৩x৩ সাইজ)
+    // ১. সেন্টার হোম
     const centerHome = new THREE.Mesh(new THREE.BoxGeometry(SQUARE_SIZE * 3, 0.6, SQUARE_SIZE * 3), homeMat);
     centerHome.receiveShadow = true;
     scene.add(centerHome);
     squareCoordinates['home'] = { x: 0, y: 0.3, z: 0 };
 
-    // ৪টি দিকের আর্ম জেনারেট করার ফাংশন
+    // ২. চার কোণার ইয়ার্ড (1000091051.png ইমেজের মতো)
+    const createYard = (x, z, mat, name) => {
+        let yard = new THREE.Mesh(yardGeo, mat);
+        yard.position.set(x, -0.05, z);
+        yard.receiveShadow = true;
+        scene.add(yard);
+        squareCoordinates[`yard-${name}`] = { x: x, y: 0.3, z: z };
+    };
+    createYard(-SQUARE_SIZE * 4.5, -SQUARE_SIZE * 4.5, yardMats.yellow, 'yellow'); 
+    createYard(SQUARE_SIZE * 4.5, -SQUARE_SIZE * 4.5, yardMats.black, 'black');   
+    createYard(-SQUARE_SIZE * 4.5, SQUARE_SIZE * 4.5, yardMats.red, 'red');       
+    createYard(SQUARE_SIZE * 4.5, SQUARE_SIZE * 4.5, yardMats.green, 'green');    
+
+    // ৩. ৪টি দিকের আর্ম (পথ) জেনারেট করা
     function createArm(armName, startX, startZ, isVertical) {
         let count = 1;
-        // প্রতিটি আর্ম ৮টি সারি এবং ৩টি কলামের হয়
         for (let row = 0; row < 8; row++) {
             for (let col = -1; col <= 1; col++) {
-                
                 let posX = isVertical ? (col * SQUARE_SIZE) : startX + (row * Math.sign(startX) * SQUARE_SIZE);
                 let posZ = isVertical ? startZ + (row * Math.sign(startZ) * SQUARE_SIZE) : (col * SQUARE_SIZE);
                 
-                // সেফ জোন (Cross) নির্ধারণ
                 let isSafeZone = (row === 3 && col === 0) || (row === 0 && (col === -1 || col === 1));
-                
                 let mesh = new THREE.Mesh(squareGeo, isSafeZone ? safeMat : boardMat);
                 mesh.position.set(posX, 0, posZ);
                 mesh.receiveShadow = true;
                 scene.add(mesh);
 
-                // কোঅর্ডিনেট সেভ করে রাখা
-                let sqId = `${armName}-arm-sq-${count++}`;
-                squareCoordinates[sqId] = { x: posX, y: 0.25, z: posZ };
+                squareCoordinates[`${armName}-arm-sq-${count++}`] = { x: posX, y: 0.25, z: posZ };
             }
         }
     }
 
-    // ৪টি দিকের আর্ম কল করা
-    createArm('bottom', 0, SQUARE_SIZE * 2, true);      // নিচের আর্ম
-    createArm('top', 0, -SQUARE_SIZE * 2, true);        // ওপরের আর্ম
-    createArm('right', SQUARE_SIZE * 2, 0, false);      // ডানদিকের আর্ম
-    createArm('left', -SQUARE_SIZE * 2, 0, false);      // বাঁদিকের আর্ম
+    createArm('bottom', 0, SQUARE_SIZE * 2, true);      
+    createArm('top', 0, -SQUARE_SIZE * 2, true);        
+    createArm('right', SQUARE_SIZE * 2, 0, false);      
+    createArm('left', -SQUARE_SIZE * 2, 0, false);      
 }
 
-// 🌟 থ্রিডি ঘুঁটি (Token) সেটআপ 🌟
+// 🌟 থ্রিডি গোলাকার ঘুঁটি (Tokens) সেটআপ 🌟
 function setupTokens3D() {
-    const tokenGeo = new THREE.CylinderGeometry(0.5, 0.8, 1.5, 32);
-    const redMat = new THREE.MeshStandardMaterial({ color: 0xcc0000 });
+    const tokenGeo = new THREE.SphereGeometry(0.7, 32, 32); 
     
-    // টেস্টিংয়ের জন্য একটি ঘুঁটি সেফ জোনে বসানো হলো
-    let testToken = new THREE.Mesh(tokenGeo, redMat);
-    let targetSq = squareCoordinates['bottom-arm-sq-11']; // সেফ জোন
-    testToken.position.set(targetSq.x, targetSq.y + 0.75, targetSq.z);
-    testToken.castShadow = true;
-    scene.add(testToken);
+    const colors = {
+        red: 0xff3333,    
+        black: 0x555555,  
+        yellow: 0xffcc00, 
+        green: 0x00cc44   
+    };
+
+    // রেড প্লেয়ারের ঘুঁটি সেটআপ
+    for(let i=0; i<4; i++) {
+        let redToken = new THREE.Mesh(tokenGeo, new THREE.MeshStandardMaterial({ color: colors.red, roughness: 0.3 }));
+        
+        if(i < 3) {
+            let yard = squareCoordinates['yard-red'];
+            redToken.position.set(yard.x - 1.5 + (i * 1.5), yard.y + 0.7, yard.z);
+        } else {
+            let boardSq = squareCoordinates['bottom-arm-sq-18']; 
+            if(boardSq) redToken.position.set(boardSq.x, boardSq.y + 0.7, boardSq.z);
+        }
+        
+        redToken.castShadow = true;
+        scene.add(redToken);
+    }
+
+    // ব্ল্যাক প্লেয়ারের ঘুঁটি সেটআপ
+    for(let i=0; i<4; i++) {
+        let blackToken = new THREE.Mesh(tokenGeo, new THREE.MeshStandardMaterial({ color: colors.black, roughness: 0.3 }));
+        
+        if(i < 3) {
+            let yard = squareCoordinates['yard-black'];
+            blackToken.position.set(yard.x - 1.5 + (i * 1.5), yard.y + 0.7, yard.z);
+        } else {
+            let boardSq = squareCoordinates['top-arm-sq-12']; 
+            if(boardSq) blackToken.position.set(boardSq.x, boardSq.y + 0.7, boardSq.z);
+        }
+        
+        blackToken.castShadow = true;
+        scene.add(blackToken);
+    }
 }
 
-// গ্লোবাল ফাংশন হিসেবে অ্যাক্সেস দেওয়ার জন্য (যাতে script.js কল করতে পারে)
 window.init3DGame = init3DGame;
-             
+                                  
