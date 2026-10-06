@@ -1,6 +1,10 @@
+window.onerror = function(message, source, lineno, colno, error) {
+    console.error("Error Detected: " + message + " at line " + lineno);
+    return false;
+};
+
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Tab Logic
     function activateTab(targetId) {
         document.querySelectorAll('.tab-section').forEach(sec => sec.classList.remove('active'));
         const targetEl = document.getElementById(targetId);
@@ -57,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             setTimeout(() => {
                 if (typeof window.init3DGame === 'function') {
-                    window.init3DGame(selectedMode); // নির্বাচিত মোড পাস করা হলো
+                    window.init3DGame(selectedMode);
                 }
             }, 300);
         });
