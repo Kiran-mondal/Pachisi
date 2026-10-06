@@ -5,17 +5,32 @@ let globalPath = [];
 let tokensArray = [];    
 
 let activeGameMode = 'pass_play';
-let turnOrder = ['red', 'green', 'yellow', 'black'];
+let turnOrder = [];
 let currentTurnIndex = 0;
+let humanPlayerColor = 'red';
 
-window.init3DGame = function(mode) {
+window.init3DGame = function(mode, numPlayers, pColor) {
     activeGameMode = mode || 'pass_play';
+    humanPlayerColor = pColor || 'red';
+    
+    // 🌟 টার্ন অর্ডার লজিক 🌟
+    const baseOrder = ['red', 'green', 'yellow', 'black'];
+    let startIndex = baseOrder.indexOf(humanPlayerColor);
+    
+    if (numPlayers === 2) {
+        turnOrder = [baseOrder[startIndex], baseOrder[(startIndex + 2) % 4]]; // বিপরীত দিকের প্লেয়ার
+    } else if (numPlayers === 3) {
+        turnOrder = [baseOrder[startIndex], baseOrder[(startIndex + 1) % 4], baseOrder[(startIndex + 2) % 4]];
+    } else {
+        turnOrder = [...baseOrder.slice(startIndex), ...baseOrder.slice(0, startIndex)];
+    }
+
     currentTurnIndex = 0;
     updateTurnIndicator();
 
     const container = document.getElementById('three-canvas-container');
     if (container.clientWidth === 0 || container.clientHeight === 0) {
-        setTimeout(() => window.init3DGame(mode), 100);
+        setTimeout(() => window.init3DGame(mode, numPlayers, pColor), 100);
         return; 
     }
 
@@ -64,7 +79,6 @@ window.init3DGame = function(mode) {
         red: new THREE.MeshStandardMaterial({ color: 0x4a3224 }),
         green: new THREE.MeshStandardMaterial({ color: 0x0a0a0a })
     };
-
     const yardCoords = { yellow: { x: -9, z: -9 }, black: { x: 9, z: -9 }, red: { x: -9, z: 9 }, green: { x: 9, z: 9 } };
 
     for (let key in yardCoords) {
@@ -96,14 +110,25 @@ window.init3DGame = function(mode) {
     createArm(4, 0, false, 1);     
     createArm(-4, 0, false, -1);   
 
-    // 🌟 Tokens Generation (With Start Offsets) 🌟
-    const tokenGeo = new THREE.SphereGeometry(0.7, 32, 32);
+    // 🌟 Traditional Wooden Token Geometry (LatheGeometry) 🌟
+    const points = [];
+    points.push(new THREE.Vector2(0, 0));       // Bottom center
+    points.push(new THREE.Vector2(0.6, 0));     // Base bottom edge
+    points.push(new THREE.Vector2(0.6, 0.2));   // Base top edge
+    points.push(new THREE.Vector2(0.4, 0.3));   // Curve inward
+    points.push(new THREE.Vector2(0.6, 0.6));   // Bulbous belly
+    points.push(new THREE.Vector2(0.4, 1.0));   // Tapering up
+    points.push(new THREE.Vector2(0.2, 1.2));   // Narrow neck
+    points.push(new THREE.Vector2(0.35, 1.3));  // Top knob bottom
+    points.push(new THREE.Vector2(0.35, 1.5));  // Top knob middle
+    points.push(new THREE.Vector2(0, 1.6));     // Top tip
+
+    const tokenGeo = new THREE.LatheGeometry(points, 32);
     const tokenColors = { red: 0xff3333, green: 0x00cc44, yellow: 0xffcc00, black: 0x555555 };
-    
-    // আলাদা স্টার্টিং ইনডেক্স
     const startOffsets = { red: 0, black: 24, green: 48, yellow: 72 };
 
-    for (let color in tokenColors) {
+    // 🌟 শুধুমাত্র সিলেক্ট করা প্লেয়ারদের ঘুঁটি তৈরি হবে 🌟
+    turnOrder.forEach(color => {
         const tMat = new THREE.MeshStandardMaterial({ color: tokenColors[color], roughness: 0.3 });
         let yard = yardCoords[color];
         
@@ -111,7 +136,9 @@ window.init3DGame = function(mode) {
             let token = new THREE.Mesh(tokenGeo, tMat);
             let offsetX = (i % 2 === 0) ? -1.5 : 1.5;
             let offsetZ = (i < 2) ? -1.5 : 1.5;
-            token.position.set(yard.x + offsetX, 1, yard.z + offsetZ);
+            
+            // Y-axis = 0.25 (বোর্ডের ঠিক ওপরে বসবে)
+            token.position.set(yard.x + offsetX, 0.25, yard.z + offsetZ);
             token.castShadow = true;
             
             token.userData = { 
@@ -124,16 +151,15 @@ window.init3DGame = function(mode) {
             scene.add(token);
             tokensArray.push(token);
         }
-    }
+    });
 
-    // Human Interaction (Touch/Click)
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
     container.addEventListener('pointerdown', (event) => {
         let currentPlayerColor = turnOrder[currentTurnIndex];
         
-        if (activeGameMode === 'computer' && currentPlayerColor !== 'red') return;
+        if (activeGameMode === 'computer' && currentPlayerColor !== humanPlayerColor) return;
         if(currentDiceRoll === 0) return; 
 
         const rect = renderer.domElement.getBoundingClientRect();
@@ -155,9 +181,9 @@ window.init3DGame = function(mode) {
             let actualPathIndex = (nextStep + clickedToken.userData.startOffset) % globalPath.length;
             
             if (nextStep < globalPath.length) {
-                clickedToken.position.y += 1.5;
+                clickedToken.position.y += 1.5; // Jump
                 setTimeout(() => { 
-                    clickedToken.position.set(globalPath[actualPathIndex].x, 1, globalPath[actualPathIndex].z);
+                    clickedToken.position.set(globalPath[actualPathIndex].x, 0.25, globalPath[actualPathIndex].z);
                     clickedToken.userData.step = nextStep;
                     
                     currentDiceRoll = 0;
@@ -202,7 +228,7 @@ function updateTurnIndicator() {
         indicator.style.color = hexColors[currentPlayer];
     }
 
-    if (activeGameMode === 'computer' && currentPlayer !== 'red') {
+    if (activeGameMode === 'computer' && currentPlayer !== humanPlayerColor) {
         if (rollBtn) rollBtn.disabled = true;
         setTimeout(() => playComputerTurn(currentPlayer), 1500);
     } else {
@@ -211,7 +237,6 @@ function updateTurnIndicator() {
     }
 }
 
-// 🌟 Computer AI Interaction (With Start Offsets) 🌟
 async function playComputerTurn(botColor) {
     const resultText = document.getElementById('dice-result');
     resultText.innerText = `Computer (${botColor}) is rolling...`;
@@ -233,7 +258,7 @@ async function playComputerTurn(botColor) {
             if (nextStep < globalPath.length) {
                 tokenToMove.position.y += 1.5;
                 setTimeout(() => { 
-                    tokenToMove.position.set(globalPath[actualPathIndex].x, 1, globalPath[actualPathIndex].z);
+                    tokenToMove.position.set(globalPath[actualPathIndex].x, 0.25, globalPath[actualPathIndex].z);
                     tokenToMove.userData.step = nextStep;
                     
                     resultText.innerText = "Computer Moved.";
@@ -271,4 +296,4 @@ window.rollDiceFromServer = async function() {
         if (rollBtn) rollBtn.disabled = false;
     }
 };
-            
+    
