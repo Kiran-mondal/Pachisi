@@ -7,7 +7,6 @@
     <meta name="description" content="Play Pachisi online. Experience the ancient Indian epic board game in 3D.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     
-    <!-- Three.js Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     
@@ -17,7 +16,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- 🌟 মেনুবার 🌟 -->
     <header class="navbar">
         <div class="brand">
             <i class="fa-solid fa-dharmachakra logo-icon" aria-hidden="true"></i>
@@ -41,28 +39,18 @@
     </header>
 
     <main class="main-content">
-        <!-- 🌟 ১. HOME TAB (নতুন বিস্তারিত তথ্যসহ) 🌟 -->
+        <!-- HOME TAB (ফ্রেশ এবং সিম্পল) -->
         <section id="home-tab" class="tab-section active">
             <div class="hero">
                 <div class="hero-content" style="max-width: 600px; margin: 0 auto;">
                     <h2>The World of Traditional<br>Indian Pachisi</h2>
                     <p style="margin-bottom: 20px;">Experience the glorious culture and heritage of India through the ultimate 3D board game adventure.</p>
                     <button class="play-now-btn nav-btn" data-target="game-tab" style="margin-bottom: 30px;">Play Game 3D</button>
-
-                    <!-- হোম পেজের নতুন ডিটেইলস সেকশন -->
-                    <div class="home-details" style="background: rgba(28, 15, 8, 0.85); padding: 25px; border-radius: 12px; border: 1px solid #dcb360; text-align: left; box-shadow: 0 5px 15px rgba(0,0,0,0.5);">
-                        <h3 style="color: #ffdf70; margin-bottom: 15px; text-align: center; font-family: 'Cinzel', serif;">Why Play Pachisi 3D?</h3>
-                        <ul style="color: #f4ead5; list-style-type: none; padding: 0; font-family: Arial, sans-serif; font-size: 15px; line-height: 1.6;">
-                            <li style="margin-bottom: 12px;"><i class="fa-solid fa-cube" style="color: #dcb360; margin-right: 8px;"></i> <b>Immersive 3D Experience:</b> Play on a fully realized, interactive 3D board with dynamic lighting and beautifully crafted spherical tokens.</li>
-                            <li style="margin-bottom: 12px;"><i class="fa-solid fa-dice" style="color: #dcb360; margin-right: 8px;"></i> <b>Authentic Gameplay:</b> Roll the traditional 'Pasha' (stick dice) and strategically navigate the ancient cross-and-circle paths.</li>
-                            <li><i class="fa-solid fa-crown" style="color: #dcb360; margin-right: 8px;"></i> <b>Royal Heritage:</b> Relive the grand era of Indian Maharajas and emperors right from your modern web browser.</li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- 🌟 ২. GAME TAB 🌟 -->
+        <!-- GAME TAB -->
         <section id="game-tab" class="tab-section">
             <div class="hero game-bg">
                 <div id="game-setup-screen" class="setup-container">
@@ -87,7 +75,7 @@
             </div>
         </section>
 
-        <!-- 🌟 ৩. RULES TAB 🌟 -->
+        <!-- RULES TAB -->
         <section id="rules-tab" class="tab-section">
             <div class="page-content">
                 <div class="content-box" style="text-align: left; padding: 25px;">
@@ -103,7 +91,7 @@
             </div>
         </section>
 
-        <!-- 🌟 ৪. HERITAGE TAB 🌟 -->
+        <!-- HERITAGE TAB -->
         <section id="heritage-tab" class="tab-section">
             <div class="page-content">
                 <div class="content-box" style="text-align: left; padding: 25px;">
@@ -119,7 +107,7 @@
     </main>
 
     <!-- Cache-Busting Versioning -->
-    <script src="game/game.js?v=1.3" defer></script>
-    <script src="script.js?v=1.3" defer></script>
+    <script src="game/game.js?v=1.4" defer></script>
+    <script src="script.js?v=1.4" defer></script>
 </body>
 </html>
