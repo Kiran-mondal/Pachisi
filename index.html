@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pachisi - The Ancient Epic</title>
+    <title>Pachisi - The Ancient Epic (3D)</title>
+    <meta name="description" content="Play Pachisi online. Experience the ancient Indian epic board game in 3D.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     
+    <!-- Three.js Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     
@@ -15,6 +17,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <!-- 🌟 মেনুবার 🌟 -->
     <header class="navbar">
         <div class="brand">
             <i class="fa-solid fa-dharmachakra logo-icon" aria-hidden="true"></i>
@@ -32,23 +35,34 @@
             <li><a href="projects/index.html">My Projects</a></li>
         </ul>
         
-        <button class="hamburger" id="hamburger">
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
             <span class="bar"></span><span class="bar"></span><span class="bar"></span>
         </button>
     </header>
 
     <main class="main-content">
-        <!-- HOME -->
+        <!-- 🌟 ১. HOME TAB (নতুন বিস্তারিত তথ্যসহ) 🌟 -->
         <section id="home-tab" class="tab-section active">
             <div class="hero">
-                <div class="hero-content">
+                <div class="hero-content" style="max-width: 600px; margin: 0 auto;">
                     <h2>The World of Traditional<br>Indian Pachisi</h2>
-                    <button class="play-now-btn nav-btn" data-target="game-tab">Play Game 3D</button>
+                    <p style="margin-bottom: 20px;">Experience the glorious culture and heritage of India through the ultimate 3D board game adventure.</p>
+                    <button class="play-now-btn nav-btn" data-target="game-tab" style="margin-bottom: 30px;">Play Game 3D</button>
+
+                    <!-- হোম পেজের নতুন ডিটেইলস সেকশন -->
+                    <div class="home-details" style="background: rgba(28, 15, 8, 0.85); padding: 25px; border-radius: 12px; border: 1px solid #dcb360; text-align: left; box-shadow: 0 5px 15px rgba(0,0,0,0.5);">
+                        <h3 style="color: #ffdf70; margin-bottom: 15px; text-align: center; font-family: 'Cinzel', serif;">Why Play Pachisi 3D?</h3>
+                        <ul style="color: #f4ead5; list-style-type: none; padding: 0; font-family: Arial, sans-serif; font-size: 15px; line-height: 1.6;">
+                            <li style="margin-bottom: 12px;"><i class="fa-solid fa-cube" style="color: #dcb360; margin-right: 8px;"></i> <b>Immersive 3D Experience:</b> Play on a fully realized, interactive 3D board with dynamic lighting and beautifully crafted spherical tokens.</li>
+                            <li style="margin-bottom: 12px;"><i class="fa-solid fa-dice" style="color: #dcb360; margin-right: 8px;"></i> <b>Authentic Gameplay:</b> Roll the traditional 'Pasha' (stick dice) and strategically navigate the ancient cross-and-circle paths.</li>
+                            <li><i class="fa-solid fa-crown" style="color: #dcb360; margin-right: 8px;"></i> <b>Royal Heritage:</b> Relive the grand era of Indian Maharajas and emperors right from your modern web browser.</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- GAME -->
+        <!-- 🌟 ২. GAME TAB 🌟 -->
         <section id="game-tab" class="tab-section">
             <div class="hero game-bg">
                 <div id="game-setup-screen" class="setup-container">
@@ -73,19 +87,39 @@
             </div>
         </section>
 
-        <!-- RULES -->
+        <!-- 🌟 ৩. RULES TAB 🌟 -->
         <section id="rules-tab" class="tab-section">
-            <div class="page-content"><div class="content-box"><h2>Rules of Pachisi & Chaupar</h2><p>Players move tokens based on dice rolls. The goal is to safely reach the center home.</p></div></div>
+            <div class="page-content">
+                <div class="content-box" style="text-align: left; padding: 25px;">
+                    <h2 style="color: #dcb360; text-align: center; margin-bottom: 20px;">📜 Rules of Pachisi & Chaupar</h2>
+                    <div style="color: #f4ead5; line-height: 1.6; font-family: Arial, sans-serif; font-size: 15px;">
+                        <p style="margin-bottom: 12px;"><strong>👥 Players:</strong> Played between 2 to 4 players. Movement progresses anti-clockwise around the board.</p>
+                        <p style="margin-bottom: 12px;"><strong>🎯 Objective:</strong> The ultimate goal is to move all four of your tokens out of the starting yard and safely enter the Center Home.</p>
+                        <p style="margin-bottom: 12px;"><strong>🎲 Pasha & Movement:</strong> Movement is determined by rolling dice. Doublets grant an Extra Turn!</p>
+                        <p style="margin-bottom: 12px;"><strong>⭐ Safe Zones:</strong> Certain squares are 'Safe Zones'. If your token is on a Safe Zone, it cannot be captured.</p>
+                        <p><strong>⚔ Capturing:</strong> Landing exactly on an opponent's token sends it back to their yard and gives you an extra turn.</p>
+                    </div>
+                </div>
+            </div>
         </section>
 
-        <!-- HERITAGE -->
+        <!-- 🌟 ৪. HERITAGE TAB 🌟 -->
         <section id="heritage-tab" class="tab-section">
-            <div class="page-content"><div class="content-box"><h2>The Royal Heritage</h2><p>Pachisi was famously played by Maharajas and Royals in ancient India.</p></div></div>
+            <div class="page-content">
+                <div class="content-box" style="text-align: left; padding: 25px;">
+                    <h2 style="color: #dcb360; text-align: center; margin-bottom: 20px;">👑 The Royal Heritage</h2>
+                    <div style="color: #f4ead5; line-height: 1.6; font-family: Arial, sans-serif; font-size: 15px;">
+                        <p style="margin-bottom: 15px;"><strong>The National Game of India:</strong> Pachisi is an ancient cross-and-circle board game that originated in Ancient India (around the 4th century). It is the direct ancestor of modern games like Ludo.</p>
+                        <p style="margin-bottom: 15px;"><strong>Epic Mythology:</strong> Variations of this game, particularly <em>Chaupar</em>, hold a legendary place in Hindu mythology, famously known as the dice game in the Mahabharata.</p>
+                        <p><strong>Played by Mughal Emperors:</strong> The great Mughal Emperor Akbar played the game on a massive scale at his palaces. The courtyard was designed as a giant board, and courtiers were moved around as living tokens!</p>
+                    </div>
+                </div>
+            </div>
         </section>
     </main>
 
-    <!-- 🌟 Cache-Busting: মোবাইল ব্রাউজার বাধ্য হবে নতুন কোড নিতে 🌟 -->
-    <script src="game/game.js?v=1.1" defer></script>
-    <script src="script.js?v=1.1" defer></script>
+    <!-- Cache-Busting Versioning -->
+    <script src="game/game.js?v=1.3" defer></script>
+    <script src="script.js?v=1.3" defer></script>
 </body>
 </html>
