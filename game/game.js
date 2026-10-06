@@ -1,9 +1,10 @@
+// Render Backend URL
 const RUBY_BACKEND_URL = "https://pachisi-rpfj.onrender.com"; 
 let scene, camera, renderer, controls;
 
-// গ্লোবাল ফাংশন হিসেবে ডিক্লেয়ার করা হলো
+// 🌟 গ্লোবাল ফাংশন হিসেবে ডিক্লেয়ার করা হলো যাতে script.js একে কল করতে পারে
 window.init3DGame = function() {
-    console.log("3D Engine Initializing...");
+    console.log("3D Engine Initializing from game/game.js...");
 
     if (typeof THREE === 'undefined') {
         alert("Error: Three.js লাইব্রেরি লোড হয়নি!");
@@ -40,7 +41,7 @@ window.init3DGame = function() {
     controls.maxPolarAngle = Math.PI / 2.2; 
     controls.enableDamping = true;
 
-    // 🌟 বোর্ড রেন্ডার 🌟
+    // --- বোর্ড তৈরি করা ---
     const boardMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9 }); 
     const homeMat = new THREE.MeshStandardMaterial({ color: 0xdcb360, roughness: 0.7 }); 
     
@@ -60,10 +61,11 @@ window.init3DGame = function() {
             }
         }
     }
-    createArm(0, 4, true, 1);      
-    createArm(0, -4, true, -1);    
-    createArm(4, 0, false, 1);     
-    createArm(-4, 0, false, -1);   
+    
+    createArm(0, 4, true, 1);      // Bottom
+    createArm(0, -4, true, -1);    // Top
+    createArm(4, 0, false, 1);     // Right
+    createArm(-4, 0, false, -1);   // Left
 
     function animate() {
         requestAnimationFrame(animate);
@@ -71,11 +73,18 @@ window.init3DGame = function() {
         renderer.render(scene, camera);
     }
     animate();
-    console.log("3D Board Rendered Successfully!");
+
+    window.addEventListener('resize', () => {
+        if(container.clientWidth > 0) {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        }
+    });
 };
 
-// API লজিক
-async function rollDiceFromServer(playerName = 'red') {
+// 🌟 ডাইস রোল API ফাংশন (গ্লোবাল)
+window.rollDiceFromServer = async function(playerName = 'red') {
     const rollBtn = document.getElementById('roll-dice-btn');
     const resultText = document.getElementById('dice-result');
     if (rollBtn) rollBtn.disabled = true;
@@ -90,8 +99,5 @@ async function rollDiceFromServer(playerName = 'red') {
         resultText.innerText = "Error!";
         if (rollBtn) rollBtn.disabled = false;
     }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('roll-dice-btn')?.addEventListener('click', () => rollDiceFromServer());
-});
+};
+            
