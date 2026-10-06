@@ -1,13 +1,13 @@
 const RUBY_BACKEND_URL = "https://pachisi-rpfj.onrender.com"; 
 
-let currentDiceRoll = 0; // বর্তমান ছক্কার মান স্টোর করার জন্য
-let globalPath = [];     // ঘুঁটি চলার পথের সব স্থানাঙ্ক (Coordinates)
-let tokensArray = [];    // ক্লিক ডিটেক্ট করার জন্য সব ঘুঁটির লিস্ট
+let currentDiceRoll = 0; 
+let globalPath = [];     
+let tokensArray = [];    
 
 window.init3DGame = function() {
     const container = document.getElementById('three-canvas-container');
     
-    // Dimension Polling (আগের ক্র্যাশ ঠেকানোর ট্রিক)
+    // Dimension Polling to prevent 0x0 crash on mobile
     if (container.clientWidth === 0 || container.clientHeight === 0) {
         setTimeout(window.init3DGame, 100);
         return; 
@@ -42,9 +42,7 @@ window.init3DGame = function() {
     controls.maxPolarAngle = Math.PI / 2.2; 
     controls.enableDamping = true;
 
-    // ==========================================
-    // ১. পঁচিশি বোর্ড তৈরি
-    // ==========================================
+    // Board Generation
     const boardMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9 }); 
     const safeMat = new THREE.MeshStandardMaterial({ color: 0xdcb360, roughness: 0.6 }); 
     const homeMat = new THREE.MeshStandardMaterial({ color: 0xdcb360, roughness: 0.7 }); 
@@ -68,7 +66,6 @@ window.init3DGame = function() {
         green: { x: 9, z: 9 }
     };
 
-    // ইয়ার্ড তৈরি
     for (let key in yardCoords) {
         let yard = new THREE.Mesh(yardGeo, yardMats[key]);
         yard.position.set(yardCoords[key].x, -0.05, yardCoords[key].z);
@@ -89,7 +86,6 @@ window.init3DGame = function() {
                 mesh.receiveShadow = true;
                 scene.add(mesh);
                 
-                // ঘুঁটি চলার জন্য পথের স্থানাঙ্ক সেভ করে রাখা হচ্ছে
                 globalPath.push({ x: posX, z: posZ });
             }
         }
@@ -100,9 +96,7 @@ window.init3DGame = function() {
     createArm(4, 0, false, 1);     
     createArm(-4, 0, false, -1);   
 
-    // ==========================================
-    // ২. ঘুঁটি (Tokens) সেটআপ 
-    // ==========================================
+    // Tokens Generation
     const tokenGeo = new THREE.SphereGeometry(0.7, 32, 32);
     const tokenColors = {
         red: 0xff3333,
@@ -117,28 +111,23 @@ window.init3DGame = function() {
         
         for (let i = 0; i < 4; i++) {
             let token = new THREE.Mesh(tokenGeo, tMat);
-            // ৪টি ঘুঁটিকে ইয়ার্ডের ভেতর ছড়িয়ে বসানো
             let offsetX = (i % 2 === 0) ? -1.5 : 1.5;
             let offsetZ = (i < 2) ? -1.5 : 1.5;
             
             token.position.set(yard.x + offsetX, 1, yard.z + offsetZ);
             token.castShadow = true;
-            
-            // ঘুঁটির বর্তমান অবস্থা সেভ রাখা
             token.userData = { color: color, step: -1, isAtHome: true, baseX: yard.x + offsetX, baseZ: yard.z + offsetZ };
             scene.add(token);
             tokensArray.push(token);
         }
     }
 
-    // ==========================================
-    // ৩. ঘুঁটি মুভমেন্ট লজিক (Raycaster / Touch)
-    // ==========================================
+    // Raycaster (Touch to Move Logic)
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
     container.addEventListener('pointerdown', (event) => {
-        if(currentDiceRoll === 0) return; // ছক্কা না চাললে কাজ করবে না
+        if(currentDiceRoll === 0) return; 
 
         const rect = renderer.domElement.getBoundingClientRect();
         mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -150,11 +139,9 @@ window.init3DGame = function() {
         if (intersects.length > 0) {
             let clickedToken = intersects[0].object;
             
-            // ঘুঁটিটি লাফিয়ে উঠবে (Animation Effect)
             clickedToken.position.y += 1.5;
             setTimeout(() => { clickedToken.position.y -= 1.5; }, 200);
             
-            // নতুন ঘরে বসানোর লজিক
             let nextStep = clickedToken.userData.step === -1 ? 0 : clickedToken.userData.step + currentDiceRoll;
             
             if (nextStep < globalPath.length) {
@@ -162,7 +149,6 @@ window.init3DGame = function() {
                 clickedToken.userData.step = nextStep;
                 clickedToken.userData.isAtHome = false;
                 
-                // মুভ কমপ্লিট হলে ছক্কা রিসেট করা
                 currentDiceRoll = 0;
                 document.getElementById('dice-result').innerText = "Move Complete!";
             }
@@ -185,11 +171,9 @@ window.init3DGame = function() {
     });
 };
 
-// ==========================================
-// ৪. API থেকে ডাইস রোল 
-// ==========================================
+// Roll Dice API
 window.rollDiceFromServer = async function(playerName = 'red') {
-    if (currentDiceRoll > 0) return; // আগের মুভ শেষ না হলে চালতে দেবে না
+    if (currentDiceRoll > 0) return; 
 
     const rollBtn = document.getElementById('roll-dice-btn');
     const resultText = document.getElementById('dice-result');
@@ -200,7 +184,7 @@ window.rollDiceFromServer = async function(playerName = 'red') {
         const response = await fetch(`${RUBY_BACKEND_URL}/api/roll?player=${playerName}`);
         const data = await response.json();
         
-        currentDiceRoll = data.totalMove; // ছক্কার মান গ্লোবালি সেভ হলো
+        currentDiceRoll = data.totalMove; 
         
         resultText.innerHTML = `${data.dice[0]} & ${data.dice[1]}<br>Move: <b>${currentDiceRoll}</b><br><span style="font-size:10px; color:#ffdf70;">Tap a token to move</span>`;
         
@@ -210,4 +194,3 @@ window.rollDiceFromServer = async function(playerName = 'red') {
         if (rollBtn) rollBtn.disabled = false;
     }
 };
-                    
