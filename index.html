@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pachisi - The Ancient Epic (3D)</title>
-    <meta name="description" content="Play Pachisi online. Experience the ancient Indian epic board game.">
+    <title>Pachisi - The Ancient Epic</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     
-    <!-- Three.js Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     
@@ -17,7 +15,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- 🌟 অরিজিনাল মেনুবার ফিরিয়ে আনা হলো 🌟 -->
     <header class="navbar">
         <div class="brand">
             <i class="fa-solid fa-dharmachakra logo-icon" aria-hidden="true"></i>
@@ -35,10 +32,8 @@
             <li><a href="projects/index.html">My Projects</a></li>
         </ul>
         
-        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
+        <button class="hamburger" id="hamburger">
+            <span class="bar"></span><span class="bar"></span><span class="bar"></span>
         </button>
     </header>
 
@@ -48,7 +43,6 @@
             <div class="hero">
                 <div class="hero-content">
                     <h2>The World of Traditional<br>Indian Pachisi</h2>
-                    <p>Play online and experience the<br>glorious culture and heritage of India.</p>
                     <button class="play-now-btn nav-btn" data-target="game-tab">Play Game 3D</button>
                 </div>
             </div>
@@ -64,25 +58,16 @@
                     </div>
                 </div>
 
-                <div id="actual-game-screen" class="game-ui-wrapper" style="display: none;">
-                    <div class="turn-status-box">
-                        <h3 id="turn-indicator" class="turn-text">YOUR TURN'S MOVE</h3>
-                    </div>
+                <div id="actual-game-screen" class="game-ui-wrapper" style="display: none; flex-direction: column; align-items: center; width: 100%;">
+                    <h3 style="color: red; margin: 10px 0; text-shadow: 1px 1px 2px black;">YOUR TURN'S MOVE</h3>
                     
-                    <!-- 🌟 3D ক্যানভাস কন্টেইনার (মোবাইলের জন্য ডাইমেনশন ফিক্সড) 🌟 -->
-                    <div class="center-panel" style="width: 100vw; height: 50vh; max-width: 800px; min-height: 350px; position: relative;">
-                        <div id="three-canvas-container" style="width: 100%; height: 100%; border: 2px solid #dcb360; border-radius: 8px; background: #000; overflow: hidden;"></div>
+                    <div class="center-panel" style="width: 100vw; max-width: 600px; height: 50vh; min-height: 350px;">
+                        <div id="three-canvas-container" style="width: 100%; height: 100%; border: 2px solid #dcb360; border-radius: 8px; background: #000;"></div>
                     </div>
 
-                    <div class="bottom-panel">
-                        <div class="dice-panel">
-                            <div class="dice-action">
-                                <button id="roll-dice-btn" class="royal-btn">ROLL PASHA</button>
-                            </div>
-                            <div class="dice-text">
-                                <p id="dice-result">Roll Pasha<br>to move.</p>
-                            </div>
-                        </div>
+                    <div class="bottom-panel" style="margin-top: 15px; text-align: center;">
+                        <button id="roll-dice-btn" class="royal-btn" style="padding: 12px 24px;">ROLL PASHA</button>
+                        <p id="dice-result" style="color: white; margin-top: 10px;">Roll Pasha to move.</p>
                     </div>
                 </div>
             </div>
@@ -90,33 +75,17 @@
 
         <!-- RULES -->
         <section id="rules-tab" class="tab-section">
-            <div class="page-content">
-                <div class="content-box">
-                    <h2>Rules of Pachisi & Chaupar</h2>
-                    <ul>
-                        <li><strong>Players:</strong> Played between 2 to 4 players. Movement progresses anti-clockwise around the board arms.</li>
-                        <li><strong>Token Base (Yard):</strong> Tokens start in each player's respective Token Yard in the board corner.</li>
-                        <li><strong>Pasha (Stick Dice):</strong> Played with solid wooden stick dice. Doublets allow moving tokens and grant an extra turn!</li>
-                        <li><strong>Safe Zones (Pachisi):</strong> Marked squares with a golden star protect tokens from being captured.</li>
-                        <li><strong>Capturing:</strong> Landing directly on an opponent's token sends their token back to their Yard.</li>
-                    </ul>
-                </div>
-            </div>
+            <div class="page-content"><div class="content-box"><h2>Rules of Pachisi & Chaupar</h2><p>Players move tokens based on dice rolls. The goal is to safely reach the center home.</p></div></div>
         </section>
 
         <!-- HERITAGE -->
         <section id="heritage-tab" class="tab-section">
-            <div class="page-content">
-                <div class="content-box">
-                    <h2>The Royal Heritage of Chaupar & Pachisi</h2>
-                    <p>Pachisi and Chaupar are ancient Indian board games that were famously played by Maharajas, Emperors, and Royals. Dating back to as early as the 4th to 6th century, these games hold a significant place in Indian mythology and history.</p>
-                </div>
-            </div>
+            <div class="page-content"><div class="content-box"><h2>The Royal Heritage</h2><p>Pachisi was famously played by Maharajas and Royals in ancient India.</p></div></div>
         </section>
     </main>
 
-    <!-- 🌟 defer যুক্ত করা হলো যাতে গেম ইঞ্জিন আগে লোড হয় 🌟 -->
-    <script src="game/game.js" defer></script>
-    <script src="script.js" defer></script>
+    <!-- 🌟 Cache-Busting: মোবাইল ব্রাউজার বাধ্য হবে নতুন কোড নিতে 🌟 -->
+    <script src="game/game.js?v=1.1" defer></script>
+    <script src="script.js?v=1.1" defer></script>
 </body>
 </html>
