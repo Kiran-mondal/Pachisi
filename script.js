@@ -1,3 +1,9 @@
+// Mobile Error Handling
+window.onerror = function(message, source, lineno, colno, error) {
+    console.error("Error Detected: " + message + " at line " + lineno);
+    return false;
+};
+
 document.addEventListener('DOMContentLoaded', () => {
 
     function activateTab(targetId) {
@@ -23,21 +29,27 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('nav-links')?.classList.toggle('active');
     });
 
-    // গেম স্টার্ট লজিক
+    // Game Start Button
     const startBtn = document.getElementById('start-game-btn');
     if (startBtn) {
         startBtn.addEventListener('click', () => {
             document.getElementById('game-setup-screen').style.display = 'none';
             document.getElementById('actual-game-screen').style.display = 'flex';
             
-            // 3D গেম ইনিশিয়ালাইজ করা
-            if (typeof window.init3DGame === 'function') {
-                window.init3DGame();
-            }
+            // Force browser to render layout
+            void document.getElementById('actual-game-screen').offsetWidth;
+
+            setTimeout(() => {
+                if (typeof window.init3DGame === 'function') {
+                    window.init3DGame();
+                } else {
+                    alert("Error: 3D Engine script is missing!");
+                }
+            }, 300);
         });
     }
 
-    // রোল ডাইস
+    // Roll Dice Button
     const rollBtn = document.getElementById('roll-dice-btn');
     if (rollBtn) {
         rollBtn.addEventListener('click', () => {
