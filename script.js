@@ -24,32 +24,25 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('nav-links')?.classList.toggle('active');
     });
 
-    // 🌟 Mode Selection Logic 🌟
+    // 🌟 Setup Variables 🌟
     let selectedMode = 'pass_play';
-    const modePassPlay = document.getElementById('mode-pass-play');
-    const modeComputer = document.getElementById('mode-computer');
+    let selectedPlayers = 4;
+    let selectedColor = 'red';
 
-    if(modePassPlay && modeComputer) {
-        modePassPlay.addEventListener('click', () => {
-            selectedMode = 'pass_play';
-            modePassPlay.style.borderColor = '#dcb360';
-            modePassPlay.style.background = '#2a2118';
-            modePassPlay.style.color = 'white';
-            modeComputer.style.borderColor = 'transparent';
-            modeComputer.style.background = '#1a0f08';
-            modeComputer.style.color = 'gray';
-        });
-        
-        modeComputer.addEventListener('click', () => {
-            selectedMode = 'computer';
-            modeComputer.style.borderColor = '#dcb360';
-            modeComputer.style.background = '#2a2118';
-            modeComputer.style.color = 'white';
-            modePassPlay.style.borderColor = 'transparent';
-            modePassPlay.style.background = '#1a0f08';
-            modePassPlay.style.color = 'gray';
+    // Helper to toggle active classes
+    function handleSelection(selector, callback) {
+        document.querySelectorAll(selector).forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll(selector).forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                callback(btn.getAttribute('data-val'));
+            });
         });
     }
+
+    handleSelection('.mode-btn', val => selectedMode = val);
+    handleSelection('.player-btn', val => selectedPlayers = parseInt(val));
+    handleSelection('.color-btn', val => selectedColor = val);
 
     // Start Game
     const startBtn = document.getElementById('start-game-btn');
@@ -61,13 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             setTimeout(() => {
                 if (typeof window.init3DGame === 'function') {
-                    window.init3DGame(selectedMode);
+                    // তিনটি অপশনই 3D ইঞ্জিনে পাঠানো হলো
+                    window.init3DGame(selectedMode, selectedPlayers, selectedColor);
                 }
             }, 300);
         });
     }
 
-    // Roll Dice
     const rollBtn = document.getElementById('roll-dice-btn');
     if (rollBtn) {
         rollBtn.addEventListener('click', () => {
