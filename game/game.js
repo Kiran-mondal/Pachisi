@@ -4,11 +4,19 @@ let currentDiceRoll = 0;
 let globalPath = [];     
 let tokensArray = [];    
 
-window.init3DGame = function() {
+// গেম লজিক ভেরিয়েবল
+let activeGameMode = 'pass_play';
+let turnOrder = ['red', 'green', 'yellow', 'black'];
+let currentTurnIndex = 0;
+
+window.init3DGame = function(mode) {
+    activeGameMode = mode || 'pass_play';
+    currentTurnIndex = 0;
+    updateTurnIndicator();
+
     const container = document.getElementById('three-canvas-container');
-    
     if (container.clientWidth === 0 || container.clientHeight === 0) {
-        setTimeout(window.init3DGame, 100);
+        setTimeout(() => window.init3DGame(mode), 100);
         return; 
     }
 
@@ -41,7 +49,7 @@ window.init3DGame = function() {
     controls.maxPolarAngle = Math.PI / 2.2; 
     controls.enableDamping = true;
 
-    // Board Generation
+    // Board
     const boardMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9 }); 
     const safeMat = new THREE.MeshStandardMaterial({ color: 0xdcb360, roughness: 0.6 }); 
     const homeMat = new THREE.MeshStandardMaterial({ color: 0xdcb360, roughness: 0.7 }); 
@@ -58,12 +66,7 @@ window.init3DGame = function() {
         green: new THREE.MeshStandardMaterial({ color: 0x0a0a0a })
     };
 
-    const yardCoords = {
-        yellow: { x: -9, z: -9 },
-        black: { x: 9, z: -9 },
-        red: { x: -9, z: 9 },
-        green: { x: 9, z: 9 }
-    };
+    const yardCoords = { yellow: { x: -9, z: -9 }, black: { x: 9, z: -9 }, red: { x: -9, z: 9 }, green: { x: 9, z: 9 } };
 
     for (let key in yardCoords) {
         let yard = new THREE.Mesh(yardGeo, yardMats[key]);
@@ -78,13 +81,11 @@ window.init3DGame = function() {
             for (let col = -1; col <= 1; col++) {
                 let posX = isVertical ? (col * 2) : startX + (row * dirSign * 2);
                 let posZ = isVertical ? startZ + (row * dirSign * 2) : (col * 2);
-                
                 let isSafeZone = (row === 3 && col === 0) || (row === 0 && (col === -1 || col === 1));
                 let mesh = new THREE.Mesh(squareGeo, isSafeZone ? safeMat : boardMat);
                 mesh.position.set(posX, 0, posZ);
                 mesh.receiveShadow = true;
                 scene.add(mesh);
-                
                 globalPath.push({ x: posX, z: posZ });
             }
         }
@@ -95,37 +96,33 @@ window.init3DGame = function() {
     createArm(4, 0, false, 1);     
     createArm(-4, 0, false, -1);   
 
-    // Tokens Generation
+    // Tokens
     const tokenGeo = new THREE.SphereGeometry(0.7, 32, 32);
-    const tokenColors = {
-        red: 0xff3333,
-        green: 0x00cc44,
-        yellow: 0xffcc00,
-        black: 0x555555
-    };
+    const tokenColors = { red: 0xff3333, green: 0x00cc44, yellow: 0xffcc00, black: 0x555555 };
 
     for (let color in tokenColors) {
         const tMat = new THREE.MeshStandardMaterial({ color: tokenColors[color], roughness: 0.3 });
         let yard = yardCoords[color];
-        
         for (let i = 0; i < 4; i++) {
             let token = new THREE.Mesh(tokenGeo, tMat);
             let offsetX = (i % 2 === 0) ? -1.5 : 1.5;
             let offsetZ = (i < 2) ? -1.5 : 1.5;
-            
             token.position.set(yard.x + offsetX, 1, yard.z + offsetZ);
             token.castShadow = true;
-            token.userData = { color: color, step: -1, isAtHome: true, baseX: yard.x + offsetX, baseZ: yard.z + offsetZ };
+            token.userData = { color: color, step: -1, isAtHome: true };
             scene.add(token);
             tokensArray.push(token);
         }
     }
 
-    // 🌟 BUG FIXED: Raycaster (Touch to Move Logic) 🌟
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
     container.addEventListener('pointerdown', (event) => {
+        let currentPlayerColor = turnOrder[currentTurnIndex];
+        
+        // যদি কম্পিউটার মোড হয় এবং প্লেয়ারের টার্ন না হয়, তবে ক্লিক কাজ করবে না
+        if (activeGameMode === 'computer' && currentPlayerColor !== 'red') return;
         if(currentDiceRoll === 0) return; 
 
         const rect = renderer.domElement.getBoundingClientRect();
@@ -137,20 +134,24 @@ window.init3DGame = function() {
         
         if (intersects.length > 0) {
             let clickedToken = intersects[0].object;
+            
+            // অন্য রঙের ঘুঁটি ক্লিক করলে কাজ করবে না
+            if (clickedToken.userData.color !== currentPlayerColor) {
+                document.getElementById('dice-result').innerText = "Not your token!";
+                return; 
+            }
+            
             let nextStep = clickedToken.userData.step === -1 ? 0 : clickedToken.userData.step + currentDiceRoll;
             
             if (nextStep < globalPath.length) {
-                // ঘুঁটি লাফিয়ে উঠবে
                 clickedToken.position.y += 1.5;
-                
-                // লাফানোর ঠিক ২৫০ms পর নতুন পজিশনে নিখুঁতভাবে বসবে (মাটির নিচে যাবে না)
                 setTimeout(() => { 
                     clickedToken.position.set(globalPath[nextStep].x, 1, globalPath[nextStep].z);
                     clickedToken.userData.step = nextStep;
-                    clickedToken.userData.isAtHome = false;
                     
                     currentDiceRoll = 0;
                     document.getElementById('dice-result').innerText = "Move Complete!";
+                    switchTurn(); // মুভ শেষ হলে টার্ন বদলাবে
                 }, 250);
             }
         }
@@ -172,9 +173,76 @@ window.init3DGame = function() {
     });
 };
 
-// Roll Dice API
-window.rollDiceFromServer = async function(playerName = 'red') {
+// 🌟 টার্ন পরিবর্তনের লজিক 🌟
+function switchTurn() {
+    currentTurnIndex = (currentTurnIndex + 1) % turnOrder.length;
+    updateTurnIndicator();
+}
+
+function updateTurnIndicator() {
+    const indicator = document.getElementById('turn-indicator');
+    const rollBtn = document.getElementById('roll-dice-btn');
+    
+    let currentPlayer = turnOrder[currentTurnIndex];
+    const colorNames = {red: 'RED', green: 'GREEN', yellow: 'YELLOW', black: 'BLACK'};
+    const hexColors = {red: '#ff3333', green: '#00cc44', yellow: '#ffcc00', black: '#aaaaaa'};
+    
+    if (indicator) {
+        indicator.innerText = `${colorNames[currentPlayer]}'S TURN`;
+        indicator.style.color = hexColors[currentPlayer];
+    }
+
+    if (activeGameMode === 'computer' && currentPlayer !== 'red') {
+        if (rollBtn) rollBtn.disabled = true;
+        setTimeout(() => playComputerTurn(currentPlayer), 1500);
+    } else {
+        if (rollBtn) rollBtn.disabled = false;
+        document.getElementById('dice-result').innerText = "Roll Pasha to move.";
+    }
+}
+
+// 🌟 কম্পিউটার এআই (বট) 🌟
+async function playComputerTurn(botColor) {
+    const resultText = document.getElementById('dice-result');
+    resultText.innerText = `Computer (${botColor}) is rolling...`;
+
+    try {
+        const response = await fetch(`${RUBY_BACKEND_URL}/api/roll?player=${botColor}`);
+        const data = await response.json();
+        let botDiceRoll = data.totalMove;
+        
+        resultText.innerHTML = `${data.dice[0]} & ${data.dice[1]}<br>Move: <b>${botDiceRoll}</b>`;
+        
+        setTimeout(() => {
+            // বটের ঘুঁটিগুলো খোঁজা
+            let botTokens = tokensArray.filter(t => t.userData.color === botColor);
+            let tokenToMove = botTokens[Math.floor(Math.random() * botTokens.length)]; // রেন্ডাম ঘুঁটি সিলেক্ট
+            
+            let nextStep = tokenToMove.userData.step === -1 ? 0 : tokenToMove.userData.step + botDiceRoll;
+            
+            if (nextStep < globalPath.length) {
+                tokenToMove.position.y += 1.5;
+                setTimeout(() => { 
+                    tokenToMove.position.set(globalPath[nextStep].x, 1, globalPath[nextStep].z);
+                    tokenToMove.userData.step = nextStep;
+                    
+                    resultText.innerText = "Computer Moved.";
+                    setTimeout(switchTurn, 1000); 
+                }, 250);
+            } else {
+                setTimeout(switchTurn, 1000); 
+            }
+        }, 1500);
+
+    } catch (error) {
+        resultText.innerText = "Computer Skipped Turn.";
+        setTimeout(switchTurn, 1000);
+    }
+}
+
+window.rollDiceFromServer = async function() {
     if (currentDiceRoll > 0) return; 
+    let currentPlayer = turnOrder[currentTurnIndex];
 
     const rollBtn = document.getElementById('roll-dice-btn');
     const resultText = document.getElementById('dice-result');
@@ -182,17 +250,15 @@ window.rollDiceFromServer = async function(playerName = 'red') {
     resultText.innerText = "Rolling...";
 
     try {
-        const response = await fetch(`${RUBY_BACKEND_URL}/api/roll?player=${playerName}`);
+        const response = await fetch(`${RUBY_BACKEND_URL}/api/roll?player=${currentPlayer}`);
         const data = await response.json();
         
         currentDiceRoll = data.totalMove; 
+        resultText.innerHTML = `${data.dice[0]} & ${data.dice[1]}<br>Move: <b>${currentDiceRoll}</b><br><span style="font-size:10px; color:#ffdf70;">Tap your token</span>`;
         
-        resultText.innerHTML = `${data.dice[0]} & ${data.dice[1]}<br>Move: <b>${currentDiceRoll}</b><br><span style="font-size:10px; color:#ffdf70;">Tap a token to move</span>`;
-        
-        setTimeout(() => { if (rollBtn) rollBtn.disabled = false; }, 1000);
     } catch (error) {
         resultText.innerText = "Error API!";
         if (rollBtn) rollBtn.disabled = false;
     }
 };
-                    
+                                 
