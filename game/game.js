@@ -1,20 +1,17 @@
 const RUBY_BACKEND_URL = "https://pachisi-rpfj.onrender.com"; 
 let scene, camera, renderer, controls;
 
+// গ্লোবাল ফাংশন হিসেবে ডিক্লেয়ার করা হলো
 window.init3DGame = function() {
     console.log("3D Engine Initializing...");
 
-    // Three.js লাইব্রেরি লোড হয়েছে কি না চেক করা
     if (typeof THREE === 'undefined') {
-        alert("Error: Three.js লাইব্রেরি ইন্টারনেট থেকে লোড হতে পারেনি!");
+        alert("Error: Three.js লাইব্রেরি লোড হয়নি!");
         return;
     }
 
     const container = document.getElementById('three-canvas-container');
-    if (!container) {
-        alert("Error: Canvas container খুঁজে পাওয়া যাচ্ছে না!");
-        return;
-    }
+    if (!container) return;
     
     container.innerHTML = ''; 
 
@@ -43,15 +40,13 @@ window.init3DGame = function() {
     controls.maxPolarAngle = Math.PI / 2.2; 
     controls.enableDamping = true;
 
-    // 🌟 সাধারণ বোর্ড রেন্ডার 🌟
+    // 🌟 বোর্ড রেন্ডার 🌟
     const boardMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9 }); 
     const homeMat = new THREE.MeshStandardMaterial({ color: 0xdcb360, roughness: 0.7 }); 
     
-    // Center Home
     const centerHome = new THREE.Mesh(new THREE.BoxGeometry(6, 0.6, 6), homeMat);
     scene.add(centerHome);
 
-    // 4 Arms
     const squareGeo = new THREE.BoxGeometry(1.9, 0.5, 1.9);
     function createArm(startX, startZ, isVertical, dirSign) {
         for (let row = 0; row < 8; row++) {
@@ -65,10 +60,10 @@ window.init3DGame = function() {
             }
         }
     }
-    createArm(0, 4, true, 1);      // Bottom
-    createArm(0, -4, true, -1);    // Top
-    createArm(4, 0, false, 1);     // Right
-    createArm(-4, 0, false, -1);   // Left
+    createArm(0, 4, true, 1);      
+    createArm(0, -4, true, -1);    
+    createArm(4, 0, false, 1);     
+    createArm(-4, 0, false, -1);   
 
     function animate() {
         requestAnimationFrame(animate);
@@ -77,9 +72,9 @@ window.init3DGame = function() {
     }
     animate();
     console.log("3D Board Rendered Successfully!");
-}
+};
 
-// Dice Roll API
+// API লজিক
 async function rollDiceFromServer(playerName = 'red') {
     const rollBtn = document.getElementById('roll-dice-btn');
     const resultText = document.getElementById('dice-result');
@@ -100,4 +95,3 @@ async function rollDiceFromServer(playerName = 'red') {
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('roll-dice-btn')?.addEventListener('click', () => rollDiceFromServer());
 });
-                                                               
