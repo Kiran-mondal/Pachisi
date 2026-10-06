@@ -1,17 +1,20 @@
 const RUBY_BACKEND_URL = "https://pachisi-rpfj.onrender.com"; 
 
 window.init3DGame = function() {
-    if (typeof THREE === 'undefined') {
-        console.error("Three.js not loaded.");
-        return;
+    const container = document.getElementById('three-canvas-container');
+    
+    // 🌟 THE NEW OPTION: Dimension Polling
+    // যদি মোবাইলে ক্যানভাসের উইডথ 0 থাকে, তবে ১০০ মিলি-সেকেন্ড অপেক্ষা করে আবার চেক করবে।
+    if (container.clientWidth === 0 || container.clientHeight === 0) {
+        console.log("Waiting for mobile DOM to render layout...");
+        setTimeout(window.init3DGame, 100);
+        return; 
     }
 
-    const container = document.getElementById('three-canvas-container');
-    if (!container) return;
     container.innerHTML = ''; 
 
-    let width = container.clientWidth || window.innerWidth * 0.9;
-    let height = container.clientHeight || 400;
+    const width = container.clientWidth;
+    const height = container.clientHeight;
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x1a0f08); 
@@ -28,56 +31,33 @@ window.init3DGame = function() {
     scene.add(new THREE.AmbientLight(0xffffff, 0.6));
     const dirLight = new THREE.DirectionalLight(0xffdf70, 1);
     dirLight.position.set(20, 50, 20);
-    dirLight.castShadow = true;
     scene.add(dirLight);
 
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.maxPolarAngle = Math.PI / 2.2; 
     controls.enableDamping = true;
 
-    // সম্পূর্ণ বোর্ড তৈরি
+    // পঁচিশি বোর্ড তৈরি
     const boardMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9 }); 
-    const safeMat = new THREE.MeshStandardMaterial({ color: 0xdcb360, roughness: 0.6 }); 
     const homeMat = new THREE.MeshStandardMaterial({ color: 0xdcb360, roughness: 0.7 }); 
-
-    const yardMats = {
-        yellow: new THREE.MeshStandardMaterial({ color: 0x111111 }),
-        black: new THREE.MeshStandardMaterial({ color: 0x2a2118 }),
-        red: new THREE.MeshStandardMaterial({ color: 0x4a3224 }),
-        green: new THREE.MeshStandardMaterial({ color: 0x0a0a0a })
-    };
-
-    const squareGeo = new THREE.BoxGeometry(1.9, 0.5, 1.9);
-    const yardGeo = new THREE.BoxGeometry(12, 0.4, 12); 
-
+    
     const centerHome = new THREE.Mesh(new THREE.BoxGeometry(6, 0.6, 6), homeMat);
     scene.add(centerHome);
 
-    const createYard = (x, z, mat) => {
-        let yard = new THREE.Mesh(yardGeo, mat);
-        yard.position.set(x, -0.05, z);
-        scene.add(yard);
-    };
-    
-    createYard(-9, -9, yardMats.yellow); 
-    createYard(9, -9, yardMats.black);   
-    createYard(-9, 9, yardMats.red);       
-    createYard(9, 9, yardMats.green);    
-
+    const squareGeo = new THREE.BoxGeometry(1.9, 0.5, 1.9);
     function createArm(startX, startZ, isVertical, dirSign) {
         for (let row = 0; row < 8; row++) {
             for (let col = -1; col <= 1; col++) {
                 let posX = isVertical ? (col * 2) : startX + (row * dirSign * 2);
                 let posZ = isVertical ? startZ + (row * dirSign * 2) : (col * 2);
                 
-                let isSafeZone = (row === 3 && col === 0) || (row === 0 && (col === -1 || col === 1));
-                let mesh = new THREE.Mesh(squareGeo, isSafeZone ? safeMat : boardMat);
+                let mesh = new THREE.Mesh(squareGeo, boardMat);
                 mesh.position.set(posX, 0, posZ);
                 scene.add(mesh);
             }
         }
     }
-
+    
     createArm(0, 4, true, 1);      
     createArm(0, -4, true, -1);    
     createArm(4, 0, false, 1);     
@@ -111,8 +91,8 @@ window.rollDiceFromServer = async function(playerName = 'red') {
         resultText.innerHTML = `${data.dice[0]} & ${data.dice[1]}<br>Move: <b>${data.totalMove}</b>`;
         setTimeout(() => { if (rollBtn) rollBtn.disabled = false; }, 1000);
     } catch (error) {
-        resultText.innerText = "Error!";
+        resultText.innerText = "Error API!";
         if (rollBtn) rollBtn.disabled = false;
     }
 };
-    
+            
