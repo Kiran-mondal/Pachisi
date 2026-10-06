@@ -7,7 +7,6 @@ let tokensArray = [];
 window.init3DGame = function() {
     const container = document.getElementById('three-canvas-container');
     
-    // Dimension Polling to prevent 0x0 crash on mobile
     if (container.clientWidth === 0 || container.clientHeight === 0) {
         setTimeout(window.init3DGame, 100);
         return; 
@@ -122,7 +121,7 @@ window.init3DGame = function() {
         }
     }
 
-    // Raycaster (Touch to Move Logic)
+    // 🌟 BUG FIXED: Raycaster (Touch to Move Logic) 🌟
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
@@ -138,19 +137,21 @@ window.init3DGame = function() {
         
         if (intersects.length > 0) {
             let clickedToken = intersects[0].object;
-            
-            clickedToken.position.y += 1.5;
-            setTimeout(() => { clickedToken.position.y -= 1.5; }, 200);
-            
             let nextStep = clickedToken.userData.step === -1 ? 0 : clickedToken.userData.step + currentDiceRoll;
             
             if (nextStep < globalPath.length) {
-                clickedToken.position.set(globalPath[nextStep].x, 1, globalPath[nextStep].z);
-                clickedToken.userData.step = nextStep;
-                clickedToken.userData.isAtHome = false;
+                // ঘুঁটি লাফিয়ে উঠবে
+                clickedToken.position.y += 1.5;
                 
-                currentDiceRoll = 0;
-                document.getElementById('dice-result').innerText = "Move Complete!";
+                // লাফানোর ঠিক ২৫০ms পর নতুন পজিশনে নিখুঁতভাবে বসবে (মাটির নিচে যাবে না)
+                setTimeout(() => { 
+                    clickedToken.position.set(globalPath[nextStep].x, 1, globalPath[nextStep].z);
+                    clickedToken.userData.step = nextStep;
+                    clickedToken.userData.isAtHome = false;
+                    
+                    currentDiceRoll = 0;
+                    document.getElementById('dice-result').innerText = "Move Complete!";
+                }, 250);
             }
         }
     });
@@ -194,3 +195,4 @@ window.rollDiceFromServer = async function(playerName = 'red') {
         if (rollBtn) rollBtn.disabled = false;
     }
 };
+                    
