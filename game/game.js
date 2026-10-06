@@ -4,7 +4,6 @@ let currentDiceRoll = 0;
 let globalPath = [];     
 let tokensArray = [];    
 
-// গেম লজিক ভেরিয়েবল
 let activeGameMode = 'pass_play';
 let turnOrder = ['red', 'green', 'yellow', 'black'];
 let currentTurnIndex = 0;
@@ -49,7 +48,7 @@ window.init3DGame = function(mode) {
     controls.maxPolarAngle = Math.PI / 2.2; 
     controls.enableDamping = true;
 
-    // Board
+    // Board Generation
     const boardMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9 }); 
     const safeMat = new THREE.MeshStandardMaterial({ color: 0xdcb360, roughness: 0.6 }); 
     const homeMat = new THREE.MeshStandardMaterial({ color: 0xdcb360, roughness: 0.7 }); 
@@ -86,6 +85,7 @@ window.init3DGame = function(mode) {
                 mesh.position.set(posX, 0, posZ);
                 mesh.receiveShadow = true;
                 scene.add(mesh);
+                
                 globalPath.push({ x: posX, z: posZ });
             }
         }
@@ -96,32 +96,43 @@ window.init3DGame = function(mode) {
     createArm(4, 0, false, 1);     
     createArm(-4, 0, false, -1);   
 
-    // Tokens
+    // 🌟 Tokens Generation (With Start Offsets) 🌟
     const tokenGeo = new THREE.SphereGeometry(0.7, 32, 32);
     const tokenColors = { red: 0xff3333, green: 0x00cc44, yellow: 0xffcc00, black: 0x555555 };
+    
+    // আলাদা স্টার্টিং ইনডেক্স
+    const startOffsets = { red: 0, black: 24, green: 48, yellow: 72 };
 
     for (let color in tokenColors) {
         const tMat = new THREE.MeshStandardMaterial({ color: tokenColors[color], roughness: 0.3 });
         let yard = yardCoords[color];
+        
         for (let i = 0; i < 4; i++) {
             let token = new THREE.Mesh(tokenGeo, tMat);
             let offsetX = (i % 2 === 0) ? -1.5 : 1.5;
             let offsetZ = (i < 2) ? -1.5 : 1.5;
             token.position.set(yard.x + offsetX, 1, yard.z + offsetZ);
             token.castShadow = true;
-            token.userData = { color: color, step: -1, isAtHome: true };
+            
+            token.userData = { 
+                color: color, 
+                step: -1, 
+                isAtHome: true,
+                startOffset: startOffsets[color] 
+            };
+            
             scene.add(token);
             tokensArray.push(token);
         }
     }
 
+    // Human Interaction (Touch/Click)
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
     container.addEventListener('pointerdown', (event) => {
         let currentPlayerColor = turnOrder[currentTurnIndex];
         
-        // যদি কম্পিউটার মোড হয় এবং প্লেয়ারের টার্ন না হয়, তবে ক্লিক কাজ করবে না
         if (activeGameMode === 'computer' && currentPlayerColor !== 'red') return;
         if(currentDiceRoll === 0) return; 
 
@@ -135,23 +146,23 @@ window.init3DGame = function(mode) {
         if (intersects.length > 0) {
             let clickedToken = intersects[0].object;
             
-            // অন্য রঙের ঘুঁটি ক্লিক করলে কাজ করবে না
             if (clickedToken.userData.color !== currentPlayerColor) {
                 document.getElementById('dice-result').innerText = "Not your token!";
                 return; 
             }
             
             let nextStep = clickedToken.userData.step === -1 ? 0 : clickedToken.userData.step + currentDiceRoll;
+            let actualPathIndex = (nextStep + clickedToken.userData.startOffset) % globalPath.length;
             
             if (nextStep < globalPath.length) {
                 clickedToken.position.y += 1.5;
                 setTimeout(() => { 
-                    clickedToken.position.set(globalPath[nextStep].x, 1, globalPath[nextStep].z);
+                    clickedToken.position.set(globalPath[actualPathIndex].x, 1, globalPath[actualPathIndex].z);
                     clickedToken.userData.step = nextStep;
                     
                     currentDiceRoll = 0;
                     document.getElementById('dice-result').innerText = "Move Complete!";
-                    switchTurn(); // মুভ শেষ হলে টার্ন বদলাবে
+                    switchTurn(); 
                 }, 250);
             }
         }
@@ -173,7 +184,6 @@ window.init3DGame = function(mode) {
     });
 };
 
-// 🌟 টার্ন পরিবর্তনের লজিক 🌟
 function switchTurn() {
     currentTurnIndex = (currentTurnIndex + 1) % turnOrder.length;
     updateTurnIndicator();
@@ -201,7 +211,7 @@ function updateTurnIndicator() {
     }
 }
 
-// 🌟 কম্পিউটার এআই (বট) 🌟
+// 🌟 Computer AI Interaction (With Start Offsets) 🌟
 async function playComputerTurn(botColor) {
     const resultText = document.getElementById('dice-result');
     resultText.innerText = `Computer (${botColor}) is rolling...`;
@@ -214,16 +224,16 @@ async function playComputerTurn(botColor) {
         resultText.innerHTML = `${data.dice[0]} & ${data.dice[1]}<br>Move: <b>${botDiceRoll}</b>`;
         
         setTimeout(() => {
-            // বটের ঘুঁটিগুলো খোঁজা
             let botTokens = tokensArray.filter(t => t.userData.color === botColor);
-            let tokenToMove = botTokens[Math.floor(Math.random() * botTokens.length)]; // রেন্ডাম ঘুঁটি সিলেক্ট
+            let tokenToMove = botTokens[Math.floor(Math.random() * botTokens.length)]; 
             
             let nextStep = tokenToMove.userData.step === -1 ? 0 : tokenToMove.userData.step + botDiceRoll;
+            let actualPathIndex = (nextStep + tokenToMove.userData.startOffset) % globalPath.length;
             
             if (nextStep < globalPath.length) {
                 tokenToMove.position.y += 1.5;
                 setTimeout(() => { 
-                    tokenToMove.position.set(globalPath[nextStep].x, 1, globalPath[nextStep].z);
+                    tokenToMove.position.set(globalPath[actualPathIndex].x, 1, globalPath[actualPathIndex].z);
                     tokenToMove.userData.step = nextStep;
                     
                     resultText.innerText = "Computer Moved.";
@@ -261,4 +271,4 @@ window.rollDiceFromServer = async function() {
         if (rollBtn) rollBtn.disabled = false;
     }
 };
-                                 
+            
