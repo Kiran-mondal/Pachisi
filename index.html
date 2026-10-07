@@ -7,20 +7,24 @@
     <meta name="description" content="Play Pachisi online. Experience the ancient Indian epic board game in 3D.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     
+    <!-- Three.js Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     
+    <!-- CSS & Fonts -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="game/game.css">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Yatra+One&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
+        /* Setup Buttons */
         .setup-option-btn { padding: 10px; border: 2px solid transparent; background: #1a0f08; color: gray; border-radius: 6px; cursor: pointer; flex: 1; font-weight: bold; transition: 0.3s; }
         .setup-option-btn.active { border-color: #dcb360; background: #2a2118; color: white; }
         .color-btn { width: 35px; height: 35px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; opacity: 0.5; transition: 0.3s; }
         .color-btn.active { border: 3px solid #dcb360; opacity: 1; transform: scale(1.1); box-shadow: 0 0 10px rgba(220, 179, 96, 0.5); }
         
+        /* Glassmorphism Panel */
         .glass-panel {
             background: rgba(26, 15, 8, 0.4);
             backdrop-filter: blur(8px);
@@ -55,6 +59,7 @@
     </header>
 
     <main class="main-content">
+        <!-- HOME TAB -->
         <section id="home-tab" class="tab-section active">
             <div class="hero">
                 <div class="hero-content" style="max-width: 600px; margin: 0 auto;">
@@ -65,8 +70,11 @@
             </div>
         </section>
 
+        <!-- GAME TAB -->
         <section id="game-tab" class="tab-section">
             <div class="hero game-bg">
+                
+                <!-- Game Setup Screen -->
                 <div id="game-setup-screen" class="setup-container">
                     <div class="content-box setup-box glass-panel" style="max-width: 450px;">
                         <h2 style="color: #dcb360;">Game Settings</h2>
@@ -98,6 +106,7 @@
                     </div>
                 </div>
 
+                <!-- Actual 3D Game Screen -->
                 <div id="actual-game-screen" class="game-ui-wrapper" style="display: none; flex-direction: column; align-items: center; width: 100%;">
                     <div class="glass-panel" style="padding: 10px 30px; margin-bottom: 15px; border-radius: 30px;">
                         <h3 id="turn-indicator" style="color: #ff3333; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); letter-spacing: 1px;">RED'S TURN</h3>
@@ -115,34 +124,36 @@
             </div>
         </section>
 
+        <!-- RULES TAB -->
         <section id="rules-tab" class="tab-section">
             <div class="page-content">
                 <div class="content-box glass-panel" style="text-align: left; padding: 25px;">
                     <h2 style="color: #dcb360; text-align: center; margin-bottom: 20px;">📜 Rules of Pachisi & Chaupar</h2>
                     <div style="color: #f4ead5; line-height: 1.6; font-family: Arial, sans-serif; font-size: 15px;">
-                        <p style="margin-bottom: 12px;"><strong>👥 Players:</strong> Played between 2 to 4 players.</p>
-                        <p style="margin-bottom: 12px;"><strong>🎯 Objective:</strong> Move all four tokens out of the starting yard and safely enter the Center Home.</p>
-                        <p><strong>⚔ Capturing:</strong> Landing on an opponent's token sends it back to their yard.</p>
+                        <p style="margin-bottom: 12px;"><strong>👥 Players:</strong> Played between 2 to 4 players. Movement progresses anti-clockwise around the board.</p>
+                        <p style="margin-bottom: 12px;"><strong>🎯 Objective:</strong> The ultimate goal is to move all four of your tokens out of the starting yard and safely enter the Center Home.</p>
+                        <p><strong>⚔ Capturing:</strong> Landing exactly on an opponent's token sends it back to their yard and gives you an extra turn.</p>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- HERITAGE TAB -->
         <section id="heritage-tab" class="tab-section">
             <div class="page-content">
                 <div class="content-box glass-panel" style="text-align: left; padding: 25px;">
                     <h2 style="color: #dcb360; text-align: center; margin-bottom: 20px;">👑 The Royal Heritage</h2>
                     <div style="color: #f4ead5; line-height: 1.6; font-family: Arial, sans-serif; font-size: 15px;">
-                        <p style="margin-bottom: 15px;"><strong>The National Game of India:</strong> Pachisi is an ancient cross-and-circle board game that originated in Ancient India.</p>
+                        <p style="margin-bottom: 15px;"><strong>The National Game of India:</strong> Pachisi is an ancient cross-and-circle board game that originated in Ancient India (around the 4th century).</p>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- 🌟 ভার্সন পরিবর্তন করা হয়েছে যাতে ব্রাউজার ক্যাশ মুছে যায় 🌟 -->
-    <script src="game/game.js?v=2.3" defer></script>
-    <script src="script.js?v=2.3" defer></script>
+    <!-- 🌟 Cache Busting Version 2.4 🌟 -->
+    <script src="game/game.js?v=2.4" defer></script>
+    <script src="script.js?v=2.4" defer></script>
 </body>
-</html>
-
+    </html>
+                    
