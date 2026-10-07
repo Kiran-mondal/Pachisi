@@ -13,12 +13,11 @@ window.init3DGame = function(mode, numPlayers, pColor) {
     activeGameMode = mode || 'pass_play';
     humanPlayerColor = pColor || 'red';
     
-    // 🌟 টার্ন অর্ডার লজিক 🌟
     const baseOrder = ['red', 'green', 'yellow', 'black'];
     let startIndex = baseOrder.indexOf(humanPlayerColor);
     
     if (numPlayers === 2) {
-        turnOrder = [baseOrder[startIndex], baseOrder[(startIndex + 2) % 4]]; // বিপরীত দিকের প্লেয়ার
+        turnOrder = [baseOrder[startIndex], baseOrder[(startIndex + 2) % 4]]; 
     } else if (numPlayers === 3) {
         turnOrder = [baseOrder[startIndex], baseOrder[(startIndex + 1) % 4], baseOrder[(startIndex + 2) % 4]];
     } else {
@@ -42,7 +41,8 @@ window.init3DGame = function(mode, numPlayers, pColor) {
     const height = container.clientHeight;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x1a0f08); 
+    // 🌟 3D ব্যাকগ্রাউন্ডের রঙ #2a2118 এ পরিবর্তন করা হয়েছে 🌟
+    scene.background = new THREE.Color(0x2a2118); 
 
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     camera.position.set(0, 45, 45); 
@@ -75,7 +75,7 @@ window.init3DGame = function(mode, numPlayers, pColor) {
     const yardGeo = new THREE.BoxGeometry(12, 0.4, 12); 
     const yardMats = {
         yellow: new THREE.MeshStandardMaterial({ color: 0x111111 }),
-        black: new THREE.MeshStandardMaterial({ color: 0x2a2118 }),
+        black: new THREE.MeshStandardMaterial({ color: 0x1a0f08 }),
         red: new THREE.MeshStandardMaterial({ color: 0x4a3224 }),
         green: new THREE.MeshStandardMaterial({ color: 0x0a0a0a })
     };
@@ -110,24 +110,22 @@ window.init3DGame = function(mode, numPlayers, pColor) {
     createArm(4, 0, false, 1);     
     createArm(-4, 0, false, -1);   
 
-    // 🌟 Traditional Wooden Token Geometry (LatheGeometry) 🌟
     const points = [];
-    points.push(new THREE.Vector2(0, 0));       // Bottom center
-    points.push(new THREE.Vector2(0.6, 0));     // Base bottom edge
-    points.push(new THREE.Vector2(0.6, 0.2));   // Base top edge
-    points.push(new THREE.Vector2(0.4, 0.3));   // Curve inward
-    points.push(new THREE.Vector2(0.6, 0.6));   // Bulbous belly
-    points.push(new THREE.Vector2(0.4, 1.0));   // Tapering up
-    points.push(new THREE.Vector2(0.2, 1.2));   // Narrow neck
-    points.push(new THREE.Vector2(0.35, 1.3));  // Top knob bottom
-    points.push(new THREE.Vector2(0.35, 1.5));  // Top knob middle
-    points.push(new THREE.Vector2(0, 1.6));     // Top tip
+    points.push(new THREE.Vector2(0, 0));       
+    points.push(new THREE.Vector2(0.6, 0));     
+    points.push(new THREE.Vector2(0.6, 0.2));   
+    points.push(new THREE.Vector2(0.4, 0.3));   
+    points.push(new THREE.Vector2(0.6, 0.6));   
+    points.push(new THREE.Vector2(0.4, 1.0));   
+    points.push(new THREE.Vector2(0.2, 1.2));   
+    points.push(new THREE.Vector2(0.35, 1.3));  
+    points.push(new THREE.Vector2(0.35, 1.5));  
+    points.push(new THREE.Vector2(0, 1.6));     
 
     const tokenGeo = new THREE.LatheGeometry(points, 32);
     const tokenColors = { red: 0xff3333, green: 0x00cc44, yellow: 0xffcc00, black: 0x555555 };
     const startOffsets = { red: 0, black: 24, green: 48, yellow: 72 };
 
-    // 🌟 শুধুমাত্র সিলেক্ট করা প্লেয়ারদের ঘুঁটি তৈরি হবে 🌟
     turnOrder.forEach(color => {
         const tMat = new THREE.MeshStandardMaterial({ color: tokenColors[color], roughness: 0.3 });
         let yard = yardCoords[color];
@@ -137,7 +135,6 @@ window.init3DGame = function(mode, numPlayers, pColor) {
             let offsetX = (i % 2 === 0) ? -1.5 : 1.5;
             let offsetZ = (i < 2) ? -1.5 : 1.5;
             
-            // Y-axis = 0.25 (বোর্ডের ঠিক ওপরে বসবে)
             token.position.set(yard.x + offsetX, 0.25, yard.z + offsetZ);
             token.castShadow = true;
             
@@ -181,7 +178,7 @@ window.init3DGame = function(mode, numPlayers, pColor) {
             let actualPathIndex = (nextStep + clickedToken.userData.startOffset) % globalPath.length;
             
             if (nextStep < globalPath.length) {
-                clickedToken.position.y += 1.5; // Jump
+                clickedToken.position.y += 1.5; 
                 setTimeout(() => { 
                     clickedToken.position.set(globalPath[actualPathIndex].x, 0.25, globalPath[actualPathIndex].z);
                     clickedToken.userData.step = nextStep;
@@ -296,4 +293,4 @@ window.rollDiceFromServer = async function() {
         if (rollBtn) rollBtn.disabled = false;
     }
 };
-    
+                                  
