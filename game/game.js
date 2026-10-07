@@ -10,7 +10,7 @@ let turnOrder = [];
 let currentTurnIndex = 0;
 let humanPlayerColor = 'red';
 
-// 🌟 Perimeter Path & Home Paths 🌟
+// Perimeter Path & Home Paths
 let perimeterPath = [];
 for(let i=0; i<8; i++) perimeterPath.push({x: 2, z: 4 + i*2}); 
 perimeterPath.push({x: 0, z: 18}); 
@@ -88,12 +88,12 @@ window.init3DGame = function(mode, numPlayers, pColor) {
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-    camera.position.set(0, 45, 45); 
+    camera.position.set(0, 50, 40); 
     camera.lookAt(0, 0, 0);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Sharp graphics
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
     renderer.shadowMap.enabled = true;
     container.appendChild(renderer.domElement);
 
@@ -104,6 +104,7 @@ window.init3DGame = function(mode, numPlayers, pColor) {
     scene.add(dirLight);
 
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.minPolarAngle = Math.PI / 6; 
     controls.maxPolarAngle = Math.PI / 2.2; 
     controls.enableDamping = true;
 
@@ -114,6 +115,26 @@ window.init3DGame = function(mode, numPlayers, pColor) {
     const centerHome = new THREE.Mesh(new THREE.BoxGeometry(6, 0.6, 6), new THREE.MeshStandardMaterial({ color: 0xdcb360 }));
     centerHome.receiveShadow = true;
     scene.add(centerHome);
+
+    const yardGeo = new THREE.BoxGeometry(10, 0.2, 10); 
+    const yardMats = {
+        green: new THREE.MeshStandardMaterial({ color: 0x00cc44, transparent: true, opacity: 0.2 }),
+        red: new THREE.MeshStandardMaterial({ color: 0xff3333, transparent: true, opacity: 0.2 }),
+        yellow: new THREE.MeshStandardMaterial({ color: 0xffcc00, transparent: true, opacity: 0.2 }),
+        black: new THREE.MeshStandardMaterial({ color: 0xaaaaaa, transparent: true, opacity: 0.2 })
+    };
+    const yardCoords = { green: { x: 9, z: 9 }, red: { x: -9, z: 9 }, yellow: { x: -9, z: -9 }, black: { x: 9, z: -9 } };
+
+    for (let key in yardCoords) {
+        let yard = new THREE.Mesh(yardGeo, yardMats[key]);
+        yard.position.set(yardCoords[key].x, -0.1, yardCoords[key].z);
+        scene.add(yard);
+
+        let edges = new THREE.EdgesGeometry(yardGeo);
+        let line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: yardMats[key].color, linewidth: 2 }));
+        line.position.copy(yard.position);
+        scene.add(line);
+    }
 
     const homePathMats = {
         green: new THREE.MeshStandardMaterial({ color: 0x00cc44, roughness: 0.8 }),
@@ -151,17 +172,17 @@ window.init3DGame = function(mode, numPlayers, pColor) {
     createArm(4, 0, false, 1, homePathMats.black);     
     createArm(-4, 0, false, -1, homePathMats.red);   
 
-    const pasaGeo = new THREE.BoxGeometry(0.8, 0.8, 2.5); 
-    const pasaMat = new THREE.MeshStandardMaterial({ color: 0xffdf70, roughness: 0.5 });
+    const pasaGeo = new THREE.BoxGeometry(1.2, 1.2, 3); 
+    const pasaMat = new THREE.MeshStandardMaterial({ color: 0xffdf70, roughness: 0.3, metalness: 0.3 });
     for (let i = 0; i < 2; i++) {
         let pasa = new THREE.Mesh(pasaGeo, pasaMat);
-        pasa.position.set(i === 0 ? -1.5 : 1.5, 0.4, 0); 
+        pasa.position.set(i === 0 ? -2 : 2, 0.8, 0); 
         pasa.castShadow = true;
         scene.add(pasa);
         diceMeshes.push(pasa);
     }
 
-    const points = [];
+        const points = [];
     points.push(new THREE.Vector2(0, 0));       
     points.push(new THREE.Vector2(0.6, 0));     
     points.push(new THREE.Vector2(0.6, 0.2));   
@@ -176,16 +197,17 @@ window.init3DGame = function(mode, numPlayers, pColor) {
     const tokenGeo = new THREE.LatheGeometry(points, 32);
     const tokenColors = { red: 0xff3333, green: 0x00cc44, yellow: 0xffcc00, black: 0x555555 };
     const startOffsets = { green: 0, red: 17, yellow: 34, black: 51 }; 
-    const yardCoords = { yellow: { x: -9, z: -9 }, black: { x: 9, z: -9 }, red: { x: -9, z: 9 }, green: { x: 9, z: 9 } };
 
     turnOrder.forEach(color => {
-        const tMat = new THREE.MeshStandardMaterial({ color: tokenColors[color], roughness: 0.3 });
+        const tMat = new THREE.MeshStandardMaterial({ color: tokenColors[color], roughness: 0.2, metalness: 0.1 });
         let yard = yardCoords[color];
         
         for (let i = 0; i < 4; i++) {
             let token = new THREE.Mesh(tokenGeo, tMat);
-            let offsetX = (i % 2 === 0) ? -1.5 : 1.5;
-            let offsetZ = (i < 2) ? -1.5 : 1.5;
+            token.scale.set(1.2, 1.2, 1.2); 
+            
+            let offsetX = (i % 2 === 0) ? -2 : 2;
+            let offsetZ = (i < 2) ? -2 : 2;
             
             token.position.set(yard.x + offsetX, 0.25, yard.z + offsetZ);
             token.castShadow = true;
@@ -234,7 +256,7 @@ window.init3DGame = function(mode, numPlayers, pColor) {
                 return;
             }
 
-            clickedToken.position.y += 1.5; 
+            clickedToken.position.y += 2.0; 
             setTimeout(() => { 
                 clickedToken.position.set(moveData.coord.x, 0.25, moveData.coord.z);
                 clickedToken.userData.step = moveData.step;
@@ -274,7 +296,7 @@ window.init3DGame = function(mode, numPlayers, pColor) {
                 die.rotation.x += Math.random() * 0.4;
                 die.rotation.y += Math.random() * 0.4;
                 die.rotation.z += Math.random() * 0.4;
-                die.position.y = 1.5 + Math.abs(Math.sin(Date.now() * 0.01 + index)) * 2;
+                die.position.y = 2 + Math.abs(Math.sin(Date.now() * 0.01 + index)) * 2;
             });
         }
         renderer.render(scene, camera);
@@ -318,7 +340,6 @@ function updateTurnIndicator() {
     }
 }
 
-// 🌟 Smart AI Logic 🌟
 async function playComputerTurn(botColor) {
     const resultText = document.getElementById('dice-result');
     if(resultText) resultText.innerText = `Computer (${botColor}) is thinking...`;
@@ -333,7 +354,7 @@ async function playComputerTurn(botColor) {
         setTimeout(() => {
             isRolling = false; 
             diceMeshes.forEach((die) => {
-                die.position.y = 0.4; 
+                die.position.y = 0.8; 
                 die.rotation.set(0, 0, (Math.random() > 0.5 ? Math.PI/2 : 0)); 
             });
             
@@ -384,7 +405,7 @@ async function playComputerTurn(botColor) {
                     let tokenToMove = bestMove.token;
                     let moveData = bestMove.move;
 
-                    tokenToMove.position.y += 1.5;
+                    tokenToMove.position.y += 2.0;
                     setTimeout(() => { 
                         tokenToMove.position.set(moveData.coord.x, 0.25, moveData.coord.z);
                         tokenToMove.userData.step = moveData.step;
@@ -445,7 +466,7 @@ window.rollDiceFromServer = async function() {
         setTimeout(() => {
             isRolling = false; 
             diceMeshes.forEach((die) => {
-                die.position.y = 0.4; 
+                die.position.y = 0.8; 
                 die.rotation.set(0, 0, (Math.random() > 0.5 ? Math.PI/2 : 0)); 
             });
 
@@ -460,4 +481,4 @@ window.rollDiceFromServer = async function() {
         if (rollBtn) rollBtn.disabled = false;
     }
 };
-                
+                            
