@@ -5,8 +5,9 @@
   
   **A Premium, Web-Based Multiplayer Board Game Experience (Pachisi & Chaupar)**
   
-  [![Live Demo](https://img.shields.io/badge/Live_Demo-Play_Now-dcb360?style=for-the-badge&logo=google-chrome&logoColor=black)](https://pachisi.quarry.dpdns.org)
-  [![Made with](https://img.shields.io/badge/Made_With-HTML_%7C_CSS_%7C_JS-7a1f1f?style=for-the-badge)](https://github.com/Kiran-mondal)
+  [![Live Demo](https://img.shields.io/badge/Live_Demo-Play_3D_Now-dcb360?style=for-the-badge&logo=google-chrome&logoColor=black)](https://pachisi.quarry.dpdns.org)
+  [![Made with](https://img.shields.io/badge/Made_With-Three.js_%7C_JS_%7C_Ruby_%7C_HTML_%7C_CSS-7a1f1f?style=for-the-badge)](https://github.com/Kiran-mondal)
+  [![Features](https://img.shields.io/badge/Features-3D_Graphics_%7C_AI_Bot-00cc44?style=for-the-badge)](#)
   [![Developer](https://img.shields.io/badge/Developer-Kiran_Mondal-1e293b?style=for-the-badge)](https://github.com/Kiran-mondal)
   [![Architecture diagram](https://gitdiagram.com/diagram-badge.svg)](https://gitdiagram.com/kiran-mondal/pachisi?utm_source=readme&utm_medium=badge)
 </div>
