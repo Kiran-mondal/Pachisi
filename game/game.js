@@ -4,6 +4,10 @@ let currentDiceRoll = 0;
 let globalPath = [];     
 let tokensArray = [];    
 
+// 🌟 নতুন ভেরিয়েবল: পাশা এবং অ্যানিমেশনের জন্য
+let diceMeshes = [];
+let isRolling = false;
+
 let activeGameMode = 'pass_play';
 let turnOrder = [];
 let currentTurnIndex = 0;
@@ -36,12 +40,12 @@ window.init3DGame = function(mode, numPlayers, pColor) {
     container.innerHTML = ''; 
     globalPath = []; 
     tokensArray = [];
+    diceMeshes = []; // পাশা রিসেট
 
     const width = container.clientWidth;
     const height = container.clientHeight;
 
     const scene = new THREE.Scene();
-    // 🌟 3D ব্যাকগ্রাউন্ডের রঙ #2a2118 এ পরিবর্তন করা হয়েছে 🌟
     scene.background = new THREE.Color(0x2a2118); 
 
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
@@ -110,6 +114,20 @@ window.init3DGame = function(mode, numPlayers, pColor) {
     createArm(4, 0, false, 1);     
     createArm(-4, 0, false, -1);   
 
+    // 🌟 3D Pasa (Stick Dice) Generation 🌟
+    const pasaGeo = new THREE.BoxGeometry(0.8, 0.8, 2.5); // লম্বাটে কাঠের পাশা
+    const pasaMat = new THREE.MeshStandardMaterial({ color: 0xffdf70, roughness: 0.5 });
+    
+    for (let i = 0; i < 2; i++) {
+        let pasa = new THREE.Mesh(pasaGeo, pasaMat);
+        // শুরুতে পাশা দুটো বোর্ডের মাঝখানে একটু দূরে দূরে থাকবে
+        pasa.position.set(i === 0 ? -1.5 : 1.5, 0.4, 0); 
+        pasa.castShadow = true;
+        scene.add(pasa);
+        diceMeshes.push(pasa);
+    }
+
+    // Token Generation
     const points = [];
     points.push(new THREE.Vector2(0, 0));       
     points.push(new THREE.Vector2(0.6, 0));     
@@ -157,7 +175,7 @@ window.init3DGame = function(mode, numPlayers, pColor) {
         let currentPlayerColor = turnOrder[currentTurnIndex];
         
         if (activeGameMode === 'computer' && currentPlayerColor !== humanPlayerColor) return;
-        if(currentDiceRoll === 0) return; 
+        if(currentDiceRoll === 0 || isRolling) return; // পাশা ঘোরার সময় ক্লিক কাজ করবে না
 
         const rect = renderer.domElement.getBoundingClientRect();
         mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -194,6 +212,18 @@ window.init3DGame = function(mode, numPlayers, pColor) {
     function animate() {
         requestAnimationFrame(animate);
         controls.update();
+        
+        // 🌟 3D পাশা ঘোরার অ্যানিমেশন (Physics Logic) 🌟
+        if (isRolling) {
+            diceMeshes.forEach((die, index) => {
+                die.rotation.x += Math.random() * 0.4;
+                die.rotation.y += Math.random() * 0.4;
+                die.rotation.z += Math.random() * 0.4;
+                // বাতাসে লাফানোর ইফেক্ট
+                die.position.y = 1.5 + Math.abs(Math.sin(Date.now() * 0.01 + index)) * 2;
+            });
+        }
+
         renderer.render(scene, camera);
     }
     animate();
@@ -234,46 +264,61 @@ function updateTurnIndicator() {
     }
 }
 
+// 🌟 কম্পিউটার বট রোল করবে 🌟
 async function playComputerTurn(botColor) {
     const resultText = document.getElementById('dice-result');
     resultText.innerText = `Computer (${botColor}) is rolling...`;
+    
+    isRolling = true; // অ্যানিমেশন শুরু
 
     try {
         const response = await fetch(`${RUBY_BACKEND_URL}/api/roll?player=${botColor}`);
         const data = await response.json();
         let botDiceRoll = data.totalMove;
         
-        resultText.innerHTML = `${data.dice[0]} & ${data.dice[1]}<br>Move: <b>${botDiceRoll}</b>`;
-        
+        // রেজাল্ট আসার পর একটু অপেক্ষা করে পাশা থামানো
         setTimeout(() => {
-            let botTokens = tokensArray.filter(t => t.userData.color === botColor);
-            let tokenToMove = botTokens[Math.floor(Math.random() * botTokens.length)]; 
+            isRolling = false; // অ্যানিমেশন থামা
+            diceMeshes.forEach((die, index) => {
+                die.position.y = 0.4; // মাটিতে বসে যাবে
+                die.rotation.set(0, 0, (Math.random() > 0.5 ? Math.PI/2 : 0)); // শুয়ে পড়বে
+            });
             
-            let nextStep = tokenToMove.userData.step === -1 ? 0 : tokenToMove.userData.step + botDiceRoll;
-            let actualPathIndex = (nextStep + tokenToMove.userData.startOffset) % globalPath.length;
+            resultText.innerHTML = `${data.dice[0]} & ${data.dice[1]}<br>Move: <b>${botDiceRoll}</b>`;
             
-            if (nextStep < globalPath.length) {
-                tokenToMove.position.y += 1.5;
-                setTimeout(() => { 
-                    tokenToMove.position.set(globalPath[actualPathIndex].x, 0.25, globalPath[actualPathIndex].z);
-                    tokenToMove.userData.step = nextStep;
-                    
-                    resultText.innerText = "Computer Moved.";
+            setTimeout(() => {
+                let botTokens = tokensArray.filter(t => t.userData.color === botColor);
+                let tokenToMove = botTokens[Math.floor(Math.random() * botTokens.length)]; 
+                
+                let nextStep = tokenToMove.userData.step === -1 ? 0 : tokenToMove.userData.step + botDiceRoll;
+                let actualPathIndex = (nextStep + tokenToMove.userData.startOffset) % globalPath.length;
+                
+                if (nextStep < globalPath.length) {
+                    tokenToMove.position.y += 1.5;
+                    setTimeout(() => { 
+                        tokenToMove.position.set(globalPath[actualPathIndex].x, 0.25, globalPath[actualPathIndex].z);
+                        tokenToMove.userData.step = nextStep;
+                        
+                        resultText.innerText = "Computer Moved.";
+                        setTimeout(switchTurn, 1000); 
+                    }, 250);
+                } else {
                     setTimeout(switchTurn, 1000); 
-                }, 250);
-            } else {
-                setTimeout(switchTurn, 1000); 
-            }
-        }, 1500);
+                }
+            }, 1000);
+            
+        }, 800); // 800ms এক্সট্রা অ্যানিমেশন
 
     } catch (error) {
+        isRolling = false;
         resultText.innerText = "Computer Skipped Turn.";
         setTimeout(switchTurn, 1000);
     }
 }
 
+// 🌟 হিউম্যান প্লেয়ার রোল করবে 🌟
 window.rollDiceFromServer = async function() {
-    if (currentDiceRoll > 0) return; 
+    if (currentDiceRoll > 0 || isRolling) return; 
     let currentPlayer = turnOrder[currentTurnIndex];
 
     const rollBtn = document.getElementById('roll-dice-btn');
@@ -281,16 +326,27 @@ window.rollDiceFromServer = async function() {
     if (rollBtn) rollBtn.disabled = true;
     resultText.innerText = "Rolling...";
 
+    isRolling = true; // অ্যানিমেশন শুরু
+
     try {
         const response = await fetch(`${RUBY_BACKEND_URL}/api/roll?player=${currentPlayer}`);
         const data = await response.json();
         
-        currentDiceRoll = data.totalMove; 
-        resultText.innerHTML = `${data.dice[0]} & ${data.dice[1]}<br>Move: <b>${currentDiceRoll}</b><br><span style="font-size:10px; color:#ffdf70;">Tap your token</span>`;
+        setTimeout(() => {
+            isRolling = false; // অ্যানিমেশন থামা
+            diceMeshes.forEach((die, index) => {
+                die.position.y = 0.4; 
+                die.rotation.set(0, 0, (Math.random() > 0.5 ? Math.PI/2 : 0)); 
+            });
+
+            currentDiceRoll = data.totalMove; 
+            resultText.innerHTML = `${data.dice[0]} & ${data.dice[1]}<br>Move: <b>${currentDiceRoll}</b><br><span style="font-size:10px; color:#ffdf70;">Tap your token</span>`;
+            
+        }, 800); // 800ms এক্সট্রা অ্যানিমেশন
         
     } catch (error) {
+        isRolling = false;
         resultText.innerText = "Error API!";
         if (rollBtn) rollBtn.disabled = false;
     }
 };
-                                  
