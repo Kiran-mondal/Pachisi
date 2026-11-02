@@ -49,7 +49,7 @@ This project is built using modern front-end web technologies with zero external
 
 ### Online / Live Demo
 The easiest way to play is directly on the live server:
-👉 **[pachisi.quarry.dpdns.org](https://pachisi.quarry.dpdns.org)**
+👉 **[Try One Time](https://pachisi.quarry.dpdns.org)**
 
 ### Local Installation
 To run the game locally on your machine:
